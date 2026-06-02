@@ -85,7 +85,7 @@ function CareerPathsTab() {
   const fallbackSteps = careerPaths[0].roadmapSteps
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+    <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_320px]">
       <main className="min-w-0 space-y-5">
         <CareerPathNetworkGraph
           network={careerPathNetwork}
@@ -96,7 +96,7 @@ function CareerPathsTab() {
         <CareerPathDetail path={selectedPath} fallbackSteps={fallbackSteps} />
       </main>
 
-      <aside className="space-y-5 xl:sticky xl:top-28 xl:self-start">
+      <aside className="grid gap-5 md:grid-cols-2 xl:grid-cols-4 2xl:sticky 2xl:top-28 2xl:block 2xl:self-start 2xl:space-y-5">
         <PathOverviewCard path={selectedPath} />
         <MarketDemandCard />
         <SalaryBenchmarkCard />

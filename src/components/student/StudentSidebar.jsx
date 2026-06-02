@@ -21,9 +21,9 @@ export default function StudentSidebar() {
   const profile = candidateOverview.profile
 
   return (
-    <aside className="hidden h-screen w-80 shrink-0 bg-gradient-to-b from-violet-50 via-white to-violet-50 p-3 lg:block">
+    <aside className="hidden h-screen w-72 shrink-0 bg-gradient-to-b from-violet-50 via-white to-violet-50 p-2.5 lg:block xl:w-80 xl:p-3">
       <div className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-violet-100/80 bg-white/78 shadow-[0_24px_70px_rgba(88,63,188,0.14)] backdrop-blur-xl">
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5">
+        <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4 xl:px-4 xl:py-5">
           <div className="flex items-center gap-3">
             <Link to="/" className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-500 text-lg font-bold text-white shadow-lg shadow-violet-200">
               C
@@ -36,12 +36,12 @@ export default function StudentSidebar() {
             </div>
           </div>
 
-          <section className="relative mt-7 overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-white via-violet-50 to-white px-4 py-5 text-center">
+          <section className="relative mt-5 overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-white via-violet-50 to-white px-4 py-4 text-center xl:mt-7 xl:py-5">
             <div className="pointer-events-none absolute -left-8 top-12 h-28 w-28 rounded-full border border-violet-100" />
             <div className="pointer-events-none absolute -right-8 bottom-6 h-24 w-24 rounded-full border border-violet-100" />
             <div className="pointer-events-none absolute left-3 top-16 h-16 w-10 rounded-full border-l-2 border-violet-200 opacity-70" />
             <div className="pointer-events-none absolute right-5 top-16 h-20 w-12 rounded-full border-r-2 border-violet-200 opacity-70" />
-            <div className="relative mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-violet-200 via-white to-indigo-100 p-1 shadow-[0_18px_36px_rgba(88,63,188,0.18)]">
+            <div className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-violet-200 via-white to-indigo-100 p-1 shadow-[0_18px_36px_rgba(88,63,188,0.18)] xl:h-28 xl:w-28">
               <div className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 text-3xl font-bold text-white">
                 ST
               </div>
@@ -65,13 +65,13 @@ export default function StudentSidebar() {
             </div>
           </section>
 
-          <nav className="mt-5 space-y-1.5">
+          <nav className="mt-4 space-y-1 xl:mt-5 xl:space-y-1.5">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `flex items-center rounded-2xl px-4 py-3 text-sm font-semibold transition-all duration-200 ${
+                  `flex items-center rounded-2xl px-3 py-2.5 text-sm font-semibold transition-all duration-200 xl:px-4 xl:py-3 ${
                     isActive || item.aliases.includes(location.pathname)
                       ? 'bg-violet-100 text-violet-700 shadow-sm'
                       : 'text-[#3f3d78] hover:bg-violet-50 hover:text-violet-700'

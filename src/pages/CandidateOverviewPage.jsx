@@ -17,7 +17,7 @@ export default function CandidateOverviewPage() {
 
   return (
     <div className="min-h-full bg-[radial-gradient(circle_at_top_right,#f2ecff,transparent_26%),linear-gradient(135deg,#ffffff_0%,#fbfaff_46%,#f7f4ff_100%)] pb-2 text-[#11104a]">
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
+      <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_300px]">
         <main className="min-w-0 space-y-6">
           <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -29,7 +29,7 @@ export default function CandidateOverviewPage() {
             </button>
           </header>
 
-          <section className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
+          <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <CareerSnapshotCard title="Career Readiness" footer="View details -&gt;">
               <div className="flex items-center gap-4">
                 <div className="grid h-24 w-24 place-items-center rounded-full border-[10px] border-violet-200 border-t-violet-600 text-2xl font-bold">
@@ -67,7 +67,7 @@ export default function CandidateOverviewPage() {
             </CareerSnapshotCard>
           </section>
 
-          <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.9fr)]">
+          <section className="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.9fr)]">
             <CareerActionList actions={data.todayActions} />
             <CareerSignalTimeline signals={data.careerSignalTimeline} />
           </section>
@@ -93,7 +93,7 @@ export default function CandidateOverviewPage() {
           <BottomAIInputBar />
         </main>
 
-        <aside className="space-y-5 xl:sticky xl:top-6 xl:self-start">
+        <aside className="grid gap-5 md:grid-cols-2 2xl:sticky 2xl:top-6 2xl:block 2xl:self-start 2xl:space-y-5">
           <ResearchInterestsCard interests={data.researchInterests} />
           <RecommendedForYouCard recommendations={data.recommendations} />
           <AICareerInsightCard insight={data.aiCareerInsight} />

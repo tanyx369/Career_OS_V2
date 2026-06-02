@@ -1,6 +1,4 @@
 import React from 'react'
-import ProgressBar from '../ui/ProgressBar'
-
 const skills = [
   ['Python', 90],
   ['SQL', 80],
@@ -11,20 +9,22 @@ const skills = [
 
 export default function TopSkillsCard() {
   return (
-    <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.04)]">
-      <h3 className="text-sm font-semibold text-slate-950">Top Skills</h3>
+    <section className="rounded-3xl border border-violet-100/80 bg-white/92 p-5 shadow-[0_18px_44px_rgba(88,63,188,0.08)]">
+      <h3 className="text-base font-bold text-[#11104a]">Top Skills</h3>
       <div className="mt-5 space-y-4">
         {skills.map(([skill, value]) => (
           <div key={skill}>
             <div className="mb-1.5 flex items-center justify-between text-xs">
-              <span className="font-medium text-slate-600">{skill}</span>
-              <span className="text-slate-500">{value}%</span>
+              <span className="font-bold text-[#3f3d78]">{skill}</span>
+              <span className="font-semibold text-slate-500">{value}%</span>
             </div>
-            <ProgressBar value={value} />
+            <div className="h-2 overflow-hidden rounded-full bg-violet-50">
+              <div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-indigo-500" style={{ width: `${value}%` }} />
+            </div>
           </div>
         ))}
       </div>
-      <button className="mt-5 text-xs font-semibold text-blue-600 hover:text-blue-700" type="button">
+      <button className="mt-5 text-xs font-bold text-violet-700 hover:text-violet-800" type="button">
         View all skills
       </button>
     </section>

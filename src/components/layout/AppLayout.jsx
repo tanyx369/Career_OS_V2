@@ -122,7 +122,7 @@ export default function AppLayout({ workspace = 'student' }) {
 
         <div className="flex h-screen min-w-0 w-full flex-1 flex-col overflow-hidden">
           {workspace === 'employer' ? <EmployerTopBar /> : workspace === 'university' ? <UniversityTopBar /> : <header className="shrink-0 border-b border-white/70 bg-white/75 backdrop-blur-xl">
-            <div className="flex w-full items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+            <div className="flex w-full items-center justify-between px-4 py-4 sm:px-6 lg:px-6 xl:px-8">
               <div>
                 <p className="text-xs font-medium uppercase tracking-wide text-blue-600">{config.eyebrow}</p>
                 <h1 className="text-lg font-semibold text-slate-950">{activeItem?.label}</h1>
@@ -156,7 +156,7 @@ export default function AppLayout({ workspace = 'student' }) {
           </header>}
           <main className="min-w-0 flex-1 overflow-y-auto">
             {/* Routed workspace pages render here through React Router's Outlet. */}
-            <div className="w-full px-4 py-6 sm:px-6 lg:px-8">
+            <div className="w-full px-4 py-5 sm:px-6 lg:px-6 xl:px-8">
               <Outlet />
             </div>
           </main>

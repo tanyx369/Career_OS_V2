@@ -45,8 +45,8 @@ export default function CareerPathNetworkGraph({ network, selectedPathId, onSele
         </div>
       </div>
 
-      <div className="overflow-x-auto pb-2">
-        <div className="relative h-[560px] min-w-[920px] overflow-hidden rounded-3xl border border-violet-100 bg-white/60">
+      <div className="min-w-0 overflow-x-auto pb-2">
+        <div className="relative h-[520px] min-w-[760px] overflow-hidden rounded-3xl border border-violet-100 bg-white/60 sm:h-[560px] lg:min-w-[820px] xl:min-w-0">
           <CareerGraphLegend />
           <CareerGraphFilter activeFilter={activeFilter} onFilterChange={setActiveFilter} />
           <CareerGraphControls />

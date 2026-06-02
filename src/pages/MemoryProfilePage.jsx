@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import ExperienceInput from '../components/memory/ExperienceInput'
 import ExperienceTimeline from '../components/memory/ExperienceTimeline'
+import EvidenceIntegrityCard from '../components/memory/EvidenceIntegrityCard'
+import MemoryAIInsightCard from '../components/memory/MemoryAIInsightCard'
 import ProfileSummaryCard from '../components/memory/ProfileSummaryCard'
 import TopSkillsCard from '../components/memory/TopSkillsCard'
 import { extractSkillsFromText } from '../data/mockAi'
@@ -28,13 +30,14 @@ export default function MemoryProfilePage() {
   }
 
   return (
-    <div className="w-full">
+    <div className="min-h-full bg-[radial-gradient(circle_at_top_right,#f2ecff,transparent_28%),linear-gradient(135deg,#ffffff_0%,#fbfaff_46%,#f7f4ff_100%)] pb-2 text-[#11104a]">
       <header className="mb-6">
-        <h2 className="text-2xl font-semibold tracking-tight text-slate-950">Memory Profile</h2>
-        <p className="mt-1 text-sm text-slate-500">Your journey. Your story. Your evidence.</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-violet-700">Student Workspace</p>
+        <h2 className="mt-2 text-3xl font-bold tracking-tight">Career Memory</h2>
+        <p className="mt-2 text-sm font-medium text-slate-500">Your journey, your story, your evidence.</p>
       </header>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
+      <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_320px]">
         <main className="min-w-0 space-y-6">
           <ExperienceInput
             text={text}
@@ -47,9 +50,11 @@ export default function MemoryProfilePage() {
           <ExperienceTimeline experiences={experiences} />
         </main>
 
-        <aside className="space-y-5 xl:sticky xl:top-28 xl:self-start">
+        <aside className="grid gap-5 md:grid-cols-2 2xl:sticky 2xl:top-6 2xl:block 2xl:self-start 2xl:space-y-5">
           <ProfileSummaryCard />
           <TopSkillsCard />
+          <MemoryAIInsightCard />
+          <EvidenceIntegrityCard />
         </aside>
       </div>
     </div>

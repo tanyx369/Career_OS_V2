@@ -1,425 +1,674 @@
-# CareerGraph — AGENT.md
+# CareerOS / CareerGraph Operating Manual
 
-## Product Overview
+This file is the internal operating manual for building CareerOS. It should guide product decisions, frontend implementation, AI behavior, responsive design, and hackathon execution.
 
-CareerGraph is a Career OS platform that transforms scattered student experiences into trusted career evidence.
-
-Students log projects, internships, hackathons, club activities, competitions, certifications, workshops, and freelance work.
-
-The system extracts:
-- skills
-- contribution
-- evidence
-- credibility signals
-
-These become a living Memory Profile that powers:
-- career path suggestions
-- readiness analysis
-- opportunity recommendations
-- employer matching
-- university insights
-
-This project is built for the Talentbank Career OS Hackathon.
+CareerOS is the product experience. CareerGraph is the intelligence layer: the evidence graph, career path graph, and skill-signal system that power the product.
 
 ---
 
-## Core Product Philosophy
+## 1. Product North Star
 
-CareerGraph is NOT:
-- another resume builder
-- another job board
-- another LinkedIn clone
+CareerOS is a multi-sided AI-powered Career Operating System for students, employers, and universities.
 
-CareerGraph IS:
-- a living evidence graph
-- an AI-powered career intelligence layer
-- a trusted skill signal system
+The platform turns real student experiences into trusted career evidence, then uses that evidence to guide career growth, opportunity discovery, hiring, and curriculum-market alignment.
 
-The main idea:
-"Show what a student actually did, not just what they claim."
+The product should prove one core idea:
+
+> Show what a person actually did, not only what they claim.
+
+CareerOS is not:
+
+- a resume builder
+- a generic job board
+- a LinkedIn clone
+- a personal productivity tracker
+- a university admin dashboard
+
+CareerOS is:
+
+- a living Memory Profile
+- an AI career companion
+- a skill and evidence verification layer
+- a career stage awareness system
+- a career path intelligence graph
+- an opportunity ecosystem
+- an evidence-based hiring interface
+- a university-market alignment system
 
 ---
 
-## UX Priorities
+## 2. Hackathon Scope And Execution
 
-The product should feel:
+This project is built for the Talentbank Career OS Hackathon. Scope must stay sharp.
 
-* intelligent
-* guided
-* trustworthy
-* calm
-* modern
+Hackathon priorities:
 
-Avoid overwhelming dashboards.
-
-Every screen should clearly communicate:
-
-1. What this page does
-2. Why it matters
-3. What the user should do next
-
-Prefer:
-
-* progressive disclosure
-* clean spacing
-* obvious visual hierarchy
-* actionable recommendations
-
-Avoid:
-
-* excessive charts
-* crowded analytics
-* enterprise-style complexity
-* tiny unreadable cards
-
-
-## AI Interaction Philosophy
-
-AI should behave like a career intelligence assistant, not a chatbot.
-
-The system should:
-
-* explain recommendations clearly
-* show reasoning transparently
-* connect skills to evidence
-* reduce uncertainty
-* guide next actions
-
-AI outputs should feel:
-
-* practical
-* grounded
-* personalized
-* confidence-based
-* career-oriented
-
-Avoid:
-
-* generic motivational advice
-* overclaiming predictions
-* fake certainty
-* conversational fluff
-
-The product should communicate:
-"We help users understand realistic career pathways using evidence and signals."
-
-
-## MVP Scope (Hackathon Version)
-
-Focus ONLY on these 3 student flows:
-1. Add Experience
-2. AI extracts skills/evidence
-3. Career path & opportunity recommendations
-
-Do NOT overbuild. Avoid:
-- authentication
-- payment systems
-- real-time chat
-- overly complex backend
-- production-grade AI pipelines
-- advanced analytics
-- enterprise infrastructure
-
-Hackathon priority:
 - demo clarity
-- visual quality
-- believable AI workflow
-- polished UX
+- visual polish
+- believable AI workflows
 - strong storytelling
+- realistic mock data
+- fast iteration
+- frontend-first validation
+
+Do not overbuild:
+
+- production authentication
+- payments
+- complex backend infrastructure
+- real-time chat infrastructure
+- production AI pipelines
+- enterprise analytics depth
+- heavy graph libraries
+
+MVP rule:
+
+> A polished small system beats a huge unfinished system.
+
+Frontend should lead the product story. Backend and AI integration can come after the demo experience is validated.
 
 ---
 
-## User Types
+## 3. Product Architecture
 
-3 future user types:
-1. Student
-2. Employer
-3. University
+CareerOS has three workspaces.
 
-Current MVP focuses mainly on Student flow.
-Employer and University pages can remain semi-static demo views.
+### Student Workspace
+
+Purpose: help students understand their career readiness, build evidence, discover paths, and find opportunities.
+
+Current student areas:
+
+- Overview
+- Career Memory / Memory Profile
+- Career Intelligence
+- Opportunities
+- Applications
+- Network & Mentors
+- Learning & Skills
+- AI Assistant
+- Settings
+
+Core student systems:
+
+- AI-driven Memory Profile
+- Career Stage Awareness
+- Career Path Network Graph
+- Opportunity Marketplace
+- AI Career Companion
+- Evidence Integrity
+
+### Employer Workspace
+
+Purpose: help employers discover evidence-backed candidates and collaborate with student ecosystems.
+
+Current employer areas:
+
+- Talent Discovery
+- Candidate Insights
+- Create Engagement
+
+Core employer systems:
+
+- evidence-based candidate discovery
+- readiness and validation signals
+- hiring pipeline analytics
+- club/society collaboration requests
+- engagement builder for workshops, case competitions, hackathons, mentorship, and micro-projects
+
+### University Workspace
+
+Purpose: help universities align curriculum, monitor student readiness, and connect societies with companies.
+
+Current university areas:
+
+- Curriculum-Market Alignment
+- Student Readiness
+- Society-Corporate Marketplace
+
+Core university systems:
+
+- curriculum-to-market gap analysis
+- cohort readiness analytics
+- skill gap heatmaps
+- AI-recommended interventions
+- society-company collaboration marketplace
+- post-event evidence completion
 
 ---
 
-## Technical Constraints
+## 4. Career Intelligence Concepts
 
-- React + Vite + Tailwind CSS
-- JavaScript (.jsx) — only use TypeScript if it significantly improves clarity
-- React Router v6 for page navigation
-- Zustand for global state management
-- All mock data in ONE file: `src/data/mockData.js`
-- All mock AI functions in ONE file: `src/utils/mockAI.js`
-- Use `lucide-react` for icons
-- No additional animation libraries
-- No CSS-in-JS — use Tailwind classes only
+### Memory Profile
+
+The Memory Profile is the heart of CareerOS.
+
+It transforms projects, internships, hackathons, club work, competitions, certificates, workshops, and freelance work into structured career evidence.
+
+Each memory should communicate:
+
+- what happened
+- what the student contributed
+- what skills were demonstrated
+- what evidence supports it
+- how credible the signal is
+
+The Career Memory page should feel like a polished evidence timeline, not a raw activity log.
+
+### Career Stage Awareness
+
+CareerOS should understand that users are at different stages:
+
+- exploring possible paths
+- building foundation skills
+- collecting evidence
+- applying to roles
+- interviewing
+- preparing for first-job readiness
+
+UI recommendations should respect the user's current stage. Do not show every possible action at once.
+
+### Career Path Network Graph
+
+The Career Path Network Graph is a discovery interface.
+
+It helps users see:
+
+- which careers are closest
+- which paths are related
+- which skills unlock future paths
+- which paths are strong matches, skill-gap paths, or future unlocks
+
+Graph rules:
+
+- Use React, Tailwind, and SVG only.
+- Use fixed percentage-based node positions for the hackathon demo.
+- Keep nodes readable on laptop screens.
+- Use curved SVG connections with soft gradients and glow.
+- Connection types are `strong`, `gap`, and `unlock`.
+- Selected paths may use subtle animated line flow.
+- Lines must sit behind nodes.
+- Graph containers must remain responsive and avoid page-level horizontal overflow.
+
+Graph philosophy:
+
+> The graph is discovery. The detail panel is execution.
+
+### Opportunity Ecosystem
+
+Opportunities should connect to career evidence and skill gaps.
+
+Examples:
+
+- internships
+- courses
+- workshops
+- hackathons
+- case competitions
+- mentorship
+- club-company collaborations
+
+Every opportunity should explain why it matches and what evidence it helps create.
 
 ---
 
-## Frontend Rules
+## 5. AI Product Philosophy
 
-Design Direction:
-- Light mode only
-- Inspired by modern Chinese AI SaaS apps
-- Soft blue/purple accents (blue-600 to indigo-500)
-- Glassmorphism allowed lightly
-- Clean spacing, rounded-xl cards, subtle shadow-sm
-- Professional but friendly, premium but minimal
+AI in CareerOS is not a novelty chatbot. It is a career intelligence layer.
+
+AI should:
+
+- extract skills from real experiences
+- connect evidence to career readiness
+- explain why a path fits
+- identify missing evidence
+- recommend next actions
+- reduce uncertainty
+- stay grounded in visible data
+
+AI should feel:
+
+- practical
+- warm
+- transparent
+- confidence-aware
+- career-focused
 
 Avoid:
-- dark mode
-- excessive animation
-- neon cyberpunk
-- cluttered dashboards
-- overly corporate or enterprise styling
+
+- generic motivation
+- fake certainty
+- vague encouragement
+- overclaiming predictions
+- personality-heavy chatbot fluff
+
+### AI Companion UX
+
+The AI Companion should feel like a calm career guide.
+
+It can:
+
+- answer career questions
+- suggest what to do next
+- review memory evidence
+- explain graph paths
+- recommend opportunities
+
+It should not dominate the interface. The user should feel supported, not interrupted.
 
 ---
 
-## Design Philosophy
+## 6. UX And Visual Design Philosophy
+
+CareerOS should feel like a warm premium AI SaaS product.
+
+Visual direction:
+
+- light mode
+- clean white surfaces
+- soft lavender gradients
+- pastel purple/blue accents
+- subtle shadows
+- rounded cards
+- spacious layouts
+- calm dashboard rhythm
+- polished but not flashy
+
+Avoid:
+
+- dark mode
+- cyberpunk/neon styling
+- cold technical diagrams
+- dense enterprise dashboards
+- tiny unreadable cards
+- decorative clutter
+- generic productivity-app patterns
 
 Every page should answer:
-"What value does the user immediately understand?"
 
-UI should feel:
-- intelligent
-- calm
-- trustworthy
-- modern
-- guided
+1. What is this page for?
+2. Why does it matter?
+3. What should the user do next?
 
-Prioritize:
-1. readability
-2. information hierarchy
-3. interaction clarity
+Use progressive disclosure. Important actions should be obvious. Secondary details can sit in right panels, tooltips, timelines, or detail cards.
 
 ---
 
-## Core Pages
+## 7. Dashboard Consistency System
 
-Student Pages:
-1. Dashboard
-2. Memory Profile
-3. Career Intelligence
-4. Opportunity Marketplace
+Dashboard-style pages should share the same design DNA.
 
-Future Pages (semi-static for MVP):
-5. Employer Talent Discovery
-6. University Intelligence Hub
+Use:
 
----
+- page title and subtitle
+- soft gradient page background
+- rounded white/lavender cards
+- thin violet or slate borders
+- subtle shadows
+- consistent gutters
+- responsive grids
+- right insight panels that collapse below main content
 
-## Page Specifications (MVP)
+Student Overview, Career Memory, and Career Intelligence should feel like siblings in the same product system.
 
-### 1. Dashboard (Student Home)
-- Welcome card with student name and overall readiness score
-- Quick stats: total experiences, skills extracted, opportunities matched
-- Recent activity feed (last 3 Memory Profile entries)
-- "Add Experience" quick action button (navigates to Memory Profile)
+Right panels should use a consistent card style:
 
-### 2. Memory Profile
-- Top section: text input + file upload zone + "Add Experience" button
-- Main section: vertical timeline of ExperienceCards
-- Each card shows: title, date, type tag, AI-extracted skill tags, evidence links, credibility badge
-- Right sidebar: mini profile summary (total skills, top categories, readiness score)
-
-### 3. Career Intelligence
-- Left sidebar tabs: Skill Summary | Career Paths | Market Standing
-- Tab A (Skill Summary): skill bars by category + readiness gauge + missing skills list
-- Tab B (Career Paths): grid of suggested roles (match %, matching/missing skills) → click to see detailed roadmap stepper
-- Tab C (Market Standing): demand trend chart + personal skill overlay + salary benchmarks
-
-### 4. Opportunity Marketplace
-- Filter bar: All | Internship | Course | Event | Project
-- Card grid of opportunities (match score, title, type, missing skills, action button)
-- Click card → slide-over detail panel with full description and AI match explanation
-
-### 5. Employer Talent Discovery (semi-static)
-- Search bar (mock)
-- Candidate result cards (anonymized, match scores, skill evidence)
-- One candidate detail view (hardcoded) showing Memory Profile + validation badges
-
-### 6. University Intelligence Hub (semi-static)
-- Curriculum gap mock table
-- Student readiness summary cards
-- Club event board with company interest buttons
+- Profile Summary
+- Top Skills
+- AI Insight
+- Evidence Integrity
+- Research Interests
+- Recommended for You
 
 ---
 
-## Memory Profile Philosophy
+## 8. Frontend Implementation Standards
 
-This is the HEART of the product.
+Tech stack:
 
-The Memory Profile is:
-- a living timeline
-- a skill evidence engine
-- the source of career intelligence
+- React
+- Vite
+- JavaScript / JSX
+- React Router v6
+- Zustand
+- Tailwind CSS
+- Mock data in `src/data/mockData.js`
+- Mock AI functions in `src/data/mockAi.js`
 
-Every experience card should:
-- show contribution
-- show extracted skills
-- show evidence
-- show credibility
+Rules:
 
-The goal:
-Turn messy experiences into structured career signals.
+- Use Tailwind classes only for styling.
+- Do not add CSS-in-JS.
+- Do not add heavy UI or graph libraries.
+- Prefer reusable components.
+- Keep page components readable.
+- Keep business/demo data in mock data files.
+- Keep AI simulation in mock AI helpers.
+- Use composition instead of giant component files.
+- Do not change Employer or University pages when a task is scoped to Candidate.
+- Do not change app features when a task asks only for documentation or styling.
 
----
+Naming:
 
-## Career Intelligence Philosophy
-
-Career Intelligence should:
-- explain WHY a role fits
-- show missing skills
-- show roadmap steps
-- reduce career uncertainty
-
-Avoid generic AI advice.
-Recommendations should feel:
-- actionable
-- personalized
-- realistic
-
----
-
-## Mock Data Rules
-
-During hackathon MVP:
-- use mock JSON data from `src/data/mockData.js`
-- simulate AI extraction via `src/utils/mockAI.js`
-- simulate recommendations
-
-Do NOT build real AI systems first.
-Demo experience > infrastructure.
+- Page components: `src/pages/CandidateOverviewPage.jsx`
+- Layout components: `src/components/layout/AppLayout.jsx`
+- Feature components: `src/components/<feature>/`
+- Mock data exports: camelCase
+- Mock AI functions: camelCase
 
 ---
 
-## Coding Rules
+## 9. Current File Structure
 
-- Use reusable components
-- Keep files organized
-- Prefer composition over giant files
-- Avoid deeply nested logic
-- Keep components readable
-- Use meaningful names
-
----
-
-## Component Naming Conventions
-
-- Page components: PascalCase, `src/pages/MemoryProfile.jsx`
-- Reusable components: PascalCase, `src/components/ExperienceCard.jsx`
-- Layout components: PascalCase, `src/layouts/AppLayout.jsx`
-- Mock data exports: camelCase, in `src/data/mockData.js`
-- Mock AI functions: camelCase, in `src/utils/mockAI.js`
-
-Reusable component candidates:
-- SkillTag
-- MatchBadge
-- CredibilityBadge
-- ExperienceCard
-- OpportunityCard
-- CandidateCard
-- ReadinessGauge
-- PathwayStepper
-- FilterChips
-- EmptyState
-- AILoadingSpinner
-
----
-
-## Project File Structure
+```text
 src/
-├── components/
-│ ├── SkillTag.jsx
-│ ├── MatchBadge.jsx
-│ ├── CredibilityBadge.jsx
-│ ├── ExperienceCard.jsx
-│ ├── OpportunityCard.jsx
-│ ├── CandidateCard.jsx
-│ ├── ReadinessGauge.jsx
-│ ├── PathwayStepper.jsx
-│ ├── FilterChips.jsx
-│ ├── EmptyState.jsx
-│ └── AILoadingSpinner.jsx
-├── pages/
-│ ├── Dashboard.jsx
-│ ├── MemoryProfile.jsx
-│ ├── CareerIntelligence.jsx
-│ ├── OpportunityMarketplace.jsx
-│ ├── EmployerView.jsx
-│ └── UniversityHub.jsx
-├── layouts/
-│ ├── AppLayout.jsx
-│ └── Sidebar.jsx
-├── data/
-│ └── mockData.js
-├── utils/
-│ └── mockAI.js
-├── store/
-│ └── useStore.js
-├── App.jsx
-└── main.jsx
-
+  App.jsx
+  main.jsx
+  styles.css
+  components/
+    layout/
+      AppLayout.jsx
+    session/
+      ProtectedRoute.jsx
+      RoleCard.jsx
+      SignOutButton.jsx
+    ui/
+      Button.jsx
+      Card.jsx
+      ProgressBar.jsx
+      Tag.jsx
+    student/
+      StudentSidebar.jsx
+      AICompanionCard.jsx
+      overview/
+        CareerSnapshotCard.jsx
+        CareerActionList.jsx
+        CareerSignalTimeline.jsx
+        TopCareerPathsCard.jsx
+        SkillGapAnalysisCard.jsx
+        ApplicationTrackerCard.jsx
+        RecentCareerMemoryCard.jsx
+        ResearchInterestsCard.jsx
+        RecommendedForYouCard.jsx
+        AICareerInsightCard.jsx
+        BottomAIInputBar.jsx
+    memory/
+      ExperienceInput.jsx
+      ExperienceTimeline.jsx
+      ExperienceCard.jsx
+      ProfileSummaryCard.jsx
+      TopSkillsCard.jsx
+      MemoryAIInsightCard.jsx
+      EvidenceIntegrityCard.jsx
+    career/
+      CareerPathDetail.jsx
+      MarketStanding.jsx
+      ReadinessGauge.jsx
+      RoadmapStepper.jsx
+      network/
+        CareerPathNetworkGraph.jsx
+        CareerGraphNode.jsx
+        GraphConnection.jsx
+        CareerGraphLegend.jsx
+        CareerGraphFilter.jsx
+        CareerGraphControls.jsx
+        CareerGraphTooltip.jsx
+    opportunities/
+    employer/
+    university/
+  pages/
+    LandingPage.jsx
+    CandidateOverviewPage.jsx
+    MemoryProfilePage.jsx
+    CareerIntelligencePage.jsx
+    OpportunitiesPage.jsx
+    EmployerWorkspacePage.jsx
+    CandidateInsightsPage.jsx
+    EmployerCreateEngagementPage.jsx
+    CurriculumMarketAlignmentPage.jsx
+    StudentReadinessOverviewPage.jsx
+    SocietyCorporateMarketplacePage.jsx
+  data/
+    mockData.js
+    mockAi.js
+  store/
+    useCareerStore.js
+```
 
 ---
 
-## Backend Philosophy
+## 10. Layout System Rules
 
-Frontend-first development.
+The app uses `AppLayout` for workspace pages.
 
-Workflow:
-1. Hardcoded UI skeleton
-2. Define data structures
-3. Define API contracts
-4. Backend integration later
+Layout principles:
 
-Avoid backend complexity early.
+- Sidebar remains fixed/static on desktop and laptop when space allows.
+- Main content owns the remaining width.
+- Main content scrolls independently.
+- Use `min-w-0` on flex/grid children.
+- Avoid large page-level fixed widths.
+- Avoid page-level `max-w-7xl` wrappers unless the content truly needs reading-width constraints.
+- Use responsive gutters: smaller on laptop, more spacious on large desktop.
+- Right panels should collapse below main content when width is limited.
+- Cards should wrap or resize, not overflow.
+
+Student sidebar:
+
+- Uses the warm CareerOS treatment.
+- Should not consume too much width on smaller laptops.
+- On tablet and mobile, use the top mobile nav instead of forcing the full sidebar.
+
+Employer and university sidebars:
+
+- Can be simpler and denser.
+- Should still obey the same responsive shell rules.
 
 ---
 
-## Demo Philosophy
+## 11. Responsive Design And Viewport Rules
 
-Judges should understand value within 30 seconds.
+Responsiveness is a core requirement, not a final polish step.
+
+The app must look stable across:
+
+- standard laptops
+- smaller laptops
+- large desktop monitors
+- tablets / iPad sizes
+- mobile screens
+
+Important issue to avoid:
+
+Do not design pages only based on a large desktop monitor. A layout that looks fine on a wide monitor may break, overflow, or feel cramped on a normal laptop screen.
+
+### Desktop And Laptop Rules
+
+- Use responsive width constraints such as `max-w`, `min-w-0`, `w-full`, and flexible grids.
+- Avoid hardcoded large pixel widths unless absolutely necessary.
+- Avoid layouts that depend on one specific screen size.
+- Main content should adapt gracefully between large monitor and standard laptop width.
+- Cards should wrap or resize instead of overflowing.
+- Right-side panels should collapse or stack when space is limited.
+- Long content should scroll inside the main page, not push the whole layout out of alignment.
+- Sidebar should remain fixed/sticky, but the main content must calculate available width correctly.
+- Use `overflow-hidden`, `overflow-x-auto`, or `min-w-0` where needed to prevent horizontal page overflow.
+
+### Breakpoint Expectations
+
+Use Tailwind responsive breakpoints intentionally:
+
+- `sm`: mobile-large
+- `md`: tablet
+- `lg`: laptop
+- `xl`: desktop
+- `2xl`: large monitor
+
+The default design should work well on normal laptop size first, not only on large desktop screens.
+
+### Layout Testing Requirement
+
+Before considering any page complete, test it at these viewport sizes:
+
+- 390px width: mobile
+- 768px width: tablet / iPad portrait
+- 1024px width: small laptop / iPad landscape
+- 1366px width: standard laptop
+- 1440px width: common desktop
+- 1920px width: large monitor
+
+The layout must not:
+
+- create unwanted horizontal scrolling
+- hide important buttons
+- overlap cards
+- push right panels outside the screen
+- make text unreadably small
+- make cards too compressed
+- break sidebar alignment
+
+### Page-Specific Rules
+
+For dashboard-style pages:
+
+- Use responsive grid columns.
+- Mobile should be 1 column.
+- Tablet can be 2 columns.
+- Laptop and desktop can be 3 or 4 columns depending on content.
+- Right-side insight panels should move below main content on smaller screens.
+
+For graph or visualization pages:
+
+- The graph container should be responsive.
+- Use relative positioning based on percentage values, not fixed pixel-only positioning.
+- SVG lines should scale with the container.
+- Graph should have a minimum usable height but should not force the whole page to overflow horizontally.
+- On smaller screens, provide scroll/zoom behavior or simplified stacked layout.
+
+For sidebar:
+
+- On desktop/laptop, sidebar can remain fixed.
+- On tablet/mobile, sidebar should collapse into a drawer, top menu, or compact navigation.
+- Do not let the fixed sidebar consume too much space on smaller screens.
+
+### Codex Instruction
+
+Whenever generating or editing UI code, always check responsive behavior as part of the task.
+
+After making UI changes, inspect and improve:
+
+- container widths
+- grid breakpoints
+- sidebar behavior
+- right panel collapse behavior
+- card wrapping
+- text truncation
+- overflow handling
+- graph scaling
+
+Do not mark the task as complete until the page works properly on standard laptop size, not only on a large desktop monitor.
+
+---
+
+## 12. Component Architecture Rules
+
+Use feature folders:
+
+- `student/overview` for Candidate Overview cards
+- `memory` for Career Memory components
+- `career` for Career Intelligence
+- `career/network` for graph-specific components
+- `opportunities` for Opportunity Marketplace
+- `employer` for Employer Workspace
+- `university` for University Workspace
+
+Component expectations:
+
+- Components should accept props instead of importing data unless they are high-level page sections.
+- Keep mock data imports mostly in pages or container components.
+- Small presentational components should be easy to reuse.
+- Avoid component names that only make sense for one temporary mock if they represent a reusable pattern.
+
+---
+
+## 13. Mock Data And Backend Philosophy
+
+During hackathon development:
+
+- use `src/data/mockData.js`
+- use `src/data/mockAi.js`
+- simulate AI and backend behavior
+- focus on demo experience over infrastructure
+
+Future backend workflow:
+
+1. Validate frontend skeleton.
+2. Keep mock data as response-shape examples.
+3. Define API contracts.
+4. Add API helpers or hooks.
+5. Replace mock data page by page.
+
+Do not build backend complexity before the product story is clear.
+
+---
+
+## 14. Demo Storytelling Priorities
+
+Judges and teammates should understand the product within 30 seconds.
+
+Demo story:
+
+1. Student builds career memory from real experiences.
+2. AI extracts evidence and skills.
+3. CareerOS shows readiness and career paths.
+4. The graph reveals unlockable opportunities.
+5. Opportunities help create more evidence.
+6. Employers use evidence-backed signals.
+7. Universities align curriculum and society collaborations with market needs.
 
 Every screen should visually communicate:
+
 - evidence
 - intelligence
 - progression
 - trust
+- action
 
-The demo should feel:
-"AI-powered career operating system"
+The demo should feel like:
 
-not:
-"student management system"
+> An AI-powered Career Operating System.
 
----
+Not:
 
-## Team Working Style
-
-Team Lead (Kinston):
-- Product direction, UX/UI decisions, AI workflow design
-- Approves all component designs before backend integration
-- Writes page specifications for Codex
-
-Backend Lead (Ying Shien):
-- FastAPI setup, database schema, AI API integration
-- Builds backend AFTER frontend skeleton is validated
-
-QA & Support (Hanz, Darren):
-- Test every page against specification
-- Curate mock data (realistic student experiences, job listings, course data)
-- Polish UI details: spacing, hover states, empty states, error states
-- Document setup instructions for demo
-
-Working rule:
-- Codex generates code. Team reviews together.
-- No generated code goes into main branch without team understanding it.
-- If Codex produces something unexpected, ask it to explain before accepting.
+> A student management system.
 
 ---
 
-## Important Principle
+## 15. Team Working Style
 
-Cut scope aggressively.
+Product direction:
 
-A polished small system beats a huge unfinished system.
+- Keep the product career-focused.
+- Prioritize user clarity over feature volume.
+- Validate visual changes against the CareerOS design language.
+
+Engineering direction:
+
+- Codex may generate code.
+- Team members must understand the code before merging.
+- Do not accept generated code that changes scope unexpectedly.
+- If a generated result is unclear, ask for explanation before continuing.
+
+QA direction:
+
+- Test role selection.
+- Test Candidate Overview.
+- Test Career Memory add-experience flow.
+- Test Career Intelligence graph interactions.
+- Test Opportunity filters and detail panel.
+- Test Employer and University demo flows.
+- Test responsive layout at required viewport sizes.
+
+Final principle:
+
+> Cut scope aggressively, polish what remains, and make the story unmistakable.
