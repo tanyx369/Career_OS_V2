@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerSync AI | Team Visual Briefing</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070914;
+      --bg-2: #0e1426;
+      --panel: rgba(255, 255, 255, 0.085);
+      --panel-strong: rgba(255, 255, 255, 0.14);
+      --line: rgba(255, 255, 255, 0.18);
+      --text: #f7f9ff;
+      --muted: #aeb8d7;
+      --soft: #dce4ff;
+      --cyan: #42d6ff;
+      --mint: #50f1b5;
+      --coral: #ff8b7b;
+      --amber: #ffd166;
+      --violet: #a78bfa;
+      --pink: #f472b6;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+      --radius: 8px;
+      --max: 1180px;
+      --nav-h: 76px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(66, 214, 255, 0.18), transparent 34rem),
+        radial-gradient(circle at 88% 18%, rgba(255, 139, 123, 0.16), transparent 32rem),
+        radial-gradient(circle at 50% 82%, rgba(80, 241, 181, 0.12), transparent 34rem),
+        linear-gradient(135deg, #060712 0%, #0c1122 44%, #11172b 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), transparent 78%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--mint), var(--amber));
+      box-shadow: 0 0 20px rgba(66, 214, 255, 0.5);
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      min-height: var(--nav-h);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(7, 9, 20, 0.76);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: fit-content;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .mark {
+      width: 36px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(66, 214, 255, 0.22), rgba(80, 241, 181, 0.14));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 14px 34px rgba(66, 214, 255, 0.14);
+    }
+
+    .mark svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+
+    .nav-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-links a {
+      flex: 0 0 auto;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.11);
+    }
+
+    main {
+      position: relative;
+    }
+
+    section {
+      scroll-margin-top: calc(var(--nav-h) + 22px);
+      padding: 92px 24px;
+    }
+
+    .section-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: var(--mint);
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 20px currentColor;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 920px;
+      margin-bottom: 22px;
+      font-size: clamp(42px, 8vw, 94px);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      max-width: 820px;
+      margin-bottom: 18px;
+      font-size: clamp(30px, 5vw, 58px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 20px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 820px;
+      color: var(--soft);
+      font-size: clamp(18px, 2.2vw, 24px);
+      line-height: 1.45;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .hero {
+      min-height: calc(100vh - var(--nav-h));
+      display: grid;
+      align-items: center;
+      padding-top: 70px;
+      padding-bottom: 70px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      gap: 36px;
+      align-items: center;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 12px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      font-weight: 800;
+      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.22);
+    }
+
+    .button.primary {
+      border-color: rgba(80, 241, 181, 0.45);
+      background: linear-gradient(135deg, rgba(66, 214, 255, 0.24), rgba(80, 241, 181, 0.22));
+    }
+
+    .button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .glass {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.055));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 38%);
+      opacity: 0.45;
+    }
+
+    .dashboard {
+      padding: 18px;
+      transform: rotate(1deg);
+    }
+
+    .dash-top {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .window-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--coral);
+    }
+
+    .window-dots span:nth-child(2) {
+      background: var(--amber);
+    }
+
+    .window-dots span:nth-child(3) {
+      background: var(--mint);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      width: fit-content;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--soft);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .metric-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 0.82fr 1fr;
+      gap: 14px;
+    }
+
+    .score-ring {
+      display: grid;
+      place-items: center;
+      min-height: 220px;
+      border-radius: 8px;
+      background:
+        radial-gradient(circle, rgba(7, 9, 20, 0.98) 54%, transparent 55%),
+        conic-gradient(var(--mint) 0 245deg, rgba(255, 255, 255, 0.16) 245deg 360deg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .score-ring strong {
+      display: block;
+      font-size: 58px;
+      line-height: 1;
+    }
+
+    .score-ring span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .mini-card {
+      padding: 13px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .mini-card b {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .bar {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--mint));
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.075);
+      box-shadow: 0 18px 52px rgba(0, 0, 0, 0.21);
+      backdrop-filter: blur(14px);
+    }
+
+    .card p:last-child,
+    .card ul:last-child {
+      margin-bottom: 0;
+    }
+
+    .number {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      background: rgba(66, 214, 255, 0.14);
+      color: var(--cyan);
+      font-weight: 900;
+    }
+
+    .big-statement {
+      padding: 28px;
+      border-left: 4px solid var(--mint);
+      font-size: clamp(21px, 3vw, 34px);
+      line-height: 1.25;
+      font-weight: 850;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+      gap: 30px;
+      align-items: center;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--soft);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .chip.hot {
+      border-color: rgba(255, 139, 123, 0.38);
+      color: #ffd8d2;
+      background: rgba(255, 139, 123, 0.13);
+    }
+
+    .chip.good {
+      border-color: rgba(80, 241, 181, 0.4);
+      color: #d9ffef;
+      background: rgba(80, 241, 181, 0.1);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .flow-step {
+      position: relative;
+      min-height: 110px;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      width: 8px;
+      height: 2px;
+      background: var(--mint);
+      opacity: 0.85;
+    }
+
+    .flow-step small {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--mint);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .mock-browser {
+      padding: 16px;
+    }
+
+    .mock-tabs {
+      position: relative;
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .mock-tabs button {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--muted);
+      cursor: pointer;
+      padding: 10px 12px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .mock-tabs button.active {
+      color: var(--text);
+      background: rgba(66, 214, 255, 0.16);
+      border-color: rgba(66, 214, 255, 0.38);
+    }
+
+    .screen {
+      display: none;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 16px;
+      min-height: 360px;
+    }
+
+    .screen.active {
+      display: grid;
+    }
+
+    .panel {
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 8px;
+      background: rgba(4, 7, 18, 0.46);
+    }
+
+    .panel-title {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+    }
+
+    .large-score {
+      margin: 14px 0;
+      font-size: 74px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      border-radius: 999px;
+      color: var(--bg);
+      background: var(--mint);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .tag.warn {
+      background: var(--amber);
+    }
+
+    .tag.miss {
+      background: var(--coral);
+      color: #180806;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .matrix div {
+      min-height: 76px;
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.075);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .ai-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .ai-tile {
+      min-height: 150px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04)),
+        radial-gradient(circle at 20% 20%, rgba(66, 214, 255, 0.18), transparent 56%);
+    }
+
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--mint);
+    }
+
+    .icon svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .stack {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stack-card {
+      padding: 18px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.075);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .stack-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 18px;
+    }
+
+    .cuts {
+      columns: 2;
+      column-gap: 24px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .cuts li {
+      break-inside: avoid;
+      margin-bottom: 10px;
+      padding: 12px 12px 12px 38px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.065);
+      color: var(--soft);
+      position: relative;
+    }
+
+    .cuts li::before {
+      content: "x";
+      position: absolute;
+      left: 14px;
+      top: 12px;
+      color: var(--coral);
+      font-weight: 900;
+    }
+
+    .role-card {
+      min-height: 260px;
+    }
+
+    .role-name {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      flex: 0 0 auto;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(66, 214, 255, 0.22), rgba(244, 114, 182, 0.18));
+      font-weight: 900;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 18px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 19px;
+      top: 16px;
+      bottom: 16px;
+      width: 2px;
+      background: linear-gradient(var(--cyan), var(--mint), var(--amber));
+      opacity: 0.75;
+    }
+
+    .phase {
+      position: relative;
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 14px;
+    }
+
+    .phase-dot {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #09101f;
+      border: 2px solid var(--mint);
+      color: var(--mint);
+      font-weight: 900;
+    }
+
+    .phase-body {
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .phase-meta {
+      color: var(--amber);
+      font-size: 13px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .strategy {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .next-grid {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 13px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      background: rgba(255, 255, 255, 0.065);
+    }
+
+    .check {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: rgba(80, 241, 181, 0.16);
+      color: var(--mint);
+      font-weight: 900;
+    }
+
+    .quote {
+      margin-top: 22px;
+      padding: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(66, 214, 255, 0.16), rgba(80, 241, 181, 0.11));
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      font-size: clamp(20px, 2.6vw, 32px);
+      line-height: 1.25;
+      font-weight: 850;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 600ms ease, transform 600ms ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .split,
+      .next-grid,
+      .screen {
+        grid-template-columns: 1fr;
+      }
+
+      .grid.three,
+      .grid.four,
+      .ai-grid,
+      .stack,
+      .strategy {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-step:not(:last-child)::after {
+        right: auto;
+        left: 24px;
+        top: auto;
+        bottom: -8px;
+        width: 2px;
+        height: 8px;
+      }
+
+      .dashboard {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 680px) {
+      section {
+        padding: 66px 16px;
+      }
+
+      .nav-inner {
+        padding: 12px 16px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        width: 100%;
+      }
+
+      .metric-grid,
+      .grid.two,
+      .grid.three,
+      .grid.four,
+      .ai-grid,
+      .stack,
+      .strategy,
+      .matrix {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .cuts {
+        columns: 1;
+      }
+
+      .large-score {
+        font-size: 58px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+  <nav class="nav" aria-label="Briefing navigation">
+    <div class="nav-inner">
+      <a class="brand" href="#hero" aria-label="CareerSync AI home">
+        <span class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 12h4l2-7 4 14 2-7h4" />
+          </svg>
+        </span>
+        <span>CareerSync AI</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#context">Context</a>
+        <a href="#problem">Problem</a>
+        <a href="#why-now">Why Now</a>
+        <a href="#solution">Solution</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#screens">MVP</a>
+        <a href="#ai">AI</a>
+        <a href="#stack">Stack</a>
+        <a href="#cuts">Cuts</a>
+        <a href="#roles">Roles</a>
+        <a href="#plan">19 Days</a>
+        <a href="#strategy">Strategy</a>
+        <a href="#next">Next</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="section-inner hero-grid">
+        <div class="reveal">
+          <div class="eyebrow">Team Briefing | Stage 1 Deadline: 15 June 2026</div>
+          <h1>Align university learning with real industry demand.</h1>
+          <p class="lead">CareerSync AI is an AI Curriculum-to-Career Alignment OS for the Talentbank Career OS AI Hackathon 2026. This page is the teammate briefing: what we are building, why it matters, what we will cut, and how we execute in 19 days.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#workflow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+              Start Briefing
+            </a>
+            <a class="button" href="#next">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>
+              Immediate Tasks
+            </a>
+          </div>
+        </div>
+
+        <div class="glass dashboard reveal" aria-label="Dashboard preview">
+          <div class="dash-top">
+            <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <span class="pill">Data Analyst MVP</span>
+          </div>
+          <div class="metric-grid">
+            <div class="score-ring">
+              <div>
+                <strong>68</strong>
+                <span>Curriculum Alignment</span>
+              </div>
+            </div>
+            <div class="mini-list">
+              <div class="mini-card">
+                <b>Top gap: SQL + Power BI</b>
+                <div class="bar"><span style="width: 74%"></span></div>
+              </div>
+              <div class="mini-card">
+                <b>Best fit: Junior Data Analyst</b>
+                <div class="bar"><span style="width: 68%"></span></div>
+              </div>
+              <div class="mini-card">
+                <b>Risk: Medium curriculum gap</b>
+                <div class="bar"><span style="width: 54%"></span></div>
+              </div>
+              <div class="mini-card">
+                <b>Evidence: 20 JDs + module sample</b>
+                <div class="bar"><span style="width: 82%"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="context">
+      <div class="section-inner reveal">
+        <div class="eyebrow">1. Hackathon Context</div>
+        <h2>Talentbank is asking for a Career OS, not another thin career chatbot.</h2>
+        <p class="lead">The theme is "Build Asia's Career OS with AI." Our interpretation: the winning idea should support a longer career journey from university learning to skill readiness, internships, employment, and progression.</p>
+        <div class="grid four">
+          <div class="card"><div class="number">1</div><h3>Practical</h3><p class="muted">Useful for real students, universities, employers, and Talentbank's ecosystem.</p></div>
+          <div class="card"><div class="number">2</div><h3>AI-powered</h3><p class="muted">LLM reasoning, structured prompts, explainable scoring, and actionable outputs.</p></div>
+          <div class="card"><div class="number">3</div><h3>Scalable</h3><p class="muted">Start with Data Analyst and Business Analyst roles, then expand to other fresh graduate paths.</p></div>
+          <div class="card"><div class="number">4</div><h3>Product-minded</h3><p class="muted">A believable module that could fit into Talentbank's real Career OS.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="problem">
+      <div class="section-inner split reveal">
+        <div>
+          <div class="eyebrow">2. Problem</div>
+          <h2>The education-to-employment gap is hard to see until it is too late.</h2>
+          <p class="lead">Students may graduate without knowing whether their courses, skills, and projects match real job requirements. Universities may not detect fast enough when curriculum is drifting away from industry demand.</p>
+        </div>
+        <div class="glass big-statement">University education -> student readiness -> employer expectations -> career outcomes. Today, those signals are not intelligently connected.</div>
+      </div>
+      <div class="section-inner grid three reveal" style="margin-top: 22px;">
+        <div class="card"><h3>Students</h3><p class="muted">Do not know their skill gaps until applying for internships or jobs.</p></div>
+        <div class="card"><h3>Universities</h3><p class="muted">May miss emerging requirements in AI tools, analytics workflows, SQL, BI, and communication.</p></div>
+        <div class="card"><h3>Employers</h3><p class="muted">Cannot judge readiness from degree name or resume keywords alone.</p></div>
+      </div>
+    </section>
+
+    <section id="why-now">
+      <div class="section-inner reveal">
+        <div class="eyebrow">3. Why Now</div>
+        <h2>Industry skill demand is changing faster than traditional curriculum review cycles.</h2>
+        <p class="lead">AI, automation, analytics tools, dashboards, and digital business workflows are reshaping entry-level roles. Static programme reviews cannot keep pace with real job descriptions.</p>
+        <div class="chips">
+          <span class="chip hot">SQL</span>
+          <span class="chip hot">Power BI</span>
+          <span class="chip hot">Excel automation</span>
+          <span class="chip hot">Dashboard storytelling</span>
+          <span class="chip hot">Stakeholder communication</span>
+          <span class="chip hot">AI productivity tools</span>
+          <span class="chip good">Statistics</span>
+          <span class="chip good">Python basics</span>
+          <span class="chip good">Data interpretation</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="solution">
+      <div class="section-inner reveal">
+        <div class="eyebrow">4. Solution</div>
+        <h2>CareerSync AI compares courses, job demand, and student evidence in one alignment layer.</h2>
+        <p class="lead">The system answers two critical questions: Is this university programme preparing students for the jobs they want? Is this student ready for this role, and what should they learn next?</p>
+        <div class="grid three">
+          <div class="card"><h3>Inputs</h3><p class="muted">Course modules, learning outcomes, job descriptions, student skills, projects, certificates, and experience.</p></div>
+          <div class="card"><h3>AI Analysis</h3><p class="muted">Skill extraction, categorisation, matching, gap analysis, scoring, and explanation generation.</p></div>
+          <div class="card"><h3>Outputs</h3><p class="muted">Alignment score, missing skills, readiness profile, roadmap, project suggestions, and curriculum insights.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow">
+      <div class="section-inner reveal">
+        <div class="eyebrow">5. Product Workflow</div>
+        <h2>A focused demo flow for Data Analyst and Business Analyst readiness.</h2>
+        <div class="flow" aria-label="Product workflow">
+          <div class="flow-step"><small>Input</small><strong>Course Modules</strong><p class="muted">Programme content and learning outcomes.</p></div>
+          <div class="flow-step"><small>Input</small><strong>Job Descriptions</strong><p class="muted">10 to 20 sample Data/Business Analyst JDs.</p></div>
+          <div class="flow-step"><small>Input</small><strong>Student Profile</strong><p class="muted">Skills, projects, experience, certificates.</p></div>
+          <div class="flow-step"><small>AI</small><strong>Skill Extraction</strong><p class="muted">Required skills and taught skills.</p></div>
+          <div class="flow-step"><small>Engine</small><strong>Gap Analysis</strong><p class="muted">Matched, missing, and weakly covered skills.</p></div>
+          <div class="flow-step"><small>Output</small><strong>Readiness Score</strong><p class="muted">Curriculum and student role fit.</p></div>
+          <div class="flow-step"><small>Action</small><strong>Roadmap</strong><p class="muted">Learn next, build next, apply where.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screens">
+      <div class="section-inner reveal">
+        <div class="eyebrow">6. MVP Screens</div>
+        <h2>Four screens are enough for a strong Stage 1 prototype.</h2>
+        <p class="lead">The goal is not a full platform. It is a polished, understandable product loop that makes the Career OS intelligence layer feel real.</p>
+        <div class="glass mock-browser">
+          <div class="mock-tabs" role="tablist" aria-label="MVP screen selector">
+            <button class="active" data-screen="overview" type="button">Dashboard Overview</button>
+            <button data-screen="analyzer" type="button">Course-to-JD Analyzer</button>
+            <button data-screen="student" type="button">Student Readiness</button>
+            <button data-screen="insight" type="button">Curriculum Insight</button>
+          </div>
+
+          <div class="screen active" data-panel="overview">
+            <div class="panel">
+              <div class="panel-title">Programme Snapshot</div>
+              <div class="large-score">68</div>
+              <p class="muted">Medium curriculum gap detected for entry-level analyst roles.</p>
+              <div class="chips"><span class="chip hot">Power BI</span><span class="chip hot">SQL</span><span class="chip hot">Dashboard storytelling</span></div>
+            </div>
+            <div class="panel">
+              <div class="panel-title">Demand Summary</div>
+              <div class="row"><strong>Job descriptions analysed</strong><span class="tag">20</span></div>
+              <div class="row"><strong>Modules analysed</strong><span class="tag">12</span></div>
+              <div class="row"><strong>Most aligned role</strong><span class="tag warn">Junior Data Analyst</span></div>
+              <div class="row"><strong>Top risk</strong><span class="tag miss">Tooling gap</span></div>
+            </div>
+          </div>
+
+          <div class="screen" data-panel="analyzer">
+            <div class="panel">
+              <div class="panel-title">Job Requires</div>
+              <div class="matrix">
+                <div><strong>SQL</strong><p class="muted">High importance</p></div>
+                <div><strong>Power BI</strong><p class="muted">High importance</p></div>
+                <div><strong>Excel</strong><p class="muted">High importance</p></div>
+                <div><strong>Python</strong><p class="muted">Medium importance</p></div>
+                <div><strong>Cleaning</strong><p class="muted">Medium importance</p></div>
+                <div><strong>Reporting</strong><p class="muted">Medium importance</p></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-title">Course Covers</div>
+              <div class="row"><strong>Statistics</strong><span class="tag">Covered</span></div>
+              <div class="row"><strong>Python basics</strong><span class="tag warn">Partial</span></div>
+              <div class="row"><strong>SQL business case</strong><span class="tag miss">Missing</span></div>
+              <div class="row"><strong>Dashboard storytelling</strong><span class="tag miss">Missing</span></div>
+            </div>
+          </div>
+
+          <div class="screen" data-panel="student">
+            <div class="panel">
+              <div class="panel-title">Student A</div>
+              <div class="large-score">61</div>
+              <p class="muted">Ready for analyst internship only after closing portfolio evidence gaps.</p>
+              <div class="chips"><span class="chip good">Python basics</span><span class="chip good">Statistics</span><span class="chip hot">No SQL project</span></div>
+            </div>
+            <div class="panel">
+              <div class="panel-title">Recommended Project</div>
+              <h3>Build a Power BI dashboard using public sales data.</h3>
+              <p class="muted">Include SQL cleaning steps and a short business insight report to prove dashboard storytelling and stakeholder communication.</p>
+            </div>
+          </div>
+
+          <div class="screen" data-panel="insight">
+            <div class="panel">
+              <div class="panel-title">AI Curriculum Recommendation</div>
+              <h3>Add a practical analytics lab and dashboard storytelling assignment.</h3>
+              <p class="muted">The programme has strong foundations in statistics and analytical thinking, but weak visible coverage in SQL, Power BI, Excel automation, and stakeholder communication.</p>
+            </div>
+            <div class="panel">
+              <div class="panel-title">Suggested Curriculum Moves</div>
+              <div class="row"><strong>Analytics lab</strong><span class="tag">Add</span></div>
+              <div class="row"><strong>Industry-style capstone</strong><span class="tag">Add</span></div>
+              <div class="row"><strong>Dashboard critique rubric</strong><span class="tag warn">Improve</span></div>
+              <div class="row"><strong>AI productivity workflow</strong><span class="tag warn">Pilot</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai">
+      <div class="section-inner reveal">
+        <div class="eyebrow">7. AI Features</div>
+        <h2>Stage 1 can use LLM reasoning plus simple scoring, without heavy ML.</h2>
+        <div class="ai-grid">
+          <div class="ai-tile"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16" /><path d="M4 12h10" /><path d="M4 17h7" /></svg></div><h3>Skill Extraction</h3><p class="muted">Extract skills from JDs and course descriptions.</p></div>
+          <div class="ai-tile"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18" /><path d="M7 12h10" /><path d="M10 18h4" /></svg></div><h3>Categorisation</h3><p class="muted">Group tools, technical, business, AI, and soft skills.</p></div>
+          <div class="ai-tile"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10H7z" /><path d="M3 3h6" /><path d="M15 21h6" /></svg></div><h3>Skill Matching</h3><p class="muted">Compare required skills against covered skills.</p></div>
+          <div class="ai-tile"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20" /><path d="M4 12h16" /></svg></div><h3>Gap Analysis</h3><p class="muted">Identify missing or weakly evidenced requirements.</p></div>
+          <div class="ai-tile"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20a8 8 0 1 0-8-8" /><path d="M12 12l5-5" /></svg></div><h3>Readiness Scoring</h3><p class="muted">Weighted scores by importance and evidence quality.</p></div>
+          <div class="ai-tile"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5" /><path d="M8 17l4-4 4 2 4-7" /></svg></div><h3>Roadmaps</h3><p class="muted">Recommend what to learn next and in what order.</p></div>
+          <div class="ai-tile"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v12H5.17L4 17.17z" /><path d="M8 9h8" /></svg></div><h3>Project Ideas</h3><p class="muted">Suggest practical portfolio work that proves readiness.</p></div>
+          <div class="ai-tile"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9" /><path d="M12 8v4" /><path d="M12 16h.01" /></svg></div><h3>Explanations</h3><p class="muted">Explain why each gap matters in simple language.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="stack">
+      <div class="section-inner reveal">
+        <div class="eyebrow">8. Tech Stack</div>
+        <h2>Professional enough to impress, simple enough to ship.</h2>
+        <div class="stack">
+          <div class="stack-card"><strong>React + Vite</strong><p class="muted">Fast frontend skeleton with reusable pages.</p></div>
+          <div class="stack-card"><strong>Tailwind CSS</strong><p class="muted">Polished dashboard styling without slow CSS work.</p></div>
+          <div class="stack-card"><strong>FastAPI</strong><p class="muted">Python backend for AI workflows and scoring.</p></div>
+          <div class="stack-card"><strong>Gemini / Groq</strong><p class="muted">Free-tier LLM reasoning for extraction and insight.</p></div>
+          <div class="stack-card"><strong>JSON First</strong><p class="muted">Sample JDs, modules, profiles, and generated results.</p></div>
+        </div>
+        <p class="muted" style="margin-top: 20px;">Deployment target: Vercel for frontend, Render or local fallback for backend. Backup plan: local demo video plus screenshots.</p>
+      </div>
+    </section>
+
+    <section id="cuts">
+      <div class="section-inner reveal">
+        <div class="eyebrow">9. Scope Cuts</div>
+        <h2>Small but polished. Simple but meaningful. Demo-ready, not theory-only.</h2>
+        <ul class="cuts">
+          <li>No login system</li>
+          <li>No real-time JobStreet or LinkedIn scraping</li>
+          <li>No full marketplace</li>
+          <li>No advanced recommendation engine</li>
+          <li>No complex database</li>
+          <li>No payment system</li>
+          <li>No multi-university admin system</li>
+          <li>No mobile app</li>
+          <li>No advanced ML model training</li>
+          <li>No complicated agent framework</li>
+          <li>No production-grade security system</li>
+          <li>No huge dataset pipeline</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="roles">
+      <div class="section-inner reveal">
+        <div class="eyebrow">10. Team Roles</div>
+        <h2>Clear ownership keeps the 19-day sprint calm and buildable.</h2>
+        <div class="grid four">
+          <div class="card role-card">
+            <div class="role-name"><div><h3>Kinston</h3><p class="muted">Team lead</p></div><div class="avatar">K</div></div>
+            <p class="muted">Product strategy, UI/UX direction, pitch story, frontend direction, teammate briefing, task coordination, and scope control.</p>
+          </div>
+          <div class="card role-card">
+            <div class="role-name"><div><h3>Ying Shien</h3><p class="muted">Technical co-lead</p></div><div class="avatar">Y</div></div>
+            <p class="muted">FastAPI backend, LLM API integration, JSON structure, GitHub workflow, frontend-backend connection, and AI output testing.</p>
+          </div>
+          <div class="card role-card">
+            <div class="role-name"><div><h3>Hanz</h3><p class="muted">Research and data</p></div><div class="avatar">H</div></div>
+            <p class="muted">Collect job descriptions, extract key requirements, prepare clean samples, test output realism, and support documentation.</p>
+          </div>
+          <div class="card role-card">
+            <div class="role-name"><div><h3>Darren</h3><p class="muted">Prompt and QA</p></div><div class="avatar">D</div></div>
+            <p class="muted">Create student profiles, test prompts, compare AI results, prepare roadmap examples, and support UI testing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="plan">
+      <div class="section-inner reveal">
+        <div class="eyebrow">11. 19-Day Plan</div>
+        <h2>From briefing to Stage 1 submission by 15 June 2026.</h2>
+        <div class="timeline">
+          <div class="phase"><div class="phase-dot">1</div><div class="phase-body"><div class="phase-meta">27 May to 30 May</div><h3>Research and Direction</h3><p class="muted">Finalise idea, brief team, collect sample data, decide MVP screens, create first prototype content.</p></div></div>
+          <div class="phase"><div class="phase-dot">2</div><div class="phase-body"><div class="phase-meta">31 May to 3 June</div><h3>Prototype and Architecture</h3><p class="muted">Create React skeleton, dashboard pages, FastAPI backend skeleton, JSON samples, and first AI prompt tests.</p></div></div>
+          <div class="phase"><div class="phase-dot">3</div><div class="phase-body"><div class="phase-meta">4 June to 8 June</div><h3>Core MVP Build</h3><p class="muted">Connect frontend, backend, and AI. Generate skill extraction, gap analysis, readiness profile, and roadmap outputs.</p></div></div>
+          <div class="phase"><div class="phase-dot">4</div><div class="phase-body"><div class="phase-meta">9 June to 12 June</div><h3>Polish and Demo Story</h3><p class="muted">Improve UI, refine prompts, prepare demo script, screenshots, architecture diagram, and problem-solution-impact story.</p></div></div>
+          <div class="phase"><div class="phase-dot">5</div><div class="phase-body"><div class="phase-meta">13 June to 15 June</div><h3>Final Submission</h3><p class="muted">Test full demo, fix bugs, prepare backups, finalise proposal, GitHub repository, demo link, and submission form.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="strategy">
+      <div class="section-inner reveal">
+        <div class="eyebrow">12. Winning Strategy</div>
+        <h2>Differentiate with a system-level Career OS module.</h2>
+        <div class="strategy">
+          <div class="card"><h3>Not generic</h3><p class="muted">This is not only a resume helper or career chatbot.</p></div>
+          <div class="card"><h3>Multi-stakeholder</h3><p class="muted">Students, universities, employers, and Talentbank all gain value.</p></div>
+          <div class="card"><h3>Buildable</h3><p class="muted">Sample data, LLM prompts, simple scoring, and clear dashboards.</p></div>
+          <div class="card"><h3>Judge-friendly</h3><p class="muted">Scores, gaps, roadmaps, and visuals are easy to understand quickly.</p></div>
+        </div>
+        <div class="quote">"Universities teach. Employers hire. Students prepare. But these three sides are not intelligently connected. CareerSync AI connects curriculum, skills, and real job demand into one Career OS intelligence layer."</div>
+      </div>
+    </section>
+
+    <section id="next">
+      <div class="section-inner next-grid reveal">
+        <div>
+          <div class="eyebrow">13. Immediate Next Steps</div>
+          <h2>What the team should do next.</h2>
+          <p class="lead">Keep tasks bounded, visible, and demo-focused. If a feature does not help the Stage 1 story, cut it or fake it with sample data.</p>
+        </div>
+        <div class="card">
+          <ul class="checklist">
+            <li><span class="check">1</span><span><strong>Collect 10 to 20 analyst job descriptions.</strong><br><span class="muted">Hanz leads clean samples and key requirements.</span></span></li>
+            <li><span class="check">2</span><span><strong>Prepare 1 programme/module sample.</strong><br><span class="muted">Use Actuarial Science, Business Analytics, Data Science, or Computer Science.</span></span></li>
+            <li><span class="check">3</span><span><strong>Create 2 to 3 student profiles.</strong><br><span class="muted">Darren prepares realistic skills, projects, certificates, and gaps.</span></span></li>
+            <li><span class="check">4</span><span><strong>Lock MVP screen content.</strong><br><span class="muted">Kinston finalises flow and UI structure.</span></span></li>
+            <li><span class="check">5</span><span><strong>Test first AI prompt and scoring logic.</strong><br><span class="muted">Ying Shien builds backend test route and JSON structure.</span></span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const progressBar = document.getElementById("progressBar");
+    const navLinks = Array.from(document.querySelectorAll("#navLinks a"));
+    const sections = Array.from(document.querySelectorAll("main section"));
+    const revealItems = Array.from(document.querySelectorAll(".reveal"));
+    const tabButtons = Array.from(document.querySelectorAll("[data-screen]"));
+    const screenPanels = Array.from(document.querySelectorAll("[data-panel]"));
+
+    function updateProgress() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+      progressBar.style.width = `${Math.min(progress, 100)}%`;
+    }
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach((link) => {
+          link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`);
+        });
+      });
+    }, { rootMargin: "-35% 0px -55% 0px", threshold: 0.01 });
+
+    sections.forEach((section) => sectionObserver.observe(section));
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.13 });
+
+    revealItems.forEach((item) => revealObserver.observe(item));
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = button.dataset.screen;
+        tabButtons.forEach((tab) => tab.classList.toggle("active", tab === button));
+        screenPanels.forEach((panel) => panel.classList.toggle("active", panel.dataset.panel === target));
+      });
+    });
+
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    updateProgress();
+  </script>
+</body>
+</html>
