@@ -3,24 +3,31 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import SignOutButton from '../session/SignOutButton'
 
 const navItems = [
-  { label: 'Curriculum-Market Alignment', path: '/university/curriculum', aliases: ['/university'] },
+  { label: 'Overview', path: '/university/overview', aliases: ['/university'] },
+  { label: 'Program-Market Alignment', path: '/university/curriculum', aliases: ['/university/curriculum-market-alignment'] },
+  { label: 'Alumni Signals', path: '/university/signals', aliases: [] },
   { label: 'Student Readiness', path: '/university/readiness', aliases: [] },
-  { label: 'Society-Corporate Marketplace', path: '/university/collaboration', aliases: [] },
+  { label: 'Collaboration Marketplace', path: '/university/collaboration', aliases: ['/university/society-corporate-marketplace'] },
+  { label: 'Reports', path: '/university/reports', aliases: [] },
 ]
 
 const supportItems = [
   { label: 'Settings', path: '/university/settings', aliases: [] },
-  { label: 'Help', path: '/university/help', aliases: [] },
 ]
 
 export default function UniversitySidebar() {
   const location = useLocation()
 
   return (
-    <aside className="hidden h-screen w-72 shrink-0 border-r border-white/70 bg-white/80 px-5 py-6 shadow-[8px_0_30px_rgba(15,23,42,0.03)] backdrop-blur-xl lg:flex lg:flex-col">
-      <div className="mb-9">
-        <Link to="/" className="text-xl font-semibold text-slate-950">CareerOS</Link>
-        <p className="mt-1 text-sm text-blue-600">For Universities</p>
+    <aside className="hidden h-screen w-72 shrink-0 border-r border-white/70 bg-white/85 px-5 py-6 shadow-[8px_0_30px_rgba(15,23,42,0.03)] backdrop-blur-xl lg:flex lg:flex-col">
+      <div className="mb-9 flex items-center gap-3">
+        <Link to="/" className="flex h-11 w-11 items-center justify-center rounded-[8px] bg-gradient-to-br from-blue-500 to-violet-500 text-xl font-semibold text-white shadow-lg shadow-blue-100">
+          C
+        </Link>
+        <div>
+          <Link to="/" className="text-xl font-semibold text-slate-950">CareerOS</Link>
+          <p className="mt-1 text-sm text-blue-600">University Workspace</p>
+        </div>
       </div>
       <nav className="space-y-2">
         {navItems.map((item) => (
@@ -53,6 +60,18 @@ export default function UniversitySidebar() {
             {item.label}
           </NavLink>
         ))}
+        <div className="rounded-[8px] border border-blue-100 bg-blue-50/70 p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-violet-500 text-sm font-semibold text-white">
+              AL
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-slate-950">Dr. Amanda Lim</p>
+              <p className="text-xs text-slate-500">Career Office</p>
+              <p className="text-xs text-blue-700">Taylor's University</p>
+            </div>
+          </div>
+        </div>
         <SignOutButton tone="blue" />
       </nav>
     </aside>

@@ -14,6 +14,7 @@ import PlaceholderPage from './pages/PlaceholderPage'
 import ProtectedRoute from './components/session/ProtectedRoute'
 import SocietyCorporateMarketplacePage from './pages/SocietyCorporateMarketplacePage'
 import StudentReadinessOverviewPage from './pages/StudentReadinessOverviewPage'
+import UniversityOverviewPage from './pages/UniversityOverviewPage'
 import WorkspacePlaceholderPage from './pages/WorkspacePlaceholderPage'
 
 export default function App() {
@@ -54,7 +55,8 @@ export default function App() {
 
       <Route element={<ProtectedRoute role="university" />}>
         <Route element={<AppLayout workspace="university" />}>
-          <Route path="/university" element={<CurriculumMarketAlignmentPage />} />
+          <Route path="/university" element={<UniversityOverviewPage />} />
+          <Route path="/university/overview" element={<UniversityOverviewPage />} />
           <Route path="/university/readiness" element={<StudentReadinessOverviewPage />} />
           <Route path="/university/student-readiness" element={<StudentReadinessOverviewPage />} />
           <Route path="/university/curriculum" element={<CurriculumMarketAlignmentPage />} />
@@ -76,6 +78,7 @@ export default function App() {
             path="/university/society-corporate-marketplace"
             element={<SocietyCorporateMarketplacePage />}
           />
+          <Route path="/university/reports" element={<PlaceholderPage title="Reports" />} />
           <Route path="/university/settings" element={<PlaceholderPage title="Settings" />} />
           <Route path="/university/help" element={<PlaceholderPage title="Help" />} />
         </Route>
