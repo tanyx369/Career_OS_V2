@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import SignOutButton from '../session/SignOutButton'
 
@@ -77,3 +77,4 @@ export default function UniversitySidebar() {
     </aside>
   )
 }
+

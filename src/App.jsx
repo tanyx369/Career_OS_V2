@@ -1,6 +1,7 @@
 import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AppLayout from './components/layout/AppLayout'
+import AlumniSignalIntelligencePage from './pages/AlumniSignalIntelligencePage'
 import CandidateInsightsPage from './pages/CandidateInsightsPage'
 import CandidateOverviewPage from './pages/CandidateOverviewPage'
 import CareerIntelligencePage from './pages/CareerIntelligencePage'
@@ -61,15 +62,7 @@ export default function App() {
           <Route path="/university/student-readiness" element={<StudentReadinessOverviewPage />} />
           <Route path="/university/curriculum" element={<CurriculumMarketAlignmentPage />} />
           <Route path="/university/curriculum-market-alignment" element={<CurriculumMarketAlignmentPage />} />
-          <Route
-            path="/university/signals"
-            element={
-              <WorkspacePlaceholderPage
-                title="Industry Signals"
-                description="A future space for demand trends, emerging skills, and market movement."
-              />
-            }
-          />
+          <Route path="/university/signals" element={<AlumniSignalIntelligencePage />} />
           <Route
             path="/university/collaboration"
             element={<SocietyCorporateMarketplacePage />}

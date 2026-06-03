@@ -1,59 +1,705 @@
-import React from 'react'
-import AISuggestionCard from '../components/university/AISuggestionCard'
-import AlumniOutcomeCard from '../components/university/AlumniOutcomeCard'
-import CurriculumHealthGauge from '../components/university/CurriculumHealthGauge'
-import GapHighlightCard from '../components/university/GapHighlightCard'
-import SideBySideSkillComparison from '../components/university/SideBySideSkillComparison'
-import StatusPill from '../components/university/StatusPill'
-import SyllabusUploadCard from '../components/university/SyllabusUploadCard'
-import { universityCurriculumAlignment } from '../data/mockData'
+﻿import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
-export default function CurriculumMarketAlignmentPage() {
-  const data = universityCurriculumAlignment
+const tabs = [
+  { id: 'skills', label: 'Skills Alignment' },
+  { id: 'gaps', label: 'Emerging Gaps' },
+  { id: 'actions', label: 'Recommended Actions' },
+]
 
+const skillAlignmentRows = [
+  { skill: 'Python', demand: 'High', coverage: 92, gap: null },
+  { skill: 'SQL', demand: 'High', coverage: 88, gap: null },
+  { skill: 'Data Analysis', demand: 'High', coverage: 85, gap: null },
+  { skill: 'AI / ML Basics', demand: 'High', coverage: 70, gap: null },
+  { skill: 'Cloud Deployment', demand: 'High', coverage: 38, gap: -62 },
+  { skill: 'MLOps', demand: 'High', coverage: 26, gap: -74 },
+  { skill: 'Product Analytics', demand: 'Medium', coverage: 30, gap: -70 },
+  { skill: 'Power BI', demand: 'High', coverage: 42, gap: -58 },
+]
+
+const emergingGapRows = [
+  {
+    rank: 1,
+    skill: 'Cloud Deployment',
+    why: 'Critical for 78% of modern tech roles',
+    demand: 76,
+    coverage: 38,
+    gap: -38,
+    impact: 'High',
+    trend: [32, 38, 44, 42, 58, 64, 76],
+  },
+  {
+    rank: 2,
+    skill: 'MLOps',
+    why: 'Essential for AI/ML production systems',
+    demand: 74,
+    coverage: 26,
+    gap: -48,
+    impact: 'High',
+    trend: [20, 28, 31, 40, 36, 55, 74],
+  },
+  {
+    rank: 3,
+    skill: 'Product Analytics',
+    why: 'High growth in product-driven companies',
+    demand: 58,
+    coverage: 30,
+    gap: -28,
+    impact: 'Medium',
+    trend: [25, 30, 34, 38, 42, 49, 58],
+  },
+  {
+    rank: 4,
+    skill: 'Cybersecurity Basics',
+    why: 'Growing concern across all industries',
+    demand: 45,
+    coverage: 28,
+    gap: -17,
+    impact: 'Medium',
+    trend: [24, 26, 30, 33, 36, 41, 45],
+  },
+  {
+    rank: 5,
+    skill: 'Generative AI',
+    why: 'New capability driving innovation',
+    demand: 40,
+    coverage: 20,
+    gap: -20,
+    impact: 'Medium',
+    trend: [10, 12, 18, 24, 31, 36, 40],
+  },
+]
+
+const recommendedActions = [
+  {
+    action: 'Cloud Fundamentals & Deployment Workshop',
+    detail: 'Hands-on 8-12 weeks',
+    gap: 'Cloud Deployment -38%',
+    impact: 'High 8.7/10',
+    impactScore: 87,
+    effort: 'Medium',
+    students: '62 students',
+    priority: 'High',
+  },
+  {
+    action: 'MLOps Fundamentals Short Course',
+    detail: '4 weeks, project-based',
+    gap: 'MLOps -48%',
+    impact: 'High 8.3/10',
+    impactScore: 83,
+    effort: 'Medium',
+    students: '48 students',
+    priority: 'High',
+  },
+  {
+    action: 'Product Thinking & Analytics Bootcamp',
+    detail: '2-3 weeks, case-based',
+    gap: 'Product Analytics -28%',
+    impact: 'Medium 6.9/10',
+    impactScore: 69,
+    effort: 'Low',
+    students: '40 students',
+    priority: 'Medium',
+  },
+  {
+    action: 'AI Society Hackathon',
+    detail: '1-2 weeks, experiential',
+    gap: 'AI/ML Basics -17%',
+    impact: 'Medium 6.2/10',
+    impactScore: 62,
+    effort: 'Low',
+    students: '80+ students',
+    priority: 'Medium',
+  },
+  {
+    action: 'Industry Mentor Sessions',
+    detail: 'Ongoing, monthly',
+    gap: 'Multiple Skills',
+    impact: 'Medium 5.8/10',
+    impactScore: 58,
+    effort: 'Low',
+    students: 'All Cohort',
+    priority: 'Medium',
+  },
+]
+
+const marketTrend = [
+  { label: 'Cloud Deployment', value: '76%', color: 'bg-blue-500', stroke: '#4f6bff', points: [66, 58, 65, 69, 62, 70] },
+  { label: 'MLOps', value: '58%', color: 'bg-violet-500', stroke: '#9b6bff', points: [53, 45, 52, 55, 49, 56] },
+  { label: 'Product Analytics', value: '45%', color: 'bg-emerald-500', stroke: '#34c985', points: [38, 32, 39, 41, 36, 45] },
+]
+
+const skillsOnRise = [
+  ['MLOps', '+120%'],
+  ['Cloud Deployment', '+95%'],
+  ['Generative AI', '+89%'],
+  ['Prompt Engineering', '+85%'],
+  ['Data Engineering', '+72%'],
+]
+
+const roadmap = [
+  { title: 'Quick Wins', time: '0-1 month', items: ['AI Society Hackathon', 'Industry Mentor Sessions'], tone: 'emerald' },
+  { title: 'Foundation Build', time: '1-3 months', items: ['Cloud Fundamentals Workshop', 'MLOps Short Course'], tone: 'blue' },
+  { title: 'Capability Deepen', time: '3-6 months', items: ['Product Thinking Bootcamp', 'Advanced Projects'], tone: 'amber' },
+  { title: 'Sustain & Scale', time: '6+ months', items: ['Certification Pathways', 'Industry Collaboration'], tone: 'violet' },
+]
+
+const successMetrics = ['Graduate Readiness Score', 'Industry Skill Coverage', 'Student Certifications', 'Job Placement Rate']
+
+const toneClasses = {
+  blue: 'bg-blue-50 text-blue-700 ring-blue-100',
+  violet: 'bg-violet-50 text-violet-700 ring-violet-100',
+  emerald: 'bg-emerald-50 text-emerald-700 ring-emerald-100',
+  amber: 'bg-amber-50 text-amber-700 ring-amber-100',
+  rose: 'bg-rose-50 text-rose-700 ring-rose-100',
+}
+
+const priorityClasses = {
+  High: 'bg-rose-50 text-rose-700 ring-rose-100',
+  Medium: 'bg-amber-50 text-amber-700 ring-amber-100',
+  Low: 'bg-emerald-50 text-emerald-700 ring-emerald-100',
+}
+
+function ProgramSkillsModal({ onClose }) {
   return (
-    <div className="space-y-6">
-      <header className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-        <div>
-          <h2 className="text-3xl font-semibold tracking-tight text-slate-950">Curriculum-Market Alignment</h2>
-          <p className="mt-2 text-base text-slate-500">Compare course syllabi with real market demand and alumni outcomes.</p>
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/30 px-4 backdrop-blur-sm">
+      <section className="w-full max-w-xl rounded-[8px] border border-slate-200 bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.18)]">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.18em] text-blue-600">Program Skills Setup</p>
+            <h2 className="mt-2 text-xl font-medium text-slate-950">Manage Program Skills</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500">A lightweight placeholder flow for defining program skill coverage.</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-9 w-9 items-center justify-center rounded-[8px] border border-slate-200 text-sm font-medium text-slate-500 hover:bg-slate-50"
+            aria-label="Close program skills setup"
+          >
+            x
+          </button>
         </div>
-        <button type="button" className="flex w-fit items-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 shadow-sm">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-          Analysed against {data.analysedJobPostings}+ job postings
-          <span className="text-blue-500">Refresh</span>
+        <div className="mt-6 space-y-3">
+          {['Select program template', 'Upload course outline', 'Review AI-extracted skills', 'Manually adjust skill coverage'].map((item, index) => (
+            <div key={item} className="flex items-center gap-4 rounded-[8px] border border-slate-200 bg-slate-50/70 p-4">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-medium text-blue-700 ring-1 ring-blue-100">{index + 1}</span>
+              <p className="text-sm font-medium text-slate-950">{item}</p>
+            </div>
+          ))}
+        </div>
+        <button type="button" onClick={onClose} className="mt-6 w-full rounded-[8px] bg-blue-600 px-4 py-3 text-sm font-medium text-white">
+          Save setup draft
         </button>
-      </header>
-
-      <section className="grid gap-5 xl:grid-cols-[1.05fr_0.7fr_1.35fr]">
-        <SyllabusUploadCard course={data.course} />
-        <CurriculumHealthGauge score={data.healthScore} status={data.alignmentStatus} summary={data.summary} />
-        <SideBySideSkillComparison taught={data.skillsTaught} demanded={data.skillsDemanded} />
       </section>
-
-      <section className="grid gap-5 xl:grid-cols-[0.95fr_1fr_1.35fr]">
-        <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.04)]">
-          <h2 className="text-base font-semibold text-slate-950">4. Gap Highlights</h2>
-          <div className="mt-5 space-y-3">
-            {data.gapHighlights.map((gap) => <GapHighlightCard key={gap.skill} gap={gap} />)}
-          </div>
-        </section>
-
-        <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.04)]">
-          <h2 className="text-base font-semibold text-slate-950">5. AI-Generated Suggestions</h2>
-          <div className="mt-5 space-y-3">
-            {data.aiSuggestions.map((suggestion) => <AISuggestionCard key={suggestion.title} suggestion={suggestion} />)}
-          </div>
-        </section>
-
-        <AlumniOutcomeCard outcomes={data.alumniOutcomes} />
-      </section>
-
-      <footer className="flex flex-wrap items-center justify-center gap-5 border-t border-slate-100 pt-4 text-xs text-slate-500">
-        <span>Scores and insights are AI-generated and for reference only.</span>
-        <span>Your data is secure and confidential.</span>
-        <button type="button" className="font-semibold text-blue-600">Learn more about our methodology</button>
-      </footer>
     </div>
   )
 }
+
+function ShareToast({ message }) {
+  if (!message) return null
+  return (
+    <div className="fixed bottom-6 right-6 z-50 rounded-[8px] border border-blue-100 bg-white px-4 py-3 text-sm font-medium text-blue-700 shadow-[0_18px_46px_rgba(37,99,235,0.18)]">
+      {message}
+    </div>
+  )
+}
+
+function HeaderButton({ children, onClick, primary = false }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`h-11 rounded-[8px] px-4 text-sm font-medium transition ${
+        primary
+          ? 'bg-blue-600 text-white shadow-lg shadow-blue-100 hover:bg-blue-700'
+          : 'border border-blue-200 bg-white text-blue-700 shadow-sm hover:border-blue-300 hover:bg-blue-50'
+      }`}
+    >
+      {children}
+    </button>
+  )
+}
+
+function CoverageBar({ value, tone = 'blue' }) {
+  const color = tone === 'green' ? 'bg-emerald-500' : tone === 'orange' ? 'bg-orange-400' : tone === 'red' ? 'bg-rose-500' : 'bg-blue-500'
+  return (
+    <div className="w-full min-w-[86px] max-w-[150px]">
+      <div className="h-2.5 overflow-hidden rounded-full bg-slate-100 shadow-inner">
+        <div className={`h-full rounded-full ${color} shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset]`} style={{ width: `${Math.max(value, 7)}%` }} />
+      </div>
+    </div>
+  )
+}
+
+function MarketTrendLineChart({ series }) {
+  const months = ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']
+  const toPoints = (points) => points
+    .map((point, index) => {
+      const x = 22 + index * 42
+      const y = 118 - point * 1.18
+      return `${x},${y}`
+    })
+    .join(' ')
+
+  return (
+    <div className="mt-5 rounded-[8px] border border-slate-100 bg-slate-50/70 p-3">
+      <svg viewBox="0 0 238 140" className="h-40 w-full" role="img" aria-label="Market trend line chart">
+        {[28, 56, 84, 112].map((y) => (
+          <line key={y} x1="18" x2="228" y1={y} y2={y} stroke="#e9eef7" strokeWidth="1" />
+        ))}
+        {[22, 64, 106, 148, 190, 232].map((x) => (
+          <line key={x} x1={x} x2={x} y1="18" y2="118" stroke="#eef2f7" strokeWidth="1" />
+        ))}
+        {series.map((item) => (
+          <g key={item.label}>
+            <polyline points={toPoints(item.points)} fill="none" stroke={item.stroke} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            {item.points.map((point, index) => (
+              <circle key={`${item.label}-${point}-${index}`} cx={22 + index * 42} cy={118 - point * 1.18} r="2.4" fill="white" stroke={item.stroke} strokeWidth="1.8" />
+            ))}
+          </g>
+        ))}
+        {months.map((month, index) => (
+          <text key={month} x={22 + index * 42} y="134" textAnchor="middle" className="fill-slate-400 text-[9px] font-medium">
+            {month}
+          </text>
+        ))}
+      </svg>
+    </div>
+  )
+}
+
+function GapText({ gap }) {
+  if (gap === null || gap === undefined) return <span className="text-sm font-medium text-emerald-600">-</span>
+  const severe = Math.abs(gap) >= 50
+  return <span className={`text-sm font-semibold ${severe ? 'text-rose-600' : 'text-orange-500'}`}>{gap}%</span>
+}
+
+function MiniTrend({ points }) {
+  const max = Math.max(...points)
+  const min = Math.min(...points)
+  return (
+    <div className="flex h-10 w-24 items-end gap-1">
+      {points.map((point, index) => {
+        const height = 20 + ((point - min) / Math.max(max - min, 1)) * 20
+        return <span key={`${point}-${index}`} className="w-2 rounded-full bg-gradient-to-t from-violet-500 to-blue-400" style={{ height }} />
+      })}
+    </div>
+  )
+}
+
+function SectionCard({ title, subtitle, children, action }) {
+  return (
+    <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_42px_rgba(15,23,42,0.05)]">
+      <div className="flex flex-col gap-3 border-b border-slate-100 pb-4 md:flex-row md:items-start md:justify-between">
+        <div>
+          <h2 className="text-lg font-medium text-slate-950">{title}</h2>
+          {subtitle ? <p className="mt-1 text-sm leading-6 text-slate-500">{subtitle}</p> : null}
+        </div>
+        {action}
+      </div>
+      {children}
+    </section>
+  )
+}
+
+function SkillsAlignmentTab() {
+  return (
+    <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px] 2xl:grid-cols-[minmax(0,1fr)_400px]">
+      <SectionCard title="Market Demand vs Program Coverage" subtitle="Comparison of in-demand skills and your program's coverage.">
+        <div className="mt-4 overflow-hidden rounded-[8px] border border-slate-100">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="text-xs font-medium uppercase tracking-[0.12em] text-slate-400">
+                <th className="bg-slate-50 px-4 py-3">Skill</th>
+                <th className="bg-slate-50 px-4 py-3">Market Demand</th>
+                <th className="bg-slate-50 px-4 py-3">Program Coverage</th>
+                <th className="bg-slate-50 px-4 py-3">Gap</th>
+              </tr>
+            </thead>
+            <tbody>
+              {skillAlignmentRows.map((row) => (
+                <tr key={row.skill} className="transition hover:bg-slate-50/60">
+                  <td className="border-b border-slate-100 px-4 py-4 text-sm font-medium text-slate-950">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-blue-50 text-xs font-semibold text-blue-700 ring-1 ring-blue-100">
+                        {row.skill.slice(0, 1)}
+                      </span>
+                      <span>{row.skill}</span>
+                    </div>
+                  </td>
+                  <td className="border-b border-slate-100 px-4 py-4">
+                    <span className={`text-sm font-medium ${row.demand === 'High' ? 'text-emerald-700' : 'text-amber-600'}`}>{row.demand}</span>
+                  </td>
+                  <td className="border-b border-slate-100 px-4 py-4">
+                    <div className="flex min-w-[220px] items-center gap-4">
+                      <CoverageBar value={row.coverage} tone={row.gap && Math.abs(row.gap) > 68 ? 'red' : row.gap && Math.abs(row.gap) > 50 ? 'orange' : 'blue'} />
+                      <span className="w-10 text-right text-sm font-semibold text-blue-700">{row.coverage}%</span>
+                    </div>
+                  </td>
+                  <td className="border-b border-slate-100 px-4 py-4"><GapText gap={row.gap} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </SectionCard>
+
+      <div className="space-y-5">
+        <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_42px_rgba(15,23,42,0.05)]">
+          <h2 className="text-lg font-medium text-slate-950">Key Insights</h2>
+          <div className="mt-4 divide-y divide-slate-100">
+            {[
+              ['Strong foundation in core technical skills.', 'Python, SQL, and Data Analysis are well covered.', 'emerald'],
+              ['High demand gap in Cloud & MLOps.', 'These skills are in 70%+ of job postings.', 'amber'],
+              ['Emerging need for Product Analytics.', 'Growing trend in data-driven product roles.', 'violet'],
+            ].map(([title, detail, tone]) => (
+              <div key={title} className="flex gap-3 py-4 first:pt-0 last:pb-0">
+                <span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] text-xs font-semibold ring-1 ${toneClasses[tone]}`}>{title.slice(0, 1)}</span>
+                <div>
+                  <p className="text-sm font-medium text-slate-950">{title}</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-500">{detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_42px_rgba(15,23,42,0.05)]">
+          <h2 className="text-lg font-medium text-slate-950">Market Trend</h2>
+          <p className="mt-1 text-sm text-slate-500">% of job postings requiring this skill</p>
+          <MarketTrendLineChart series={marketTrend} />
+          <div className="mt-4 space-y-3">
+            {marketTrend.map((item) => (
+              <div key={item.label} className="flex items-center justify-between text-sm">
+                <span className="flex items-center gap-2 font-semibold text-slate-600"><span className={`h-2.5 w-2.5 rounded-full ${item.color}`} />{item.label}</span>
+                <span className="font-semibold text-slate-950">{item.value}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </section>
+  )
+}
+
+function EmergingGapsTab() {
+  return (
+    <div className="space-y-5">
+      <section className="grid items-start gap-5 md:grid-cols-12">
+        <div className="min-w-0 space-y-5 md:col-span-8 2xl:col-span-9">
+          <SectionCard
+            title="Emerging Skills Gaps"
+            subtitle="Skills with growing market demand but insufficient program coverage."
+            action={<button type="button" className="rounded-[8px] border border-slate-200 px-3 py-2 text-xs font-medium text-slate-600">How Gaps are Calculated</button>}
+          >
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="text-xs font-medium uppercase tracking-[0.12em] text-slate-400">
+                    <th className="rounded-l-[8px] bg-slate-50 px-2 py-3">Rank</th>
+                    <th className="bg-slate-50 px-2 py-3">Skill</th>
+                    <th className="bg-slate-50 px-2 py-3">Why it matters</th>
+                    <th className="bg-slate-50 px-2 py-3">Market demand</th>
+                    <th className="bg-slate-50 px-2 py-3">Program coverage</th>
+                    <th className="bg-slate-50 px-2 py-3">Gap</th>
+                    <th className="rounded-r-[8px] bg-slate-50 px-2 py-3">Impact</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {emergingGapRows.map((row) => (
+                    <tr key={row.skill} className="transition hover:bg-slate-50/60">
+                      <td className="border-b border-slate-100 px-2 py-4 text-sm font-medium text-slate-500">{row.rank}</td>
+                      <td className="border-b border-slate-100 px-2 py-4">
+                        <div className="flex items-center gap-2.5">
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-violet-50 text-xs font-semibold text-violet-700 ring-1 ring-violet-100">
+                            {row.skill.slice(0, 1)}
+                          </span>
+                          <div>
+                            <p className="text-sm font-medium text-slate-950">{row.skill}</p>
+                            <p className="mt-1 w-fit rounded-full bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-500 ring-1 ring-slate-100">
+                              {row.rank === 1 ? 'Infrastructure' : row.rank === 2 ? 'DevOps' : row.rank === 3 ? 'Analytics' : row.rank === 4 ? 'Security' : 'AI'}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="max-w-[140px] border-b border-slate-100 px-2 py-4 text-xs leading-5 text-slate-500">{row.why}</td>
+                      <td className="border-b border-slate-100 px-2 py-4"><div className="flex items-center gap-2"><CoverageBar value={row.demand} /><span className="w-8 text-right text-sm font-medium">{row.demand}%</span></div></td>
+                      <td className="border-b border-slate-100 px-2 py-4"><div className="flex items-center gap-2"><CoverageBar value={row.coverage} tone="green" /><span className="w-8 text-right text-sm font-medium">{row.coverage}%</span></div></td>
+                      <td className="border-b border-slate-100 px-2 py-4"><GapText gap={row.gap} /></td>
+                      <td className="border-b border-slate-100 px-2 py-4"><span className={`rounded-full px-2.5 py-1.5 text-xs font-medium ring-1 ${priorityClasses[row.impact]}`}>{row.impact}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <button type="button" className="mt-4 w-full text-sm font-medium text-blue-700">View all emerging gaps -&gt;</button>
+          </SectionCard>
+
+          <section className="grid gap-5 md:grid-cols-[0.95fr_1fr]">
+            <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_42px_rgba(15,23,42,0.05)]">
+              <h2 className="text-lg font-medium text-slate-950">Gap Overview</h2>
+              <p className="mt-1 text-sm text-slate-500">Breakdown of skill gaps by impact level.</p>
+              <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">
+                <div className="grid h-32 w-32 shrink-0 place-items-center rounded-full bg-[conic-gradient(#f43f5e_0_33%,#f59e0b_33%_79%,#10b981_79%_100%)]">
+                  <div className="grid h-20 w-20 place-items-center rounded-full bg-white text-center">
+                    <span className="text-2xl font-semibold text-slate-950">24</span>
+                    <span className="-mt-3 text-[10px] font-medium text-slate-400">Total gaps</span>
+                  </div>
+                </div>
+                <div className="flex-1 space-y-3">
+                  {[
+                    ['High Impact', '8 (33%)', 'bg-rose-500'],
+                    ['Medium Impact', '11 (46%)', 'bg-amber-500'],
+                    ['Low Impact', '5 (21%)', 'bg-emerald-500'],
+                  ].map(([label, value, color]) => (
+                    <div key={label} className="flex items-center justify-between text-sm">
+                      <span className="flex items-center gap-2 font-medium text-slate-600"><span className={`h-2.5 w-2.5 rounded-full ${color}`} />{label}</span>
+                      <span className="font-semibold text-slate-950">{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+            <section className="rounded-[8px] border border-violet-100 bg-gradient-to-br from-white via-violet-50/70 to-blue-50 p-5 shadow-[0_16px_42px_rgba(79,70,229,0.08)]">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-violet-600">What this means</p>
+              <p className="mt-3 text-sm leading-7 text-slate-600">
+                Your program is aligned in foundational skills but needs strategic focus on high-demand, emerging capability areas. Focus on top 3 gaps could improve graduate readiness by up to <span className="font-semibold text-blue-700">18%</span>.
+              </p>
+            </section>
+          </section>
+        </div>
+
+        <aside className="rounded-[8px] border border-violet-100 bg-white p-5 shadow-[0_16px_42px_rgba(79,70,229,0.08)] md:sticky md:top-6 md:col-span-4 2xl:col-span-3">
+          <h2 className="text-lg font-medium text-slate-950">Gap Spotlight</h2>
+          <div className="mt-5 flex items-start gap-4">
+            <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[8px] bg-violet-50 text-lg font-semibold text-violet-700 ring-1 ring-violet-100">C</span>
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-base font-semibold text-slate-950">Cloud Deployment</h3>
+                <span className="rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-semibold text-rose-600 ring-1 ring-rose-100">High Impact</span>
+              </div>
+              <p className="mt-2 text-sm leading-6 text-slate-500">Largest gap and highest market demand in your program.</p>
+            </div>
+          </div>
+          <div className="mt-6 space-y-4 border-t border-slate-100 pt-5">
+            {[
+              ['Market Demand', '76%', 'text-blue-700'],
+              ['Program Coverage', '38%', 'text-emerald-600'],
+              ['Gap', '-38%', 'text-rose-600'],
+              ['Students Affected', '62', 'text-violet-700'],
+            ].map(([label, value, color]) => (
+              <div key={label} className="flex items-center justify-between text-sm">
+                <span className="font-medium text-slate-600">{label}</span>
+                <span className={`text-xl font-semibold ${color}`}>{value}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5">
+            <p className="text-sm font-medium text-slate-950">Top Related Roles</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {['Cloud Engineer', 'DevOps Engineer', 'Solutions Architect'].map((role) => <span key={role} className="rounded-full bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700">{role}</span>)}
+            </div>
+          </div>
+          <div className="mt-5">
+            <p className="text-sm font-medium text-slate-950">Example Topics</p>
+            <ul className="mt-2 space-y-2 text-sm leading-6 text-slate-600">
+              {['AWS / Azure / GCP', 'Docker & Kubernetes', 'Serverless Architecture', 'Cloud Security'].map((topic) => <li key={topic}>- {topic}</li>)}
+            </ul>
+          </div>
+          <button type="button" className="mt-7 w-full rounded-[8px] border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700 shadow-sm">Explore Interventions -&gt;</button>
+        </aside>
+      </section>
+
+      <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_42px_rgba(15,23,42,0.05)]">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-medium text-slate-950">Skills on the Rise</h2>
+            <p className="mt-1 text-sm text-slate-500">Fastest growing skills in the market over the last 12 months.</p>
+          </div>
+          <button type="button" className="hidden text-sm font-medium text-blue-700 sm:block">View all rising skills -&gt;</button>
+        </div>
+        <div className="mt-5 grid gap-3 md:grid-cols-3 xl:grid-cols-5">
+          {skillsOnRise.map(([skill, lift]) => (
+            <div key={skill} className="rounded-[8px] border border-blue-100 bg-blue-50/40 px-4 py-3">
+              <p className="text-sm font-medium text-slate-950">{skill}</p>
+              <p className="mt-1 text-sm font-semibold text-emerald-600">{lift}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function RecommendedActionsTab() {
+  return (
+    <div className="space-y-5">
+      <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px] 2xl:grid-cols-[minmax(0,1fr)_380px]">
+        <SectionCard
+          title="Recommended Actions"
+          subtitle="AI-curated actions to close skill gaps and improve graduate readiness."
+          action={
+            <div className="flex flex-wrap gap-2">
+              <button type="button" className="rounded-[8px] border border-slate-200 px-3 py-2 text-xs font-medium text-slate-600">All Priorities</button>
+              <button type="button" className="rounded-[8px] border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-700">Customize Actions</button>
+            </div>
+          }
+        >
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full min-w-[880px] text-left">
+              <thead>
+                <tr className="text-xs font-medium uppercase tracking-[0.12em] text-slate-400">
+                  <th className="rounded-l-[8px] bg-slate-50 px-3 py-3">Action</th>
+                  <th className="bg-slate-50 px-3 py-3">Addresses gap</th>
+                  <th className="bg-slate-50 px-3 py-3">Impact</th>
+                  <th className="bg-slate-50 px-3 py-3">Effort</th>
+                  <th className="bg-slate-50 px-3 py-3">Target students</th>
+                  <th className="rounded-r-[8px] bg-slate-50 px-3 py-3">Priority</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recommendedActions.map((row) => (
+                  <tr key={row.action}>
+                    <td className="border-b border-slate-100 px-3 py-4">
+                      <p className="text-sm font-medium text-slate-950">{row.action}</p>
+                      <p className="mt-1 text-xs font-semibold text-slate-400">{row.detail}</p>
+                    </td>
+                    <td className="border-b border-slate-100 px-3 py-4 text-sm font-medium text-blue-700">{row.gap}</td>
+                    <td className="border-b border-slate-100 px-3 py-4">
+                      <p className="text-sm font-medium text-slate-700">{row.impact}</p>
+                      <div className="mt-2"><CoverageBar value={row.impactScore} tone={row.priority === 'High' ? 'green' : 'orange'} /></div>
+                    </td>
+                    <td className="border-b border-slate-100 px-3 py-4 text-sm font-medium text-slate-600">{row.effort}</td>
+                    <td className="border-b border-slate-100 px-3 py-4 text-sm font-medium text-slate-950">{row.students}</td>
+                    <td className="border-b border-slate-100 px-3 py-4"><span className={`rounded-full px-3 py-1.5 text-xs font-medium ring-1 ${priorityClasses[row.priority]}`}>{row.priority}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <button type="button" className="mt-4 w-full rounded-[8px] border border-dashed border-blue-200 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50">+ Add Custom Action</button>
+        </SectionCard>
+
+        <aside className="space-y-5">
+          <section className="rounded-[8px] border border-violet-100 bg-gradient-to-br from-white via-violet-50/60 to-blue-50 p-5 shadow-[0_16px_42px_rgba(79,70,229,0.08)]">
+            <h2 className="text-lg font-medium text-slate-950">Expected Impact Summary</h2>
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <div className="rounded-[8px] bg-white/85 p-4 ring-1 ring-blue-100">
+                <p className="text-xs font-medium text-slate-400">Readiness Improvement</p>
+                <p className="mt-2 text-3xl font-semibold text-emerald-600">+14%</p>
+              </div>
+              <div className="rounded-[8px] bg-white/85 p-4 ring-1 ring-violet-100">
+                <p className="text-xs font-medium text-slate-400">Students Impacted</p>
+                <p className="mt-2 text-3xl font-semibold text-blue-700">230+</p>
+              </div>
+            </div>
+            <div className="mt-3 rounded-[8px] bg-white/85 p-4 ring-1 ring-slate-100">
+              <p className="text-xs font-medium text-slate-400">Estimated Time to Impact</p>
+              <p className="mt-1 text-xl font-semibold text-slate-950">3-6 months</p>
+            </div>
+          </section>
+
+          <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_42px_rgba(15,23,42,0.05)]">
+            <h2 className="text-lg font-medium text-slate-950">Action Resources</h2>
+            <div className="mt-4 space-y-3">
+              {[
+                ['Industry Partners Available', '12'],
+                ['Campus Resources', '8'],
+                ['Budget Estimate', 'Medium'],
+                ['Existing Courses to Leverage', '5'],
+              ].map(([label, value]) => (
+                <div key={label} className="flex items-center justify-between text-sm">
+                  <span className="font-semibold text-slate-500">{label}</span>
+                  <span className="font-semibold text-blue-700">{value}</span>
+                </div>
+              ))}
+            </div>
+            <Link to="/university/collaboration" className="mt-5 block rounded-[8px] bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white shadow-lg shadow-blue-100">
+              View in Collaboration Marketplace
+            </Link>
+          </section>
+        </aside>
+      </section>
+
+      <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_42px_rgba(15,23,42,0.05)]">
+        <h2 className="text-lg font-medium text-slate-950">Implementation Roadmap</h2>
+        <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {roadmap.map((stage, index) => (
+            <article key={stage.title} className="rounded-[8px] border border-slate-200 bg-slate-50/60 p-4">
+              <span className={`inline-flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ring-1 ${toneClasses[stage.tone]}`}>{index + 1}</span>
+              <h3 className="mt-3 text-sm font-semibold text-slate-950">{stage.title}</h3>
+              <p className="mt-1 text-xs font-medium text-slate-400">{stage.time}</p>
+              <ul className="mt-4 space-y-2 text-xs leading-5 text-slate-600">
+                {stage.items.map((item) => <li key={item}>- {item}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <div className="mt-5 rounded-[8px] bg-violet-50/70 p-4 ring-1 ring-violet-100">
+          <p className="text-sm font-semibold text-slate-950">Success Metrics to Track</p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+            {successMetrics.map((metric) => <span key={metric} className="rounded-full bg-white px-3 py-2 text-xs font-medium text-violet-700 ring-1 ring-violet-100">{metric}</span>)}
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+export default function CurriculumMarketAlignmentPage() {
+  const [activeTab, setActiveTab] = useState('skills')
+  const [showSkillsModal, setShowSkillsModal] = useState(false)
+  const [toast, setToast] = useState('')
+
+  function showToast(message) {
+    setToast(message)
+    window.setTimeout(() => setToast(''), 1800)
+  }
+
+  return (
+    <div className="mx-auto max-w-[1560px] space-y-6">
+      <header className="flex flex-col gap-5 border-b border-slate-200 pb-5 xl:flex-row xl:items-start xl:justify-between">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-blue-600">University Intelligence</p>
+          <h1 className="mt-2 text-3xl font-medium tracking-tight text-slate-950">Program-Market Alignment</h1>
+          <label className="mt-4 block w-fit">
+            <span className="text-xs font-medium text-slate-500">Program</span>
+            <button type="button" className="mt-2 flex h-11 min-w-[260px] items-center justify-between rounded-[8px] border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm">
+              BSc Computer Science
+              <span className="text-slate-400">v</span>
+            </button>
+          </label>
+        </div>
+        <div className="flex flex-wrap gap-3 xl:justify-end">
+          <HeaderButton onClick={() => setShowSkillsModal(true)}>Manage Program Skills</HeaderButton>
+          <HeaderButton onClick={() => showToast('Report sharing link copied.')}>Share Report</HeaderButton>
+        </div>
+      </header>
+
+      <nav className="flex gap-2 overflow-x-auto border-b border-slate-200">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setActiveTab(tab.id)}
+            className={`relative whitespace-nowrap px-5 py-3 text-sm font-medium transition ${
+              activeTab === tab.id ? 'text-blue-700' : 'text-slate-500 hover:text-slate-950'
+            }`}
+          >
+            {tab.label}
+            {activeTab === tab.id ? <span className="absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-blue-600" /> : null}
+          </button>
+        ))}
+      </nav>
+
+      {activeTab === 'skills' ? <SkillsAlignmentTab /> : null}
+      {activeTab === 'gaps' ? <EmergingGapsTab /> : null}
+      {activeTab === 'actions' ? <RecommendedActionsTab /> : null}
+
+      {showSkillsModal ? <ProgramSkillsModal onClose={() => setShowSkillsModal(false)} /> : null}
+      <ShareToast message={toast} />
+    </div>
+  )
+}
+

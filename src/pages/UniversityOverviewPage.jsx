@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const overviewMetrics = [
@@ -120,7 +120,7 @@ function GapCell({ gap }) {
 
   return (
     <div className="min-w-[112px]">
-      <span className={`text-sm font-bold ${isImportant ? 'text-rose-600' : gap < 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
+      <span className={`text-sm font-medium ${isImportant ? 'text-rose-600' : gap < 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
         {gap > 0 ? `+${gap}%` : `${gap}%`}
       </span>
       <div className="mt-2 h-2 rounded-full bg-slate-100">
@@ -136,8 +136,8 @@ function SkillSetupModal({ onClose }) {
       <section className="w-full max-w-xl rounded-[8px] border border-slate-200 bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.18)]">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-600">Program Skills Setup</p>
-            <h2 className="mt-2 text-xl font-bold text-slate-950">Manage Program Skills</h2>
+            <p className="text-xs font-medium uppercase tracking-[0.18em] text-blue-600">Program Skills Setup</p>
+            <h2 className="mt-2 text-xl font-medium text-slate-950">Manage Program Skills</h2>
             <p className="mt-2 text-sm leading-6 text-slate-500">
               Define course skill coverage so AI can compare curriculum signals with market demand.
             </p>
@@ -145,7 +145,7 @@ function SkillSetupModal({ onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-[8px] border border-slate-200 text-sm font-bold text-slate-500 hover:bg-slate-50"
+            className="flex h-9 w-9 items-center justify-center rounded-[8px] border border-slate-200 text-sm font-medium text-slate-500 hover:bg-slate-50"
             aria-label="Close program skills setup"
           >
             x
@@ -159,11 +159,11 @@ function SkillSetupModal({ onClose }) {
             'Manually adjust skill coverage',
           ].map((item, index) => (
             <div key={item} className="flex items-center gap-4 rounded-[8px] border border-slate-200 bg-slate-50/70 p-4">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-bold text-blue-700 ring-1 ring-blue-100">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-medium text-blue-700 ring-1 ring-blue-100">
                 {index + 1}
               </span>
               <div>
-                <p className="text-sm font-bold text-slate-950">{item}</p>
+                <p className="text-sm font-medium text-slate-950">{item}</p>
                 <p className="mt-1 text-xs text-slate-500">Placeholder workflow for the prototype.</p>
               </div>
             </div>
@@ -189,8 +189,8 @@ export default function UniversityOverviewPage() {
     <div className="mx-auto max-w-[1560px] space-y-6">
       <header className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
         <div className="max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">University Workspace</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">University Career Intelligence Hub</h1>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-blue-600">University Workspace</p>
+          <h1 className="mt-2 text-3xl font-medium tracking-tight text-slate-950">University Career Intelligence Hub</h1>
           <p className="mt-2 text-base leading-7 text-slate-500">
             AI-powered insights to strengthen curriculum relevance and graduate outcomes.
           </p>
@@ -199,7 +199,7 @@ export default function UniversityOverviewPage() {
           {filterOptions.map((label) => <FilterButton key={label} label={label} />)}
           <button
             type="button"
-            className="flex h-11 items-center rounded-[8px] bg-slate-950 px-4 text-sm font-bold text-white shadow-[0_12px_28px_rgba(15,23,42,0.16)] transition hover:bg-blue-700"
+            className="flex h-11 items-center rounded-[8px] bg-slate-950 px-4 text-sm font-medium text-white shadow-[0_12px_28px_rgba(15,23,42,0.16)] transition hover:bg-blue-700"
           >
             Export Report
           </button>
@@ -209,13 +209,13 @@ export default function UniversityOverviewPage() {
       <section className="rounded-[8px] border border-blue-100 bg-white/95 p-5 shadow-[0_18px_48px_rgba(30,64,175,0.08)]">
         <div className="flex flex-col gap-4 border-b border-slate-100 pb-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-950">Program Intelligence at a Glance</h2>
+            <h2 className="text-lg font-medium text-slate-950">Program Intelligence at a Glance</h2>
             <p className="mt-1 text-sm text-slate-500">One view of readiness, risk, market fit, and signal confidence.</p>
           </div>
           <button
             type="button"
             onClick={() => setShowSkillSetup(true)}
-            className="w-fit rounded-[8px] border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-bold text-blue-700 transition hover:border-blue-300 hover:bg-blue-100"
+            className="w-fit rounded-[8px] border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-medium text-blue-700 transition hover:border-blue-300 hover:bg-blue-100"
           >
             Manage Program Skills
           </button>
@@ -223,14 +223,14 @@ export default function UniversityOverviewPage() {
         <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
           {overviewMetrics.map((metric) => (
             <article key={metric.label} className="min-w-0 border-l border-slate-100 pl-4 first:border-l-0 first:pl-0 md:first:border-l md:first:pl-4 xl:first:border-l-0 xl:first:pl-0">
-              <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">{metric.label}</p>
+              <p className="text-xs font-medium uppercase tracking-[0.14em] text-slate-400">{metric.label}</p>
               <div className="mt-3 flex flex-wrap items-end gap-2">
-                <p className="text-2xl font-bold tracking-tight text-slate-950">{metric.value}</p>
-                <span className={`mb-1 rounded-full px-2.5 py-1 text-xs font-bold ring-1 ${metricToneClasses[metric.tone]}`}>
+                <p className="text-2xl font-medium tracking-tight text-slate-950">{metric.value}</p>
+                <span className={`mb-1 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ${metricToneClasses[metric.tone]}`}>
                   {metric.status}
                 </span>
               </div>
-              <p className="mt-2 text-sm font-bold text-emerald-600">{metric.change}</p>
+              <p className="mt-2 text-sm font-medium text-emerald-600">{metric.change}</p>
               <p className="mt-2 text-xs leading-5 text-slate-500">{metric.helper}</p>
             </article>
           ))}
@@ -241,17 +241,17 @@ export default function UniversityOverviewPage() {
         <section className="min-w-0 rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_18px_48px_rgba(15,23,42,0.06)]">
           <div className="flex flex-col gap-3 border-b border-slate-100 pb-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <h2 className="text-lg font-bold text-slate-950">Top Market Skills vs Program Coverage</h2>
+              <h2 className="text-lg font-medium text-slate-950">Top Market Skills vs Program Coverage</h2>
               <p className="mt-1 text-sm text-slate-500">Table-style intelligence view of demand, readiness, and intervention priority.</p>
             </div>
-            <span className="w-fit rounded-full bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700 ring-1 ring-violet-100">
+            <span className="w-fit rounded-full bg-violet-50 px-3 py-1.5 text-xs font-medium text-violet-700 ring-1 ring-violet-100">
               Live mock intelligence
             </span>
           </div>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[820px] border-separate border-spacing-0 text-left">
               <thead>
-                <tr className="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
+                <tr className="text-xs font-medium uppercase tracking-[0.12em] text-slate-400">
                   <th className="rounded-l-[8px] bg-slate-50 px-3 py-3">Rank</th>
                   <th className="bg-slate-50 px-3 py-3">Skill</th>
                   <th className="bg-slate-50 px-3 py-3">Market Demand</th>
@@ -263,13 +263,13 @@ export default function UniversityOverviewPage() {
               <tbody>
                 {marketSkills.map((row) => (
                   <tr key={row.skill} className="border-b border-slate-100">
-                    <td className="border-b border-slate-100 px-3 py-4 text-sm font-bold text-slate-500">{row.rank}</td>
-                    <td className="border-b border-slate-100 px-3 py-4 text-sm font-bold text-slate-950">{row.skill}</td>
+                    <td className="border-b border-slate-100 px-3 py-4 text-sm font-medium text-slate-500">{row.rank}</td>
+                    <td className="border-b border-slate-100 px-3 py-4 text-sm font-medium text-slate-950">{row.skill}</td>
                     <td className="border-b border-slate-100 px-3 py-4"><ProgressCell value={row.demand} tone="blue" /></td>
                     <td className="border-b border-slate-100 px-3 py-4"><ProgressCell value={row.coverage} tone="green" /></td>
                     <td className="border-b border-slate-100 px-3 py-4"><GapCell gap={row.gap} /></td>
                     <td className="border-b border-slate-100 px-3 py-4">
-                      <span className={`rounded-full px-3 py-1.5 text-xs font-bold ring-1 ${priorityClasses[row.priority]}`}>
+                      <span className={`rounded-full px-3 py-1.5 text-xs font-medium ring-1 ${priorityClasses[row.priority]}`}>
                         {row.priority}
                       </span>
                     </td>
@@ -285,25 +285,25 @@ export default function UniversityOverviewPage() {
 
         <aside className="rounded-[8px] border border-violet-100 bg-gradient-to-br from-white via-violet-50/60 to-blue-50 p-5 shadow-[0_18px_48px_rgba(79,70,229,0.1)]">
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-[8px] bg-white text-sm font-black text-violet-700 shadow-sm ring-1 ring-violet-100">
+            <span className="flex h-11 w-11 items-center justify-center rounded-[8px] bg-white text-sm font-semibold text-violet-700 shadow-sm ring-1 ring-violet-100">
               AI
             </span>
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-600">AI University Advisor</p>
-              <h2 className="text-lg font-bold text-slate-950">Key Insight</h2>
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-violet-600">AI University Advisor</p>
+              <h2 className="text-lg font-medium text-slate-950">Key Insight</h2>
             </div>
           </div>
           <p className="mt-5 text-sm leading-6 text-slate-600">
             Your program excels in core technical skills, but significant gaps in Cloud and MLOps are limiting graduate readiness for high-demand roles.
           </p>
           <div className="mt-6">
-            <h3 className="text-sm font-bold text-slate-950">Recommended Focus</h3>
+            <h3 className="text-sm font-medium text-slate-950">Recommended Focus</h3>
             <div className="mt-3 space-y-3">
               {advisorFocus.map((item) => (
                 <div key={item.title} className="rounded-[8px] border border-white bg-white/80 p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-3">
-                    <p className="text-sm font-bold text-slate-950">{item.title}</p>
-                    <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ${metricToneClasses[item.tone]}`}>
+                    <p className="text-sm font-medium text-slate-950">{item.title}</p>
+                    <span className={`rounded-full px-2.5 py-1 text-[11px] font-medium ring-1 ${metricToneClasses[item.tone]}`}>
                       {item.impact}
                     </span>
                   </div>
@@ -313,14 +313,14 @@ export default function UniversityOverviewPage() {
             </div>
           </div>
           <div className="mt-6 rounded-[8px] border border-blue-100 bg-white/85 p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Potential Impact</p>
-            <p className="mt-2 text-3xl font-black text-blue-700">+14%</p>
+            <p className="text-xs font-medium uppercase tracking-[0.14em] text-slate-400">Potential Impact</p>
+            <p className="mt-2 text-3xl font-semibold text-blue-700">+14%</p>
             <p className="mt-1 text-sm font-semibold text-slate-600">readiness improvement</p>
             <p className="mt-1 text-xs text-slate-500">Estimated: 3-6 months</p>
           </div>
           <button
             type="button"
-            className="mt-5 w-full rounded-[8px] bg-blue-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-blue-100 transition hover:bg-blue-700"
+            className="mt-5 w-full rounded-[8px] bg-blue-600 px-4 py-3 text-sm font-medium text-white shadow-lg shadow-blue-100 transition hover:bg-blue-700"
           >
             View full AI recommendations
           </button>
@@ -329,13 +329,13 @@ export default function UniversityOverviewPage() {
 
       <section className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
         <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
-          <h2 className="text-lg font-bold text-slate-950">Program Strengths vs Emerging Weaknesses</h2>
+          <h2 className="text-lg font-medium text-slate-950">Program Strengths vs Emerging Weaknesses</h2>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             <div className="rounded-[8px] border border-emerald-100 bg-emerald-50/60 p-4">
-              <p className="text-sm font-bold text-emerald-800">What We Do Well</p>
+              <p className="text-sm font-medium text-emerald-800">What We Do Well</p>
               <div className="mt-4 space-y-3">
                 {strengths.map((item) => (
-                  <div key={item} className="flex items-center justify-between rounded-[8px] bg-white px-3 py-3 text-sm font-bold text-slate-800 ring-1 ring-emerald-100">
+                  <div key={item} className="flex items-center justify-between rounded-[8px] bg-white px-3 py-3 text-sm font-medium text-slate-800 ring-1 ring-emerald-100">
                     <span>{item}</span>
                     <span className="text-emerald-600">Strong</span>
                   </div>
@@ -343,10 +343,10 @@ export default function UniversityOverviewPage() {
               </div>
             </div>
             <div className="rounded-[8px] border border-rose-100 bg-rose-50/55 p-4">
-              <p className="text-sm font-bold text-rose-800">What We Need To Improve</p>
+              <p className="text-sm font-medium text-rose-800">What We Need To Improve</p>
               <div className="mt-4 space-y-3">
                 {weaknesses.map((item) => (
-                  <div key={item} className="flex items-center justify-between rounded-[8px] bg-white px-3 py-3 text-sm font-bold text-slate-800 ring-1 ring-rose-100">
+                  <div key={item} className="flex items-center justify-between rounded-[8px] bg-white px-3 py-3 text-sm font-medium text-slate-800 ring-1 ring-rose-100">
                     <span>{item}</span>
                     <span className="text-rose-600">Gap</span>
                   </div>
@@ -359,10 +359,10 @@ export default function UniversityOverviewPage() {
         <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-lg font-bold text-slate-950">Recommended Interventions</h2>
+              <h2 className="text-lg font-medium text-slate-950">Recommended Interventions</h2>
               <p className="mt-1 text-sm text-slate-500">Concrete actions mapped to the most urgent coverage gaps.</p>
             </div>
-            <Link to="/university/collaboration" className="text-sm font-bold text-blue-700">
+            <Link to="/university/collaboration" className="text-sm font-medium text-blue-700">
               Go to Collaboration Marketplace -&gt;
             </Link>
           </div>
@@ -371,10 +371,10 @@ export default function UniversityOverviewPage() {
               <article key={item.title} className="rounded-[8px] border border-slate-200 bg-white p-4 shadow-sm transition hover:border-blue-200 hover:shadow-md">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-950">{item.title}</h3>
+                    <h3 className="text-sm font-medium text-slate-950">{item.title}</h3>
                     <p className="mt-2 text-xs font-semibold text-slate-500">{item.duration}</p>
                   </div>
-                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ${metricToneClasses[item.tone]}`}>
+                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-medium ring-1 ${metricToneClasses[item.tone]}`}>
                     {item.impact}
                   </span>
                 </div>
@@ -388,3 +388,4 @@ export default function UniversityOverviewPage() {
     </div>
   )
 }
+

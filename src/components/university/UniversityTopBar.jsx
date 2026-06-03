@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import SignOutButton from '../session/SignOutButton'
 
 export default function UniversityTopBar() {
@@ -27,3 +27,4 @@ export default function UniversityTopBar() {
     </header>
   )
 }
+
