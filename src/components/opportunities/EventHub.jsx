@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { eventHub } from '../../data/mockData'
 import EventDetail from './EventDetail'
+import { useCareerStore } from '../../store/useCareerStore'
+import MyCareerCalendarModal from '../calendar/MyCareerCalendarModal'
 
 // All data lives in mockData.js → eventHub. Swap that object with the AI
 // backend response when ready; the components below read whatever shape arrives.
@@ -1413,6 +1415,9 @@ function normalizeUpcomingForDetail(item) {
 
 // ─── main composition ─────────────────────────────────────────────────
 export default function EventHub() {
+  const { myEvents } = useCareerStore()
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false)
+
   // Search + sector filter live here so every downstream list reacts.
   const [search, setSearch] = useState('')
   const [sectorId, setSectorId] = useState('all')
@@ -1438,7 +1443,42 @@ export default function EventHub() {
     [],
   )
   const recommendedSmall = useMemo(() => eventHub.recommendedSmall.filter(matches), [search, sectorId])
-  const upcoming = useMemo(() => eventHub.upcoming.filter(matches), [search, sectorId])
+
+  const upcoming = useMemo(() => {
+    return myEvents
+      .filter((event) => {
+        const match = matchesQuery(event, search) && matchesSector(event, sectorId);
+        return match && event.status !== 'Completed';
+      })
+      .map((event) => {
+        const parts = event.date.split('-');
+        const day = parts[2];
+        const monthIndex = parseInt(parts[1], 10) - 1;
+        const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+        const month = months[monthIndex] || 'MAY';
+        
+        const toneMap = { Registered: 'violet', Saved: 'teal', Waitlisted: 'amber', Completed: 'emerald' };
+        const statusToneMap = { Registered: 'violet', Saved: 'slate', Waitlisted: 'rose', Completed: 'emerald' };
+
+        const diffTime = new Date(event.date).getTime() - new Date(2025, 4, 14).getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const countdown = diffDays === 0 ? 'Today' : diffDays > 0 ? `In ${diffDays} days` : `${Math.abs(diffDays)} days ago`;
+
+        return {
+          ...event,
+          day,
+          month,
+          tone: toneMap[event.status] || 'violet',
+          statusTone: statusToneMap[event.status] || 'slate',
+          countdown,
+          meta: [
+            { icon: event.location.toLowerCase().includes('online') ? '🌐' : '📍', text: event.location },
+            { icon: '🕘', text: event.time },
+            { icon: '👥', text: event.status === 'Registered' ? '1,250 going' : '842 going' }
+          ]
+        };
+      });
+  }, [myEvents, search, sectorId]);
   const featuredMatches = matches(eventHub.recommendedFeatured)
 
   const isFiltered = Boolean(search) || sectorId !== 'all'
@@ -1523,7 +1563,12 @@ export default function EventHub() {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
         <section>
-          <SectionHeader icon="🗓" title="Your Upcoming Events" link="Full calendar" />
+          <SectionHeader
+            icon="🗓"
+            title="Your Upcoming Events"
+            link="Full calendar"
+            onLinkClick={() => setIsCalendarModalOpen(true)}
+          />
           <div className="space-y-3">
             {upcoming.length > 0 ? (
               upcoming.map((item) => <UpcomingItem key={item.id} item={item} onSelect={openDetail} />)
@@ -1567,6 +1612,12 @@ export default function EventHub() {
         title="Recommended Events"
         icon="✨"
         subtitle="Browse personalized events matched to your skills, goals, and career direction."
+      />
+
+      <MyCareerCalendarModal
+        isOpen={isCalendarModalOpen}
+        onClose={() => setIsCalendarModalOpen(false)}
+        onOpenEventDetail={openDetail}
       />
     </div>
   )
