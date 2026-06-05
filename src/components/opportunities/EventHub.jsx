@@ -886,6 +886,147 @@ const EXTRA_TRENDING_EVENTS = [
   },
 ]
 
+const EXTRA_RECOMMENDED_EVENTS = [
+  {
+    id: 'evt-rec-modal-5',
+    type: 'Workshop',
+    typeColor: 'teal',
+    thumbGradient: 'from-teal-100 to-emerald-200',
+    iconBg: 'bg-teal-500/20',
+    emoji: '🧩',
+    org: 'Product School',
+    title: 'Product Analytics Bootcamp',
+    date: '25 May 2025',
+    location: 'Online',
+    goingCount: 286,
+    goingLabel: 'going',
+    matchPercent: 89,
+    sector: 'business',
+    tags: ['Product', 'Analytics', 'Metrics'],
+    category: 'workshops',
+    format: 'Online',
+    industry: 'Technology',
+    daysLeft: 7,
+    createdOrder: 9,
+    ctaLabel: 'Register',
+  },
+  {
+    id: 'evt-rec-modal-6',
+    type: 'Case Comp',
+    typeColor: 'rose',
+    thumbGradient: 'from-rose-100 to-orange-200',
+    iconBg: 'bg-rose-500/15',
+    emoji: '📈',
+    org: 'CIMB Future Leaders',
+    title: 'Fintech Strategy Case Challenge',
+    date: '27 May 2025',
+    location: 'Hybrid',
+    goingCount: 198,
+    goingLabel: 'joined',
+    matchPercent: 83,
+    sector: 'finance',
+    tags: ['Finance', 'Strategy', 'Pitching'],
+    category: 'case-competitions',
+    format: 'Hybrid',
+    industry: 'Finance',
+    daysLeft: 9,
+    createdOrder: 8,
+    ctaLabel: 'Register',
+  },
+  {
+    id: 'evt-rec-modal-7',
+    type: 'Talk',
+    typeColor: 'blue',
+    thumbGradient: 'from-blue-100 to-indigo-200',
+    iconBg: 'bg-blue-500/20',
+    emoji: '🎙️',
+    org: 'Grab Data Guild',
+    title: 'From SQL to Business Impact',
+    date: '29 May 2025',
+    location: 'Online',
+    goingCount: 341,
+    goingLabel: 'going',
+    matchPercent: 92,
+    sector: 'data',
+    tags: ['SQL', 'Data Storytelling', 'Analytics'],
+    category: 'talks',
+    format: 'Online',
+    industry: 'Technology',
+    daysLeft: 11,
+    createdOrder: 7,
+    ctaLabel: 'Register',
+  },
+  {
+    id: 'evt-rec-modal-8',
+    type: 'Networking',
+    typeColor: 'emerald',
+    thumbGradient: 'from-emerald-100 to-teal-200',
+    iconBg: 'bg-emerald-500/20',
+    emoji: '☕',
+    org: 'Taylor Alumni Network',
+    title: 'Analytics Alumni Coffee Chats',
+    date: '30 May 2025',
+    location: 'Kuala Lumpur',
+    goingCount: 96,
+    goingLabel: 'going',
+    matchPercent: 77,
+    sector: 'data',
+    tags: ['Mentorship', 'Analytics', 'Networking'],
+    category: 'networking',
+    format: 'Physical',
+    industry: 'Technology',
+    daysLeft: 12,
+    createdOrder: 6,
+    ctaLabel: 'Join Waitlist',
+  },
+  {
+    id: 'evt-rec-modal-9',
+    type: 'Webinar',
+    typeColor: 'teal',
+    thumbGradient: 'from-cyan-100 to-blue-200',
+    iconBg: 'bg-cyan-500/20',
+    emoji: '🩺',
+    org: 'HealthTech Malaysia',
+    title: 'Data Careers in Digital Healthcare',
+    date: '1 Jun 2025',
+    location: 'Online',
+    goingCount: 164,
+    goingLabel: 'going',
+    matchPercent: 72,
+    sector: 'data',
+    tags: ['Healthcare', 'Data', 'Career'],
+    category: 'webinars',
+    format: 'Online',
+    industry: 'Healthcare',
+    daysLeft: 14,
+    createdOrder: 5,
+    ctaLabel: 'Join Waitlist',
+  },
+  {
+    id: 'evt-rec-modal-10',
+    type: 'Hackathon',
+    typeColor: 'violet',
+    thumbGradient: 'from-violet-100 to-fuchsia-200',
+    iconBg: 'bg-violet-500/20',
+    emoji: '💻',
+    org: 'AWS Cloud Club',
+    title: 'Serverless Student Build Day',
+    date: '3 Jun 2025',
+    location: 'Online',
+    goingCount: 275,
+    goingLabel: 'joined',
+    matchPercent: 85,
+    sector: 'computer-science',
+    tags: ['AWS', 'Serverless', 'Cloud'],
+    category: 'hackathons',
+    format: 'Online',
+    industry: 'Technology',
+    daysLeft: 16,
+    createdOrder: 4,
+    ctaLabel: 'Register',
+  },
+]
+
 function categoryForType(type) {
   const normalized = type?.toLowerCase()
   if (normalized?.includes('hack')) return 'hackathons'
@@ -922,6 +1063,31 @@ function enrichTrendingEvent(event, index) {
     createdOrder: event.createdOrder ?? 20 - index,
     ctaLabel: event.ctaLabel ?? (event.matchPercent >= 90 ? 'Register' : 'Join Waitlist'),
   }
+}
+
+function normalizeRecommendedEvent(event, index) {
+  const isFeatured = Boolean(event.ctaLabel)
+  const normalizedType = event.type ?? (event.title?.toLowerCase().includes('hackathon') ? 'Hackathon' : 'Workshop')
+  const locationText = event.location ?? event.date?.split('·')[1]?.trim() ?? 'Online'
+  return enrichTrendingEvent(
+    {
+      ...event,
+      type: normalizedType,
+      typeColor: event.typeColor ?? (normalizedType === 'Hackathon' ? 'violet' : 'teal'),
+      thumbGradient: event.thumbGradient ?? 'from-violet-100 to-indigo-200',
+      iconBg: event.iconBg ?? 'bg-violet-500/20',
+      emoji: event.emoji ?? '✨',
+      date: event.date?.replace('· Offline', '2025').replace('· Online', '2025') ?? 'Upcoming',
+      location: locationText === 'Offline' ? 'Kuala Lumpur' : locationText,
+      goingCount: event.goingCount ?? (isFeatured ? 1250 : 180 + index * 37),
+      goingLabel: event.goingLabel ?? (isFeatured ? 'going' : 'going'),
+      tags: event.tags ?? [event.sector ?? 'Career', 'Recommended'],
+      ctaLabel: event.ctaLabel ?? ((event.matchPercent ?? 0) >= 85 ? 'Register' : 'Join Waitlist'),
+      daysLeft: event.daysLeft ?? index + 3,
+      createdOrder: event.createdOrder ?? 16 - index,
+    },
+    index,
+  )
 }
 
 function FilterChip({ label, active, onClick }) {
@@ -1092,7 +1258,15 @@ function TrendingModalCard({ event, index, onSelect }) {
   )
 }
 
-function AllTrendingEventsModal({ isOpen, onClose, events, onSelect }) {
+function AllTrendingEventsModal({
+  isOpen,
+  onClose,
+  events,
+  onSelect,
+  title = 'All Trending Events',
+  icon = '🔥',
+  subtitle = "Explore what's trending in your community and beyond.",
+}) {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('all')
   const [format, setFormat] = useState('All')
@@ -1141,20 +1315,20 @@ function AllTrendingEventsModal({ isOpen, onClose, events, onSelect }) {
   }, [category, date, events, format, industry, matchScore, query, sort])
 
   return (
-    <ModalShell isOpen={isOpen} onClose={onClose} titleId="all-trending-events-title">
+    <ModalShell isOpen={isOpen} onClose={onClose} titleId="event-discovery-modal-title">
       <div className="shrink-0 border-b border-slate-100 bg-white px-5 py-5 sm:px-7">
         <div className="flex items-start gap-4">
           <div className="flex-1">
-            <h2 id="all-trending-events-title" className="flex items-center gap-2 text-xl font-extrabold text-slate-950 sm:text-2xl">
-              <span aria-hidden>🔥</span>
-              All Trending Events
+            <h2 id="event-discovery-modal-title" className="flex items-center gap-2 text-xl font-extrabold text-slate-950 sm:text-2xl">
+              <span aria-hidden>{icon}</span>
+              {title}
             </h2>
-            <p className="mt-2 text-sm text-slate-500">Explore what's trending in your community and beyond.</p>
+            <p className="mt-2 text-sm text-slate-500">{subtitle}</p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close all trending events"
+            aria-label={`Close ${title}`}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-xl leading-none text-slate-500 transition hover:border-slate-300 hover:text-slate-900"
           >
             ×
@@ -1246,12 +1420,21 @@ export default function EventHub() {
   // When set, render the EventDetail view instead of the hub.
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [isTrendsModalOpen, setIsTrendsModalOpen] = useState(false)
+  const [isRecommendedModalOpen, setIsRecommendedModalOpen] = useState(false)
 
   const matches = (event) => matchesQuery(event, search) && matchesSector(event, sectorId)
 
   const trending = useMemo(() => eventHub.trending.filter(matches), [search, sectorId])
   const allTrendingEvents = useMemo(
     () => [...eventHub.trending, ...EXTRA_TRENDING_EVENTS].map(enrichTrendingEvent),
+    [],
+  )
+  const allRecommendedEvents = useMemo(
+    () => [
+      eventHub.recommendedFeatured,
+      ...eventHub.recommendedSmall,
+      ...EXTRA_RECOMMENDED_EVENTS,
+    ].map(normalizeRecommendedEvent),
     [],
   )
   const recommendedSmall = useMemo(() => eventHub.recommendedSmall.filter(matches), [search, sectorId])
@@ -1262,6 +1445,7 @@ export default function EventHub() {
 
   const openDetail = (event) => {
     setIsTrendsModalOpen(false)
+    setIsRecommendedModalOpen(false)
     setSelectedEvent(normalizeUpcomingForDetail(event))
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -1308,7 +1492,12 @@ export default function EventHub() {
       </section>
 
       <section>
-        <SectionHeader icon="✨" title="Recommended for You" link="See all" />
+        <SectionHeader
+          icon="✨"
+          title="Recommended for You"
+          link="See all"
+          onLinkClick={() => setIsRecommendedModalOpen(true)}
+        />
         {featuredMatches || recommendedSmall.length > 0 ? (
           <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr_1fr]">
             {featuredMatches ? (
@@ -1368,6 +1557,16 @@ export default function EventHub() {
         onClose={() => setIsTrendsModalOpen(false)}
         events={allTrendingEvents}
         onSelect={openDetail}
+      />
+
+      <AllTrendingEventsModal
+        isOpen={isRecommendedModalOpen}
+        onClose={() => setIsRecommendedModalOpen(false)}
+        events={allRecommendedEvents}
+        onSelect={openDetail}
+        title="Recommended Events"
+        icon="✨"
+        subtitle="Browse personalized events matched to your skills, goals, and career direction."
       />
     </div>
   )
