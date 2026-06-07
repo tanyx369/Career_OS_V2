@@ -1,10 +1,6 @@
 import React from 'react';
 
-interface DeadlineWidgetProps {
-  onSelectDate: (date: string) => void;
-}
-
-export default function DeadlineWidget({ onSelectDate }: DeadlineWidgetProps) {
+export default function DeadlineWidget({ onSelectDate }) {
   const deadlines = [
     {
       id: 'dl-mckinsey',

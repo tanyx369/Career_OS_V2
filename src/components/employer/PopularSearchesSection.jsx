@@ -1,16 +1,10 @@
-
-
-interface PopularSearchesSectionProps {
-  onSelectSkill: (skill: string) => void;
-  onSelectRole: (role: string) => void;
-  onSelectSearch: (search: string) => void;
-}
+import React from 'react';
 
 export default function PopularSearchesSection({
   onSelectSkill,
   onSelectRole,
   onSelectSearch,
-}: PopularSearchesSectionProps) {
+}) {
   const popularSkills = ['SQL', 'Python', 'Tableau', 'React', 'Leadership'];
   const popularRoles = ['Data Analyst', 'Product Analyst', 'Frontend Engineer', 'UX Designer'];
   const recommendedSearches = [

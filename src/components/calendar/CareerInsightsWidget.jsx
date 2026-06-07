@@ -1,11 +1,6 @@
 import React, { useMemo } from 'react';
-import { CalendarEvent } from './CalendarTypes';
 
-interface CareerInsightsWidgetProps {
-  events: CalendarEvent[];
-}
-
-export default function CareerInsightsWidget({ events }: CareerInsightsWidgetProps) {
+export default function CareerInsightsWidget({ events }) {
   const mockToday = useMemo(() => new Date(2025, 4, 14), []);
 
   const insights = useMemo(() => {
@@ -31,7 +26,7 @@ export default function CareerInsightsWidget({ events }: CareerInsightsWidgetPro
     }).length;
 
     // Most active category
-    const categoryCounts: Record<string, number> = {};
+    const categoryCounts = {};
     events.forEach((e) => {
       const cat = e.category || 'workshops';
       categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;

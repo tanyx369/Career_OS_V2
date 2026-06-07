@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import SignOutButton from '../session/SignOutButton'
+import { useEmployerSearchStore } from '../../store/useEmployerSearchStore'
 
 const navItems = [
   { label: 'Talent Discovery', path: '/employer/talent', aliases: ['/employer'], icon: 'search' },
@@ -33,6 +34,7 @@ function SidebarIcon({ name }) {
 
 export default function EmployerSidebar() {
   const location = useLocation()
+  const shortlistedIds = useEmployerSearchStore((state) => state.shortlistedIds)
 
   return (
     <aside className="hidden h-screen w-72 shrink-0 border-r border-slate-200/80 bg-white px-4 py-5 shadow-[8px_0_30px_rgba(15,23,42,0.03)] lg:flex lg:flex-col">
@@ -75,7 +77,7 @@ export default function EmployerSidebar() {
           className="flex items-center justify-between rounded-[8px] px-4 py-3 text-sm font-normal leading-5 text-slate-600 hover:bg-slate-50"
         >
           <span className="flex items-center gap-3"><span className="flex h-6 w-6 items-center justify-center"><SidebarIcon name="users" /></span> Shortlists</span>
-          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">8</span>
+          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">{shortlistedIds.size}</span>
         </NavLink>
       </div>
       <nav className="mt-auto space-y-2 border-t border-slate-100 pt-5">

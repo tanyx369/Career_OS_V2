@@ -1,12 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useEmployerSearchStore } from '../../store/useEmployerSearchStore';
 import SearchDropdown from './SearchDropdown';
 
 export default function GlobalEmployerSearch() {
   const location = useLocation();
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef(null);
+  const inputRef = useRef(null);
 
   const {
     searchQuery,
@@ -20,7 +20,7 @@ export default function GlobalEmployerSearch() {
   const [isOpen, setIsOpen] = useState(false);
 
   // Determine active view page based on route URL path
-  const getActivePage = (): 'talent' | 'insights' | 'engagement' => {
+  const getActivePage = () => {
     const path = location.pathname;
     if (path.includes('/insights')) return 'insights';
     if (path.includes('/posting')) return 'engagement';
@@ -31,8 +31,8 @@ export default function GlobalEmployerSearch() {
 
   // Close dropdown on click outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
@@ -42,10 +42,10 @@ export default function GlobalEmployerSearch() {
 
   // Close on Escape key
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         setIsOpen(false);
-        inputRef.current?.blur();
+        if (inputRef.current) inputRef.current.blur();
       }
     };
     document.addEventListener('keydown', handleKeyDown);
@@ -53,7 +53,7 @@ export default function GlobalEmployerSearch() {
   }, []);
 
   // Context-aware candidate selection action
-  const handleSelectCandidate = (candidateId: string, name: string) => {
+  const handleSelectCandidate = (candidateId, name) => {
     addChip(activePage, { type: 'candidate', value: name });
     addRecentSearch(name);
     setSearchQuery('');
@@ -64,21 +64,21 @@ export default function GlobalEmployerSearch() {
     window.dispatchEvent(selectEvent);
   };
 
-  const handleSelectSkill = (skill: string) => {
+  const handleSelectSkill = (skill) => {
     addChip(activePage, { type: 'skill', value: skill });
     addRecentSearch(skill);
     setSearchQuery('');
     setIsOpen(false);
   };
 
-  const handleSelectRole = (role: string) => {
+  const handleSelectRole = (role) => {
     addChip(activePage, { type: 'role', value: role });
     addRecentSearch(role);
     setSearchQuery('');
     setIsOpen(false);
   };
 
-  const handleSelectRecentSearch = (search: string) => {
+  const handleSelectRecentSearch = (search) => {
     setSearchQuery(search);
   };
 

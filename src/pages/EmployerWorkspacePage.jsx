@@ -4,65 +4,8 @@ import { useEmployerSearchStore } from '../store/useEmployerSearchStore';
 
 const tabs = ['Profile Fit', 'Skills', 'Experience', 'Projects', 'Evidence', 'Activity'];
 
-
-
-interface FitScore {
-  label: string;
-  value: number;
-}
-
-interface Evidence {
-  skill: string;
-  source: string;
-  detail: string;
-  confidence: number;
-}
-
-interface ExperienceItem {
-  title: string;
-  org: string;
-  period: string;
-  impact: string;
-}
-
-interface ProjectItem {
-  title: string;
-  proof: string;
-  outcome: string;
-}
-
-interface ProfileStat {
-  label: string;
-  value: string;
-}
-
-interface Candidate {
-  id: string;
-  name: string;
-  targetRole: string;
-  university: string;
-  location: string;
-  availability: string;
-  match: number;
-  shortlisted: boolean;
-  evidenceCount: number;
-  trustScore: number;
-  lastSignal: string;
-  topSkills: string[];
-  summary: string;
-  fitScores: FitScore[];
-  fitReasons: string[];
-  potentialGap: string;
-  nextSteps: string[];
-  profileStats: ProfileStat[];
-  evidenceTrace: Evidence[];
-  experience: ExperienceItem[];
-  projects: ProjectItem[];
-  activity: string[];
-}
-
-function SkillPill({ children, tone = 'blue' }: { children: React.ReactNode; tone?: string }) {
-  const tones: Record<string, string> = {
+function SkillPill({ children, tone = 'blue' }) {
+  const tones = {
     blue: 'bg-blue-50 text-blue-700 ring-blue-100',
     green: 'bg-emerald-50 text-emerald-700 ring-emerald-100',
     violet: 'bg-violet-50 text-violet-700 ring-violet-100',
@@ -77,7 +20,7 @@ function SkillPill({ children, tone = 'blue' }: { children: React.ReactNode; ton
   );
 }
 
-function CandidateAvatar({ name, selected, large = false }: { name: string; selected: boolean; large?: boolean }) {
+function CandidateAvatar({ name, selected, large = false }) {
   const initials = name
     .split(' ')
     .map((part) => part[0])
@@ -91,27 +34,6 @@ function CandidateAvatar({ name, selected, large = false }: { name: string; sele
       <span className="absolute bottom-1 right-1 h-3 w-3 rounded-full border-2 border-white bg-emerald-500" />
     </div>
   );
-}
-
-type SortOption = 'bestMatch' | 'highestHiringPotential' | 'highestSkillGrowth' | 'recentlyActive' | 'mostExperienced' | 'newestGraduates' | 'leadership';
-
-interface CandidateStreamProps {
-  candidates: Candidate[];
-  selectedId: string;
-  shortlistedIds: Set<string>;
-  savedIds: Set<string>;
-  selectedTab: 'all' | 'shortlisted';
-  selectedSort: SortOption;
-  searchQuery: string;
-  isSortDropdownOpen: boolean;
-  onSelect: (candidateId: string) => void;
-  onToggleShortlist: (candidateId: string) => void;
-  onToggleSave: (candidateId: string) => void;
-  onTabChange: (tab: 'all' | 'shortlisted') => void;
-  onSortChange: (sort: SortOption) => void;
-  onSearchChange: (query: string) => void;
-  onToggleSortDropdown: () => void;
-  onCloseSortDropdown: () => void;
 }
 
 function CandidateStream({
@@ -131,13 +53,13 @@ function CandidateStream({
   onSearchChange,
   onToggleSortDropdown,
   onCloseSortDropdown,
-}: CandidateStreamProps) {
-  const dropdownRef = useRef<HTMLDivElement>(null);
+}) {
+  const dropdownRef = useRef(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         onCloseSortDropdown();
       }
     };
@@ -147,7 +69,7 @@ function CandidateStream({
 
   // Keyboard accessibility: Escape to close sort dropdown
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         onCloseSortDropdown();
       }
@@ -221,15 +143,15 @@ function CandidateStream({
       }
       if (selectedSort === 'recentlyActive') {
         // Mock activity recency
-        const recencyRank: Record<string, number> = { 'alyssa-tan': 4, 'daniel-lim': 3, 'mei-wong': 2, 'hakim-ridwan': 1 };
+        const recencyRank = { 'alyssa-tan': 4, 'daniel-lim': 3, 'mei-wong': 2, 'hakim-ridwan': 1 };
         return (recencyRank[b.id] || 0) - (recencyRank[a.id] || 0);
       }
       if (selectedSort === 'mostExperienced') {
-        const getExpYears = (c: Candidate) => parseFloat(c.profileStats[0]?.value.replace(/[^\d.]/g, '') || '0');
+        const getExpYears = (c) => parseFloat(c.profileStats[0]?.value.replace(/[^\d.]/g, '') || '0');
         return getExpYears(b) - getExpYears(a);
       }
       if (selectedSort === 'newestGraduates') {
-        const getExpYears = (c: Candidate) => parseFloat(c.profileStats[0]?.value.replace(/[^\d.]/g, '') || '0');
+        const getExpYears = (c) => parseFloat(c.profileStats[0]?.value.replace(/[^\d.]/g, '') || '0');
         return getExpYears(a) - getExpYears(b);
       }
       if (selectedSort === 'leadership') {
@@ -241,7 +163,7 @@ function CandidateStream({
     });
   }, [candidates, searchQuery, activeChips, selectedTab, shortlistedIds, selectedSort]);
 
-  const sortOptions: { value: SortOption; label: string }[] = [
+  const sortOptions = [
     { value: 'bestMatch', label: 'Best Match' },
     { value: 'highestHiringPotential', label: 'Highest Hiring Potential' },
     { value: 'highestSkillGrowth', label: 'Highest Skill Growth' },
@@ -251,7 +173,7 @@ function CandidateStream({
     { value: 'leadership', label: 'Most Leadership Experience' },
   ];
 
-  const sortLabels: Record<SortOption, string> = {
+  const sortLabels = {
     bestMatch: 'Best Match',
     highestHiringPotential: 'Highest Hiring Potential',
     highestSkillGrowth: 'Highest Skill Growth',
@@ -261,7 +183,7 @@ function CandidateStream({
     leadership: 'Most Leadership Experience',
   };
 
-  const sortExplanations: Record<SortOption, string> = {
+  const sortExplanations = {
     bestMatch: 'Candidates ranked by how closely their skills and experience match the role requirements.',
     highestHiringPotential: 'Candidates predicted to perform best based on skills, projects, communication indicators, and past achievements.',
     highestSkillGrowth: 'Candidates showing the fastest rate of skill acquisition and portfolio updates.',
@@ -490,15 +412,7 @@ function CandidateStream({
   );
 }
 
-interface CandidateHeaderProps {
-  candidate: Candidate;
-  shortlisted: boolean;
-  saved: boolean;
-  onToggleShortlist: () => void;
-  onToggleSave: () => void;
-}
-
-function CandidateHeader({ candidate, shortlisted, saved, onToggleShortlist, onToggleSave }: CandidateHeaderProps) {
+function CandidateHeader({ candidate, shortlisted, saved, onToggleShortlist, onToggleSave }) {
   return (
     <header className="border-b border-slate-100 px-6 py-6">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
@@ -558,10 +472,6 @@ function TabNav({
   activeTab,
   candidate,
   onChange,
-}: {
-  activeTab: string;
-  candidate: Candidate;
-  onChange: (tab: string) => void;
 }) {
   // Compute dynamic counts based on the active candidate's actual items
   const skillsCount = makeSkillGroups(candidate).reduce((acc, g) => acc + g.skills.length, 0);
@@ -569,7 +479,7 @@ function TabNav({
   const projectsCount = candidate.projects.length;
   const evidenceCount = candidate.evidenceTrace.length;
 
-  const dynamicCounts: Record<string, number | string> = {
+  const dynamicCounts = {
     'Profile Fit': '',
     Skills: skillsCount,
     Experience: experienceCount,
@@ -604,7 +514,7 @@ function TabNav({
   );
 }
 
-function getRecruiterDecision(candidate: Candidate) {
+function getRecruiterDecision(candidate) {
   if (candidate.match >= 90) {
     return {
       action: 'Invite to assessment',
@@ -634,7 +544,7 @@ function getRecruiterDecision(candidate: Candidate) {
   };
 }
 
-function RecruiterDecisionStrip({ candidate }: { candidate: Candidate }) {
+function RecruiterDecisionStrip({ candidate }) {
   const decision = getRecruiterDecision(candidate);
   const items = [
     { label: 'Recommended action', value: decision.action },
@@ -660,7 +570,7 @@ function RecruiterDecisionStrip({ candidate }: { candidate: Candidate }) {
   );
 }
 
-function FitScoreBadge({ score, className }: { score: FitScore; className: string }) {
+function FitScoreBadge({ score, className }) {
   return (
     <div className={`absolute rounded-[8px] border border-blue-100 bg-white px-3 py-2 text-center shadow-[0_12px_30px_rgba(37,99,235,0.08)] ${className}`}>
       <p className="text-[10px] font-medium leading-4 text-slate-500">{score.label}</p>
@@ -669,7 +579,7 @@ function FitScoreBadge({ score, className }: { score: FitScore; className: strin
   );
 }
 
-function FitVisualization({ candidate }: { candidate: Candidate }) {
+function FitVisualization({ candidate }) {
   const scores = candidate.fitScores;
 
   return (
@@ -712,7 +622,7 @@ function FitVisualization({ candidate }: { candidate: Candidate }) {
   );
 }
 
-function MatchAdvisorPanel({ candidate }: { candidate: Candidate }) {
+function MatchAdvisorPanel({ candidate }) {
   return (
     <aside className="rounded-[8px] border border-slate-200 bg-white p-5 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
       <h3 className="text-base font-semibold text-slate-950">Why it's a strong match</h3>
@@ -750,7 +660,7 @@ function MatchAdvisorPanel({ candidate }: { candidate: Candidate }) {
   );
 }
 
-function ProfileStatsRail({ stats }: { stats: ProfileStat[] }) {
+function ProfileStatsRail({ stats }) {
   return (
     <div className="grid overflow-hidden rounded-[8px] border border-slate-200 bg-white shadow-[0_14px_40px_rgba(15,23,42,0.04)] sm:grid-cols-2 xl:grid-cols-5">
       {stats.map((stat) => (
@@ -768,7 +678,7 @@ function ProfileStatsRail({ stats }: { stats: ProfileStat[] }) {
   );
 }
 
-function EvidenceTrace({ evidence }: { evidence: Evidence[] }) {
+function EvidenceTrace({ evidence }) {
   return (
     <div className="space-y-3">
       {evidence.map((item) => (
@@ -792,7 +702,7 @@ function EvidenceTrace({ evidence }: { evidence: Evidence[] }) {
   );
 }
 
-function ProfileFitTab({ candidate }: { candidate: Candidate }) {
+function ProfileFitTab({ candidate }) {
   return (
     <div className="space-y-5">
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
@@ -804,8 +714,8 @@ function ProfileFitTab({ candidate }: { candidate: Candidate }) {
   );
 }
 
-function TrustBadge({ label = 'Verified', tone = 'green' }: { label?: string; tone?: string }) {
-  const tones: Record<string, string> = {
+function TrustBadge({ label = 'Verified', tone = 'green' }) {
+  const tones = {
     green: 'bg-emerald-50 text-emerald-700 ring-emerald-100',
     blue: 'bg-blue-50 text-blue-700 ring-blue-100',
     violet: 'bg-violet-50 text-violet-700 ring-violet-100',
@@ -815,8 +725,8 @@ function TrustBadge({ label = 'Verified', tone = 'green' }: { label?: string; to
   return <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ${tones[tone] || tones.green}`}>{label}</span>;
 }
 
-function ProgressBar({ value, tone = 'blue' }: { value: number; tone?: string }) {
-  const fills: Record<string, string> = {
+function ProgressBar({ value, tone = 'blue' }) {
+  const fills = {
     blue: 'from-blue-50 to-sky-400',
     green: 'from-emerald-500 to-teal-400',
     violet: 'from-violet-500 to-indigo-400',
@@ -829,7 +739,7 @@ function ProgressBar({ value, tone = 'blue' }: { value: number; tone?: string })
   );
 }
 
-function IntelligenceHeader({ title, subtitle, action }: { title: string; subtitle: string; action?: React.ReactNode }) {
+function IntelligenceHeader({ title, subtitle, action }) {
   return (
     <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
@@ -841,7 +751,7 @@ function IntelligenceHeader({ title, subtitle, action }: { title: string; subtit
   );
 }
 
-function makeSkillGroups(candidate: Candidate) {
+function makeSkillGroups(candidate) {
   const evidenceSkills = candidate.evidenceTrace.map((item) => item.skill);
   const primary = candidate.topSkills[0] || evidenceSkills[0] || 'Role fundamentals';
   const secondary = candidate.topSkills[1] || evidenceSkills[1] || 'Analysis';
@@ -881,13 +791,31 @@ function makeSkillGroups(candidate: Candidate) {
   ];
 }
 
-function verificationTone(verification: string) {
+function verificationTone(verification) {
   if (verification === 'Verified') return 'green';
   if (verification === 'Assessed') return 'violet';
   return 'blue';
 }
 
-function TabCta({ title, description, action }: { title: string; description: string; action: string }) {
+// Keep a dynamic implementation for Experience tab details
+function makeExperienceSignals(candidate) {
+  const fallback = {
+    title: candidate.targetRole.includes('Frontend') ? 'Product UI Contributor' : 'Business Intelligence Assistant',
+    org: candidate.university,
+    period: 'May 2024 - Aug 2024',
+    impact: candidate.targetRole.includes('Frontend') ? 'Built reusable UI patterns for a campus product prototype.' : 'Built KPI tracking system for campus engagement reporting.',
+  };
+
+  return [...candidate.experience, fallback].slice(0, 3).map((item, index) => ({
+    ...item,
+    duration: index === 0 ? '4 months' : index === 1 ? '8 months' : '4 months',
+    proof: index === 0 ? candidate.topSkills : index === 1 ? ['Communication', 'Leadership', candidate.topSkills[1] || 'Reporting'] : ['Reporting', candidate.topSkills[2] || 'Execution'],
+    evidence: Math.max(2, candidate.evidenceCount - index - 7),
+    detail: `This experience supports hiring confidence because it connects ${item.impact.toLowerCase()} to observable work artifacts and skill signals.`,
+  }));
+}
+
+function TabCta({ title, description, action }) {
   return (
     <div className="mt-4 flex flex-col gap-3 rounded-[8px] border border-slate-200 bg-slate-50/60 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
@@ -901,9 +829,9 @@ function TabCta({ title, description, action }: { title: string; description: st
   );
 }
 
-function SkillsTab({ candidate }: { candidate: Candidate }) {
+function SkillsTab({ candidate }) {
   const [selectedGroup, setSelectedGroup] = useState('Core Technical');
-  const [expandedSkill, setExpandedSkill] = useState<string | null>(null);
+  const [expandedSkill, setExpandedSkill] = useState(null);
   const groups = makeSkillGroups(candidate);
   const activeGroup = groups.find((group) => group.group === selectedGroup) || groups[0];
   const [leadSkill, ...supportingSkills] = activeGroup.skills;
@@ -920,12 +848,12 @@ function SkillsTab({ candidate }: { candidate: Candidate }) {
           {groups.map((group) => (
             <button
               key={group.group}
-              className={`flex w-full items-center justify-between border-b border-slate-100 px-4 py-4 text-left text-sm last:border-b-0 ${group.group === activeGroup.group ? 'bg-blue-50/55 text-slate-950' : 'text-slate-600 hover:bg-slate-50'}`}
+              className={`flex w-full items-center justify-between border-b border-slate-100 px-4 py-4 text-left text-sm last:border-b-0 ${group.group === activeGroup.group ? 'bg-blue-50/55 text-slate-950' : 'text-slate-650 hover:bg-slate-50'}`}
               type="button"
               onClick={() => setSelectedGroup(group.group)}
             >
               <span className="font-medium">{group.group}</span>
-              <span className="rounded-full bg-white px-2 py-0.5 text-xs text-slate-500 ring-1 ring-slate-200">{group.skills.length}</span>
+              <span className="rounded-full bg-white px-2 py-0.5 text-xs text-slate-505 ring-1 ring-slate-200">{group.skills.length}</span>
             </button>
           ))}
         </div>
@@ -950,7 +878,7 @@ function SkillsTab({ candidate }: { candidate: Candidate }) {
                 <div className="rounded-[8px] border border-blue-100 bg-white p-3">
                   <TrustBadge label={leadSkill.verification} tone={verificationTone(leadSkill.verification)} />
                   <p className="mt-3 text-sm font-medium text-slate-950">{leadSkill.evidence} linked evidence</p>
-                  <p className="mt-1 text-xs text-slate-500">Last used {leadSkill.lastUsed}</p>
+                  <p className="mt-1 text-xs text-slate-505">Last used {leadSkill.lastUsed}</p>
                 </div>
               </div>
             </article>
@@ -1012,25 +940,8 @@ function SkillsTab({ candidate }: { candidate: Candidate }) {
   );
 }
 
-function makeExperienceSignals(candidate: Candidate) {
-  const fallback = {
-    title: candidate.targetRole.includes('Frontend') ? 'Product UI Contributor' : 'Business Intelligence Assistant',
-    org: candidate.university,
-    period: 'May 2024 - Aug 2024',
-    impact: candidate.targetRole.includes('Frontend') ? 'Built reusable UI patterns for a campus product prototype.' : 'Built KPI tracking system for campus engagement reporting.',
-  };
-
-  return [...candidate.experience, fallback].slice(0, 3).map((item, index) => ({
-    ...item,
-    duration: index === 0 ? '4 months' : index === 1 ? '8 months' : '4 months',
-    proof: index === 0 ? candidate.topSkills : index === 1 ? ['Communication', 'Leadership', candidate.topSkills[1] || 'Reporting'] : ['Reporting', candidate.topSkills[2] || 'Execution'],
-    evidence: Math.max(2, candidate.evidenceCount - index - 7),
-    detail: `This experience supports hiring confidence because it connects ${item.impact.toLowerCase()} to observable work artifacts and skill signals.`,
-  }));
-}
-
-function ExperienceTab({ candidate }: { candidate: Candidate }) {
-  const [expanded, setExpanded] = useState<number | null>(null);
+function ExperienceTab({ candidate }) {
+  const [expanded, setExpanded] = useState(null);
   const items = makeExperienceSignals(candidate);
 
   return (
@@ -1043,7 +954,7 @@ function ExperienceTab({ candidate }: { candidate: Candidate }) {
             <div key={`${item.title}-${item.period}`} className="relative mb-24 pl-12">
               <span className="absolute left-[13px] top-1 flex h-4 w-4 rounded-full border-2 border-blue-500 bg-white" />
               <p className="text-sm font-medium text-slate-700">{item.period}</p>
-              <p className="mt-1 text-xs text-slate-500">{item.duration}</p>
+              <p className="mt-1 text-xs text-slate-505">{item.duration}</p>
             </div>
           ))}
         </div>
@@ -1065,7 +976,7 @@ function ExperienceTab({ candidate }: { candidate: Candidate }) {
                     <p className="text-xs font-medium text-slate-500">What this experience proves</p>
                     <div className="mt-2 flex flex-wrap gap-2">{item.proof.map((skill) => <SkillPill key={skill}>{skill}</SkillPill>)}</div>
                   </div>
-                  <button className="flex items-center justify-between rounded-[8px] border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50" type="button" onClick={() => setExpanded(open ? null : index)}>
+                  <button className="flex items-center justify-between rounded-[8px] border border-slate-200 px-3 py-2 text-sm font-medium text-slate-650 hover:bg-slate-50" type="button" onClick={() => setExpanded(open ? null : index)}>
                     <span>{item.evidence} evidence</span><span>{open ? '^' : 'v'}</span>
                   </button>
                 </div>
@@ -1079,7 +990,7 @@ function ExperienceTab({ candidate }: { candidate: Candidate }) {
   );
 }
 
-function makeProjectShowcase(candidate: Candidate) {
+function makeProjectShowcase(candidate) {
   return candidate.projects.map((project, index) => ({
     ...project,
     description: project.outcome,
@@ -1091,7 +1002,7 @@ function makeProjectShowcase(candidate: Candidate) {
   }));
 }
 
-function ProjectsTab({ candidate }: { candidate: Candidate }) {
+function ProjectsTab({ candidate }) {
   const projects = makeProjectShowcase(candidate);
   const primaryProject = projects[0];
 
@@ -1116,7 +1027,7 @@ function ProjectsTab({ candidate }: { candidate: Candidate }) {
                 <div><p className="text-xs font-medium text-slate-500">Business impact</p><p className="mt-1 text-sm leading-6 text-slate-600">{project.impact}</p></div>
                 <div><p className="text-xs font-medium text-slate-500">What this project proves</p><div className="mt-2 flex flex-wrap gap-2">{project.proves.map((item) => <TrustBadge key={item} label={item} tone="green" />)}</div></div>
               </div>
-              <div className="mt-3 flex flex-wrap gap-2">{project.links.map((link) => <button key={link} className="rounded-full bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600 ring-1 ring-slate-200" type="button">{link}</button>)}</div>
+              <div className="mt-3 flex flex-wrap gap-2">{project.links.map((link) => <button key={link} className="rounded-full bg-slate-50 px-3 py-1 text-xs font-medium text-slate-650 ring-1 ring-slate-200" type="button">{link}</button>)}</div>
             </div>
             <div className="flex items-start justify-end">
               <div className="rounded-[8px] bg-emerald-50 px-4 py-3 text-center ring-1 ring-emerald-100">
@@ -1136,8 +1047,8 @@ function ProjectsTab({ candidate }: { candidate: Candidate }) {
   );
 }
 
-function EvidenceTab({ candidate }: { candidate: Candidate }) {
-  const [expanded, setExpanded] = useState<number | null>(null);
+function EvidenceTab({ candidate }) {
+  const [expanded, setExpanded] = useState(null);
   const items = candidate.evidenceTrace.map((item, index) => ({
     ...item,
     type: index === 0 ? 'Project' : index === 1 ? 'Walkthrough' : 'Assessment',
@@ -1163,7 +1074,7 @@ function EvidenceTab({ candidate }: { candidate: Candidate }) {
             <article key={`${item.source}-${item.skill}`} className="rounded-[8px] border border-slate-200 bg-white">
               <button className="grid w-full gap-4 p-4 text-left hover:bg-slate-50/70 md:grid-cols-[56px_minmax(0,1fr)_90px_180px_24px] md:items-center" type="button" onClick={() => setExpanded(open ? null : index)}>
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-sm font-semibold text-blue-700 ring-1 ring-blue-100">{item.skill.slice(0, 2)}</span>
-                <div><p className="text-sm font-semibold text-slate-950">{item.source}</p><p className="mt-1 text-sm leading-6 text-slate-600">{item.type} - Linked to {item.skill}</p><p className="text-xs text-slate-500">{item.detail}</p></div>
+                <div><p className="text-sm font-semibold text-slate-950">{item.source}</p><p className="mt-1 text-sm leading-6 text-slate-600">{item.type} - Linked to {item.skill}</p><p className="text-xs text-slate-550">{item.detail}</p></div>
                 <div className="rounded-[8px] bg-emerald-50 px-3 py-2 text-center ring-1 ring-emerald-100"><p className="text-sm font-semibold text-emerald-700">{item.confidence}%</p><p className="text-xs text-emerald-600">trusted</p></div>
                 <div><p className="text-sm text-slate-700">{item.verifiedBy}</p><p className="mt-1 text-xs text-slate-500">{item.date}</p></div>
                 <span className="text-slate-400">{open ? '^' : '>'}</span>
@@ -1182,7 +1093,7 @@ function EvidenceTab({ candidate }: { candidate: Candidate }) {
   );
 }
 
-function ActivityTab({ candidate }: { candidate: Candidate }) {
+function ActivityTab({ candidate }) {
   const items = candidate.activity.map((activity, index) => ({
     action: activity,
     signal: index === 0 ? `Strengthened ${candidate.topSkills[0]} evidence` : index === 1 ? `${candidate.topSkills[1] || 'Skill'} confidence increased` : `Added ${candidate.topSkills[2] || 'role'} signal`,
@@ -1213,7 +1124,7 @@ function ActivityTab({ candidate }: { candidate: Candidate }) {
   );
 }
 
-function DetailList({ items, type }: { items: any[]; type: string }) {
+function DetailList({ items, type }) {
   return (
     <div className="grid gap-3 md:grid-cols-2">
       {items.map((item) => (
@@ -1227,7 +1138,7 @@ function DetailList({ items, type }: { items: any[]; type: string }) {
   );
 }
 
-function TabPanel({ candidate, activeTab }: { candidate: Candidate; activeTab: string }) {
+function TabPanel({ candidate, activeTab }) {
   if (activeTab === 'Profile Fit') return <ProfileFitTab candidate={candidate} />;
   if (activeTab === 'Skills') return <SkillsTab candidate={candidate} />;
   if (activeTab === 'Experience') return <ExperienceTab candidate={candidate} />;
@@ -1235,16 +1146,6 @@ function TabPanel({ candidate, activeTab }: { candidate: Candidate; activeTab: s
   if (activeTab === 'Evidence') return <EvidenceTab candidate={candidate} />;
   if (activeTab === 'Activity') return <ActivityTab candidate={candidate} />;
   return <DetailList items={candidate.experience} type="experience" />;
-}
-
-interface CandidateWorkspaceProps {
-  candidate: Candidate;
-  activeTab: string;
-  shortlisted: boolean;
-  saved: boolean;
-  onChangeTab: (tab: string) => void;
-  onToggleShortlist: () => void;
-  onToggleSave: () => void;
 }
 
 function CandidateWorkspace({
@@ -1255,7 +1156,7 @@ function CandidateWorkspace({
   onChangeTab,
   onToggleShortlist,
   onToggleSave,
-}: CandidateWorkspaceProps) {
+}) {
   return (
     <section className="min-w-0 overflow-hidden rounded-[8px] border border-slate-200 bg-white shadow-[0_18px_54px_rgba(15,23,42,0.05)]">
       <CandidateHeader
@@ -1275,13 +1176,13 @@ function CandidateWorkspace({
 }
 
 export default function EmployerWorkspacePage() {
-  const candidatesList = employerTalentWorkspace.candidates as Candidate[];
+  const candidatesList = employerTalentWorkspace.candidates;
   
   // Set up state variables
   const [selectedCandidateId, setSelectedCandidateId] = useState(candidatesList[0].id);
   const [activeTab, setActiveTab] = useState('Profile Fit');
-  const [selectedTab, setSelectedTab] = useState<'all' | 'shortlisted'>('all');
-  const [selectedSort, setSelectedSort] = useState<SortOption>('bestMatch');
+  const [selectedTab, setSelectedTab] = useState('all');
+  const [selectedSort, setSelectedSort] = useState('bestMatch');
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
 
   // Read global search store states
@@ -1290,8 +1191,8 @@ export default function EmployerWorkspacePage() {
 
   // Listen for search selections
   useEffect(() => {
-    const handleSearchSelectCandidate = (e: Event) => {
-      const detail = (e as CustomEvent).detail;
+    const handleSearchSelectCandidate = (e) => {
+      const detail = e.detail;
       if (detail && detail.candidateId) {
         setSelectedCandidateId(detail.candidateId);
         setActiveTab('Profile Fit');
@@ -1301,15 +1202,11 @@ export default function EmployerWorkspacePage() {
     return () => window.removeEventListener('employer-search-select-candidate', handleSearchSelectCandidate);
   }, []);
 
-  // Initialize shortlist Set
-  const [shortlistedIds, setShortlistedIds] = useState<Set<string>>(
-    () => new Set(candidatesList.filter((c) => c.shortlisted).map((c) => c.id))
-  );
-
-  // Initialize saved Set (for Bookmark icon)
-  const [savedIds, setSavedIds] = useState<Set<string>>(
-    () => new Set(candidatesList.filter((c) => c.shortlisted).map((c) => c.id)) // Seeding with shortlisted as a default save pool
-  );
+  // Read shortlist and saved Sets from Zustand store
+  const shortlistedIds = useEmployerSearchStore((state) => state.shortlistedIds);
+  const savedIds = useEmployerSearchStore((state) => state.savedIds);
+  const toggleShortlist = useEmployerSearchStore((state) => state.toggleShortlist);
+  const toggleSave = useEmployerSearchStore((state) => state.toggleSave);
 
   // Filtered list computed for current view
   const currentFilteredList = useMemo(() => {
@@ -1369,37 +1266,6 @@ export default function EmployerWorkspacePage() {
     return cand || candidatesList[0];
   }, [currentFilteredList, selectedCandidateId, candidatesList]);
 
-  // Toggle Shortlist action
-  const toggleShortlist = (candidateId: string) => {
-    setShortlistedIds((current) => {
-      const next = new Set(current);
-      if (next.has(candidateId)) {
-        next.delete(candidateId);
-      } else {
-        next.add(candidateId);
-        // Automatically save when shortlisting
-        setSavedIds((saved) => {
-          const nextSaved = new Set(saved);
-          nextSaved.add(candidateId);
-          return nextSaved;
-        });
-      }
-      return next;
-    });
-  };
-
-  // Toggle Save action
-  const toggleSave = (candidateId: string) => {
-    setSavedIds((current) => {
-      const next = new Set(current);
-      if (next.has(candidateId)) {
-        next.delete(candidateId);
-      } else {
-        next.add(candidateId);
-      }
-      return next;
-    });
-  };
 
   return (
     <div className="mx-auto min-w-0 max-w-[1540px]">

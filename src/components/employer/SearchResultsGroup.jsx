@@ -1,20 +1,12 @@
 import React from 'react';
 
-interface SearchResultsGroupProps {
-  title: string;
-  query: string;
-  footerLabel: string;
-  onFooterClick: () => void;
-  children: React.ReactNode;
-}
-
 export default function SearchResultsGroup({
   title,
   query,
   footerLabel,
   onFooterClick,
   children,
-}: SearchResultsGroupProps) {
+}) {
   return (
     <div className="border-b border-slate-100 last:border-b-0 py-3">
       <div className="px-4">

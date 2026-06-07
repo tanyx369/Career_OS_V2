@@ -1,14 +1,7 @@
 import React from 'react';
-import { CalendarEvent } from './CalendarTypes';
 
-interface CalendarSyncButtonProps {
-  events: CalendarEvent[];
-  activeEvent?: CalendarEvent | null;
-  variant?: 'compact' | 'footer';
-}
-
-export default function CalendarSyncButton({ events, activeEvent, variant = 'compact' }: CalendarSyncButtonProps) {
-  const getICSDateString = (dateStr: string, timeStr: string, isEnd: boolean = false) => {
+export default function CalendarSyncButton({ events, activeEvent, variant = 'compact' }) {
+  const getICSDateString = (dateStr, timeStr, isEnd = false) => {
     const cleanDate = dateStr.replace(/-/g, ''); // YYYYMMDD
     let hour = isEnd ? 17 : 9;
     let min = '00';
@@ -109,7 +102,7 @@ export default function CalendarSyncButton({ events, activeEvent, variant = 'com
       return;
     }
 
-    const formatISO = (dateStr: string, timeStr: string, isEnd: boolean) => {
+    const formatISO = (dateStr, timeStr, isEnd) => {
       const stamp = getICSDateString(dateStr, timeStr, isEnd);
       // Convert YYYYMMDDTHHMMSS to YYYY-MM-DDTHH:MM:SS
       const y = stamp.substring(0, 4);

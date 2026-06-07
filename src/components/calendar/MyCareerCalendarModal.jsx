@@ -6,33 +6,26 @@ import DeadlineWidget from './DeadlineWidget';
 import CareerInsightsWidget from './CareerInsightsWidget';
 import EventDrawer from './EventDrawer';
 import CalendarSyncButton from './CalendarSyncButton';
-import { CalendarEvent, CalendarEventStatus } from './CalendarTypes';
-
-interface MyCareerCalendarModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onOpenEventDetail: (event: any) => void;
-}
 
 export default function MyCareerCalendarModal({
   isOpen,
   onClose,
   onOpenEventDetail,
-}: MyCareerCalendarModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null);
+}) {
+  const modalRef = useRef(null);
   
   // Connect to Zustand store
   const {
     myEvents,
     updateEventStatus,
     removeEventFromCalendar,
-  } = useCareerStore() as any;
+  } = useCareerStore();
 
   // Active Calendar settings
-  const [selectedDate, setSelectedDate] = useState<string>('2025-05-17');
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2025, 4, 1)); // May 2025
-  const [activeFilter, setActiveFilter] = useState<string>('all');
-  const [selectedDrawerEvent, setSelectedDrawerEvent] = useState<CalendarEvent | null>(null);
+  const [selectedDate, setSelectedDate] = useState('2025-05-17');
+  const [currentMonth, setCurrentMonth] = useState(new Date(2025, 4, 1)); // May 2025
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [selectedDrawerEvent, setSelectedDrawerEvent] = useState(null);
 
   // Focus trap and ESC key listeners
   useEffect(() => {
@@ -42,7 +35,7 @@ export default function MyCareerCalendarModal({
     const prevBodyOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         e.preventDefault();
         onClose();
@@ -56,7 +49,7 @@ export default function MyCareerCalendarModal({
       'button, select, input, textarea, [tabindex]:not([tabindex="-1"])'
     );
     if (focusableElements && focusableElements.length > 0) {
-      (focusableElements[0] as HTMLElement).focus();
+      focusableElements[0].focus();
     }
 
     return () => {
@@ -68,7 +61,7 @@ export default function MyCareerCalendarModal({
   // Sync selectedDrawerEvent detail if myEvents updates
   const currentDrawerEvent = useMemo(() => {
     if (!selectedDrawerEvent) return null;
-    return myEvents.find((e: CalendarEvent) => e.id === selectedDrawerEvent.id) || null;
+    return myEvents.find((e) => e.id === selectedDrawerEvent.id) || null;
   }, [myEvents, selectedDrawerEvent]);
 
   // Calculate events this week for "This Week" widget
@@ -76,7 +69,7 @@ export default function MyCareerCalendarModal({
     const weekStart = new Date(2025, 4, 11);
     const weekEnd = new Date(2025, 4, 17);
 
-    const weekEvents = myEvents.filter((e: CalendarEvent) => {
+    const weekEvents = myEvents.filter((e) => {
       const eDate = new Date(e.date);
       return eDate >= weekStart && eDate <= weekEnd;
     });
@@ -105,18 +98,18 @@ export default function MyCareerCalendarModal({
 
   if (!isOpen) return null;
 
-  const handleUpdateStatus = (eventId: string, newStatus: CalendarEventStatus) => {
+  const handleUpdateStatus = (eventId, newStatus) => {
     updateEventStatus(eventId, newStatus);
   };
 
-  const handleRemoveEvent = (eventId: string) => {
+  const handleRemoveEvent = (eventId) => {
     removeEventFromCalendar(eventId);
     if (selectedDrawerEvent?.id === eventId) {
       setSelectedDrawerEvent(null);
     }
   };
 
-  const handleSelectDateFromWidget = (date: string) => {
+  const handleSelectDateFromWidget = (date) => {
     setSelectedDate(date);
     const d = new Date(date);
     if (!isNaN(d.getTime())) {
@@ -124,7 +117,7 @@ export default function MyCareerCalendarModal({
     }
   };
 
-  const handleViewEvent = (event: CalendarEvent) => {
+  const handleViewEvent = (event) => {
     onClose();
     const parts = event.date.split('-');
     const year = parts[0];
@@ -149,7 +142,7 @@ export default function MyCareerCalendarModal({
     onOpenEventDetail(mappedEvent);
   };
 
-  const handleCloseBackdrop = (e: React.MouseEvent) => {
+  const handleCloseBackdrop = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }

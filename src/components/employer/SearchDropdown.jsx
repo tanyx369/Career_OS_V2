@@ -4,17 +4,6 @@ import SearchResultsGroup from './SearchResultsGroup';
 import RecentSearchesSection from './RecentSearchesSection';
 import PopularSearchesSection from './PopularSearchesSection';
 
-interface SearchDropdownProps {
-  query: string;
-  recentSearches: string[];
-  onSelectCandidate: (candidateId: string, name: string) => void;
-  onSelectSkill: (skill: string) => void;
-  onSelectRole: (role: string) => void;
-  onSelectRecentSearch: (search: string) => void;
-  onClearRecentSearches: () => void;
-  onClose: () => void;
-}
-
 export default function SearchDropdown({
   query,
   recentSearches,
@@ -24,7 +13,7 @@ export default function SearchDropdown({
   onSelectRecentSearch,
   onClearRecentSearches,
   onClose,
-}: SearchDropdownProps) {
+}) {
   const candidates = employerTalentWorkspace.candidates;
 
   // Static list pools for robust autofill matching
@@ -45,27 +34,39 @@ export default function SearchDropdown({
   const cleanQuery = query.trim().toLowerCase();
 
   // Filter candidates matching the query
-  const filteredCandidates = React.useMemo(() => {
+  const allFilteredCandidates = React.useMemo(() => {
     if (!cleanQuery) return [];
-    return (candidates as any[]).filter((c: any) =>
+    return candidates.filter((c) =>
       c.name.toLowerCase().includes(cleanQuery) ||
       c.targetRole.toLowerCase().includes(cleanQuery) ||
       c.university.toLowerCase().includes(cleanQuery) ||
-      c.topSkills.some((s: string) => s.toLowerCase().includes(cleanQuery))
-    ).slice(0, 3);
+      c.topSkills.some((s) => s.toLowerCase().includes(cleanQuery))
+    );
   }, [candidates, cleanQuery]);
 
+  const filteredCandidates = React.useMemo(() => {
+    return allFilteredCandidates.slice(0, 3);
+  }, [allFilteredCandidates]);
+
   // Filter skills matching the query
-  const filteredSkills = React.useMemo(() => {
+  const allFilteredSkills = React.useMemo(() => {
     if (!cleanQuery) return [];
-    return skillsPool.filter(s => s.toLowerCase().includes(cleanQuery)).slice(0, 5);
+    return skillsPool.filter(s => s.toLowerCase().includes(cleanQuery));
   }, [cleanQuery]);
 
+  const filteredSkills = React.useMemo(() => {
+    return allFilteredSkills.slice(0, 5);
+  }, [allFilteredSkills]);
+
   // Filter roles matching the query
-  const filteredRoles = React.useMemo(() => {
+  const allFilteredRoles = React.useMemo(() => {
     if (!cleanQuery) return [];
-    return rolesPool.filter(r => r.toLowerCase().includes(cleanQuery)).slice(0, 5);
+    return rolesPool.filter(r => r.toLowerCase().includes(cleanQuery));
   }, [cleanQuery]);
+
+  const filteredRoles = React.useMemo(() => {
+    return allFilteredRoles.slice(0, 5);
+  }, [allFilteredRoles]);
 
   const showSuggestions = !cleanQuery;
 
@@ -89,7 +90,7 @@ export default function SearchDropdown({
           {/* Candidates Group */}
           {filteredCandidates.length > 0 && (
             <SearchResultsGroup
-              title="Top Candidate Matches"
+              title={`Top Candidate Matches (${allFilteredCandidates.length})`}
               query={query}
               footerLabel="View all candidates for"
               onFooterClick={() => {
@@ -97,8 +98,8 @@ export default function SearchDropdown({
                 onClose();
               }}
             >
-              {filteredCandidates.map((c: any) => {
-                const initials = c.name.split(' ').map((p: string) => p[0]).join('');
+              {filteredCandidates.map((c) => {
+                const initials = c.name.split(' ').map((p) => p[0]).join('');
                 return (
                   <button
                     key={c.id}
@@ -130,7 +131,7 @@ export default function SearchDropdown({
           {/* Skills Group */}
           {filteredSkills.length > 0 && (
             <SearchResultsGroup
-              title="Skills"
+              title={`Skills (${allFilteredSkills.length})`}
               query={query}
               footerLabel="View all skills for"
               onFooterClick={() => {
@@ -158,7 +159,7 @@ export default function SearchDropdown({
           {/* Roles Group */}
           {filteredRoles.length > 0 && (
             <SearchResultsGroup
-              title="Roles"
+              title={`Roles (${allFilteredRoles.length})`}
               query={query}
               footerLabel="View all roles for"
               onFooterClick={() => {
