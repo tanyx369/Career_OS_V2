@@ -38,7 +38,6 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
   const [newPrefSkill, setNewPrefSkill] = useState('');
   const [newQuestion, setNewQuestion] = useState('');
 
-  // Reset wizard state when opening
   useEffect(() => {
     if (isOpen) {
       setStep(1);
@@ -74,7 +73,6 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
     const keys = Object.keys(formData.weights);
     const sum = Object.values(formData.weights).reduce((a, b) => a + b, 0);
     if (sum === 0) {
-      // equal distribution
       const equalVal = Math.floor(100 / keys.length);
       const newWeights = {};
       keys.forEach(k => { newWeights[k] = equalVal; });
@@ -96,7 +94,6 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
     setFormData(prev => ({ ...prev, weights: newWeights }));
   };
 
-  // Skill Add / Remove
   const addRequiredSkill = () => {
     if (newReqSkill.trim() && !formData.requiredSkills.includes(newReqSkill.trim())) {
       setFormData(prev => ({
@@ -131,7 +128,6 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
     }));
   };
 
-  // Questions Add / Remove
   const addQuestion = () => {
     if (newQuestion.trim() && !formData.screeningQuestions.includes(newQuestion.trim())) {
       setFormData(prev => ({
@@ -172,11 +168,11 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-900/50 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-5xl rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl transition-all duration-300 md:p-8 flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-5xl rounded-[8px] border border-slate-200 bg-white p-6 shadow-2xl transition-all duration-300 md:p-8 flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div>
-            <h2 className="text-xl font-extrabold text-slate-900">Create New Opportunity</h2>
+            <h2 className="text-xl font-semibold text-slate-950">Create New Opportunity</h2>
             <p className="text-xs text-slate-500 font-semibold mt-1">Configure internship or job openings for university talent</p>
           </div>
           <button
@@ -207,7 +203,7 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
               }`}>
                 {step > s.num ? '✓' : s.num}
               </span>
-              <span className={`text-xs font-bold ${
+              <span className={`text-xs font-semibold ${
                 step === s.num ? 'text-blue-600' : step > s.num ? 'text-slate-700' : 'text-slate-400'
               }`}>
                 {s.label}
@@ -225,25 +221,29 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
             <div className="space-y-4 max-w-2xl mx-auto">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Opportunity Title *</label>
+                  <label className="block text-sm font-semibold text-slate-800">
+                    Opportunity Title *
+                  </label>
                   <input
                     type="text"
                     name="title"
                     value={formData.title}
                     onChange={handleTextChange}
                     placeholder="e.g. Data Analyst Intern, Graduate Associate"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Role Type *</label>
+                  <label className="block text-sm font-semibold text-slate-800">
+                    Role Type *
+                  </label>
                   <select
                     name="type"
                     value={formData.type}
                     onChange={handleTextChange}
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   >
                     <option value="Internship">Internship</option>
                     <option value="Graduate Program">Graduate Program</option>
@@ -254,24 +254,28 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Number of Openings</label>
+                  <label className="block text-sm font-semibold text-slate-800">
+                    Number of Openings
+                  </label>
                   <input
                     type="number"
                     name="openings"
                     value={formData.openings}
                     onChange={handleNumberChange}
                     min="1"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Location Type *</label>
+                  <label className="block text-sm font-semibold text-slate-800">
+                    Location Type *
+                  </label>
                   <select
                     name="location"
                     value={formData.location}
                     onChange={handleTextChange}
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   >
                     <option value="On-site">On-site</option>
                     <option value="Hybrid">Hybrid</option>
@@ -280,24 +284,28 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">City</label>
+                  <label className="block text-sm font-semibold text-slate-800">
+                    City
+                  </label>
                   <input
                     type="text"
                     name="city"
                     value={formData.city}
                     onChange={handleTextChange}
                     placeholder="e.g. Kuala Lumpur, Singapore"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Country</label>
+                  <label className="block text-sm font-semibold text-slate-800">
+                    Country
+                  </label>
                   <select
                     name="country"
                     value={formData.country}
                     onChange={handleTextChange}
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   >
                     {countries.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
@@ -310,53 +318,61 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
           {step === 2 && (
             <div className="space-y-4 max-w-3xl mx-auto">
               <div>
-                <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Role Summary *</label>
+                <label className="block text-sm font-semibold text-slate-800">
+                  Role Summary *
+                </label>
                 <textarea
                   name="summary"
                   value={formData.summary}
                   onChange={handleTextChange}
                   rows="3"
                   placeholder="Provide a high-level summary of the opportunity, team, and expectations..."
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none resize-none"
+                  className="mt-2 min-h-[96px] w-full rounded-xl border border-slate-200 bg-white p-3 text-sm leading-6 text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50 resize-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Key Responsibilities *</label>
+                <label className="block text-sm font-semibold text-slate-800">
+                  Key Responsibilities *
+                </label>
                 <textarea
                   name="responsibilities"
                   value={formData.responsibilities}
                   onChange={handleTextChange}
                   rows="4"
                   placeholder="Bullet points of daily tasks, key achievements desired, and deliverables..."
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                  className="mt-2 min-h-24 w-full rounded-xl border border-slate-200 bg-white p-3 text-sm leading-6 text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Requirements & Qualifications *</label>
+                <label className="block text-sm font-semibold text-slate-800">
+                  Requirements & Qualifications *
+                </label>
                 <textarea
                   name="requirements"
                   value={formData.requirements}
                   onChange={handleTextChange}
                   rows="4"
                   placeholder="Core requirements, specific technical skills needed, and certifications..."
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                  className="mt-2 min-h-24 w-full rounded-xl border border-slate-200 bg-white p-3 text-sm leading-6 text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Fringe Benefits & Perks</label>
+                <label className="block text-sm font-semibold text-slate-800">
+                  Fringe Benefits & Perks
+                </label>
                 <textarea
                   name="benefits"
                   value={formData.benefits}
                   onChange={handleTextChange}
                   rows="2"
                   placeholder="Mentorship opportunities, training allowance, wellness allowances..."
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                  className="mt-2 min-h-24 w-full rounded-xl border border-slate-200 bg-white p-3 text-sm leading-6 text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                 />
               </div>
             </div>
@@ -366,20 +382,22 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
           {step === 3 && (
             <div className="space-y-5 max-w-2xl mx-auto">
               <div>
-                <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Required Skills</label>
-                <div className="flex gap-2">
+                <label className="block text-sm font-semibold text-slate-800">
+                  Required Skills
+                </label>
+                <div className="flex gap-2 mt-2">
                   <input
                     type="text"
                     value={newReqSkill}
                     onChange={(e) => setNewReqSkill(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addRequiredSkill())}
                     placeholder="Type skill and press enter (e.g. SQL, Figma)"
-                    className="flex-1 rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   />
                   <button
                     type="button"
                     onClick={addRequiredSkill}
-                    className="rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition"
+                    className="rounded-[8px] bg-blue-600 px-4 text-xs font-bold text-white hover:bg-blue-700 transition h-11 shrink-0"
                   >
                     Add
                   </button>
@@ -395,20 +413,22 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
               </div>
 
               <div>
-                <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Preferred Skills</label>
-                <div className="flex gap-2">
+                <label className="block text-sm font-semibold text-slate-800">
+                  Preferred Skills
+                </label>
+                <div className="flex gap-2 mt-2">
                   <input
                     type="text"
                     value={newPrefSkill}
                     onChange={(e) => setNewPrefSkill(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addPreferredSkill())}
                     placeholder="Type skill and press enter (e.g. Python, Tableau)"
-                    className="flex-1 rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   />
                   <button
                     type="button"
                     onClick={addPreferredSkill}
-                    className="rounded-xl bg-violet-600 px-4 py-2 text-xs font-bold text-white hover:bg-violet-700 transition"
+                    className="rounded-[8px] bg-violet-600 px-4 text-xs font-bold text-white hover:bg-violet-700 transition h-11 shrink-0"
                   >
                     Add
                   </button>
@@ -425,12 +445,14 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Target Experience Level</label>
+                  <label className="block text-sm font-semibold text-slate-800">
+                    Target Experience Level
+                  </label>
                   <select
                     name="experienceLevel"
                     value={formData.experienceLevel}
                     onChange={handleTextChange}
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   >
                     <option value="Undergraduate">Undergraduate</option>
                     <option value="Postgraduate">Postgraduate</option>
@@ -441,14 +463,16 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Target Education</label>
+                  <label className="block text-sm font-semibold text-slate-800">
+                    Target Education
+                  </label>
                   <input
                     type="text"
                     name="education"
                     value={formData.education}
                     onChange={handleTextChange}
                     placeholder="e.g. Bachelor's Degree in CS"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   />
                 </div>
               </div>
@@ -458,8 +482,8 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
           {/* STEP 4: AI MATCH CONFIGURATION */}
           {step === 4 && (
             <div className="space-y-6 max-w-2xl mx-auto">
-              <div className="rounded-2xl border border-indigo-100 bg-indigo-50/50 p-5">
-                <h4 className="text-sm font-extrabold text-indigo-950 flex items-center gap-2">
+              <div className="rounded-[8px] border border-indigo-100 bg-indigo-50/50 p-5">
+                <h4 className="text-sm font-semibold text-indigo-950 flex items-center gap-2">
                   <span>🤖</span> AI Candidate Match Weights
                 </h4>
                 <p className="text-xs text-slate-600 font-semibold mt-1">
@@ -479,10 +503,10 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
                   <div key={item.key} className="space-y-1">
                     <div className="flex justify-between items-center text-xs">
                       <div>
-                        <span className="font-extrabold text-slate-900">{item.label}</span>
+                        <span className="font-semibold text-slate-900">{item.label}</span>
                         <p className="text-[10px] text-slate-400 font-medium leading-none mt-0.5">{item.desc}</p>
                       </div>
-                      <span className="font-extrabold text-slate-950 bg-slate-100 px-2.5 py-1 rounded-lg">
+                      <span className="font-semibold text-slate-950 bg-slate-100 px-2.5 py-1 rounded-[8px]">
                         {formData.weights[item.key]}%
                       </span>
                     </div>
@@ -500,12 +524,11 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
                 ))}
               </div>
 
-              {/* Balance Bar & AI Output */}
-              <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="rounded-[8px] border border-slate-100 bg-slate-50 p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-extrabold text-slate-700">Total Distribution:</span>
-                    <span className={`text-sm font-extrabold px-2 py-0.5 rounded-full ${
+                    <span className="text-xs font-semibold text-slate-700">Total Distribution:</span>
+                    <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${
                       totalWeight === 100
                         ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                         : 'bg-rose-100 text-rose-800 border border-rose-200'
@@ -514,20 +537,20 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
                     </span>
                   </div>
                   {totalWeight !== 100 && (
-                    <p className="text-[10px] text-rose-600 font-bold mt-1">Weights must equal exactly 100% to run standard evaluations.</p>
+                    <p className="text-[10px] text-rose-600 font-semibold mt-1">Weights must equal exactly 100% to run standard evaluations.</p>
                   )}
                 </div>
                 <button
                   type="button"
                   onClick={autoBalanceWeights}
-                  className="rounded-xl border border-indigo-200 bg-white px-4 py-2 text-xs font-bold text-indigo-700 shadow-sm hover:bg-indigo-50 transition"
+                  className="rounded-[8px] border border-indigo-200 bg-white px-4 py-2 text-xs font-semibold text-indigo-700 shadow-sm hover:bg-indigo-50 transition"
                 >
                   ⚖️ Auto-Balance Weights
                 </button>
               </div>
 
-              <div className="rounded-xl bg-gradient-to-r from-emerald-50 to-blue-50 border border-emerald-100 p-4 text-xs font-semibold text-slate-700">
-                <span className="text-emerald-700 font-bold">Predicted Match Model:</span> Average student match is expected around <strong className="text-slate-900">84%</strong>. This weighting yields high variance, optimizing for candidates with strong verified project evidence.
+              <div className="rounded-[8px] bg-gradient-to-r from-emerald-50 to-blue-50 border border-emerald-100 p-4 text-xs font-semibold text-slate-700">
+                <span className="text-emerald-700 font-semibold">Predicted Match Model:</span> Average student match is expected around <strong className="text-slate-900">84%</strong>. This weighting yields high variance, optimizing for candidates with strong verified project evidence.
               </div>
             </div>
           )}
@@ -537,51 +560,57 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
             <div className="space-y-4 max-w-2xl mx-auto">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Application Deadline</label>
+                  <label className="block text-sm font-semibold text-slate-800">
+                    Application Deadline
+                  </label>
                   <input
                     type="date"
                     name="deadline"
                     value={formData.deadline}
                     onChange={handleTextChange}
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Target Start Date</label>
+                  <label className="block text-sm font-semibold text-slate-800">
+                    Target Start Date
+                  </label>
                   <input
                     type="date"
                     name="startDate"
                     value={formData.startDate}
                     onChange={handleTextChange}
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wide mb-1">Screening Questions (Recommended)</label>
-                <p className="text-[10px] text-slate-400 font-bold mb-2">Candidates will be prompted to answer these questions when applying.</p>
-                <div className="flex gap-2">
+                <label className="block text-sm font-semibold text-slate-800">
+                  Screening Questions (Recommended)
+                </label>
+                <p className="text-[10px] text-slate-400 font-semibold mb-2">Candidates will be prompted to answer these questions when applying.</p>
+                <div className="flex gap-2 mt-2">
                   <input
                     type="text"
                     value={newQuestion}
                     onChange={(e) => setNewQuestion(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addQuestion())}
                     placeholder="Type question and press enter..."
-                    className="flex-1 rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
                   />
                   <button
                     type="button"
                     onClick={addQuestion}
-                    className="rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition"
+                    className="rounded-[8px] bg-blue-600 px-4 text-xs font-bold text-white hover:bg-blue-700 transition h-11 shrink-0"
                   >
                     Add
                   </button>
                 </div>
                 <ul className="mt-3 space-y-2">
                   {formData.screeningQuestions.map((q, idx) => (
-                    <li key={idx} className="flex items-start justify-between gap-3 bg-slate-50 border border-slate-100 p-2.5 rounded-xl text-xs font-semibold text-slate-700">
+                    <li key={idx} className="flex items-start justify-between gap-3 bg-slate-50 border border-slate-100 p-2.5 rounded-[8px] text-xs font-semibold text-slate-700">
                       <span>{q}</span>
                       <button type="button" onClick={() => removeQuestion(q)} className="text-[10px] text-rose-500 hover:text-rose-700 shrink-0">Remove</button>
                     </li>
@@ -594,9 +623,9 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
           {/* STEP 6: PREVIEW & PUBLISH */}
           {step === 6 && (
             <div className="space-y-4">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4 max-w-3xl mx-auto text-center">
-                <span className="text-xs font-extrabold text-slate-600">Student Workspace Preview</span>
-                <p className="text-[10px] text-slate-400 font-bold mt-0.5">This is how the opportunity will render on the student-facing jobs dashboard.</p>
+              <div className="rounded-[8px] border border-slate-200 bg-slate-50/50 p-4 max-w-3xl mx-auto text-center">
+                <span className="text-xs font-semibold text-slate-600">Student Workspace Preview</span>
+                <p className="text-[10px] text-slate-400 font-semibold mt-0.5">This is how the opportunity will render on the student-facing jobs dashboard.</p>
               </div>
               <div className="max-w-3xl mx-auto">
                 <OpportunityPreview formData={formData} mockMatchScore={91} />
@@ -613,7 +642,7 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
               <button
                 type="button"
                 onClick={handleSaveDraft}
-                className="rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-extrabold text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
+                className="h-9 rounded-[8px] border border-slate-200 px-4 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
               >
                 Save as Draft
               </button>
@@ -624,7 +653,7 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
               <button
                 type="button"
                 onClick={handleBack}
-                className="rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-extrabold text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
+                className="h-9 rounded-[8px] border border-slate-200 px-4 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
               >
                 ← Back
               </button>
@@ -635,7 +664,7 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
                 type="button"
                 onClick={handleNext}
                 disabled={step === 1 && !formData.title.trim()}
-                className={`rounded-xl px-5 py-2.5 text-xs font-extrabold text-white transition ${
+                className={`h-9 rounded-[8px] px-5 text-xs font-semibold text-white transition ${
                   step === 1 && !formData.title.trim()
                     ? 'bg-blue-300 cursor-not-allowed'
                     : 'bg-blue-600 hover:bg-blue-700'
@@ -648,7 +677,7 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
                 type="button"
                 onClick={handlePublish}
                 disabled={totalWeight !== 100}
-                className={`rounded-xl px-6 py-2.5 text-xs font-extrabold text-white shadow-md transition ${
+                className={`h-9 rounded-[8px] px-6 text-xs font-semibold text-white shadow-md transition ${
                   totalWeight !== 100
                     ? 'bg-blue-300 cursor-not-allowed'
                     : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-lg'

@@ -178,22 +178,17 @@ export default function JobMarketplacePage() {
   const [opportunities, setOpportunities] = useState(initialOpportunities);
   const [pipelineApplications, setPipelineApplications] = useState(initialPipelineApplications);
   
-  // Navigation states: 'dashboard' | 'pipeline'
   const [currentView, setCurrentView] = useState('dashboard');
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   
-  // Tabs: 'Active' | 'Drafts' | 'Closed' | 'Archived' | 'Analytics'
   const [activeTab, setActiveTab] = useState('Active');
   
-  // Filter states
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('All');
   const [filterLocation, setFilterLocation] = useState('All');
 
-  // Modal overlays
   const [isWizardOpen, setIsWizardOpen] = useState(false);
 
-  // Statistics summaries
   const stats = useMemo(() => {
     const activeCount = opportunities.filter(o => o.status === 'Active').length;
     
@@ -216,7 +211,6 @@ export default function JobMarketplacePage() {
     };
   }, [opportunities, pipelineApplications]);
 
-  // Handle saving new opportunity from the wizard
   const handleCreateOpportunity = (newOpp) => {
     const id = `opp-${String(opportunities.length + 1).padStart(3, '0')}`;
     const formattedOpp = {
@@ -241,14 +235,12 @@ export default function JobMarketplacePage() {
     }
   };
 
-  // Handle moving candidates in pipeline stage
   const handleUpdatePipelineCandidates = (opportunityId, updatedList) => {
     setPipelineApplications(prev => ({
       ...prev,
       [opportunityId]: updatedList
     }));
     
-    // Dynamically update applicants count and average match on the opportunity listing
     setOpportunities(prev => prev.map(opp => {
       if (opp.id === opportunityId) {
         const count = updatedList.length;
@@ -265,16 +257,13 @@ export default function JobMarketplacePage() {
     }));
   };
 
-  // Filter opportunities to display based on selected tab and search filters
   const filteredOpportunities = useMemo(() => {
     return opportunities.filter(opp => {
-      // Tab matching
       if (activeTab === 'Active' && opp.status !== 'Active') return false;
       if (activeTab === 'Drafts' && opp.status !== 'Draft') return false;
       if (activeTab === 'Closed' && opp.status !== 'Closed') return false;
       if (activeTab === 'Archived' && opp.status !== 'Archived') return false;
 
-      // Filter matching
       const matchesSearch = opp.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             opp.requiredSkills.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesType = filterType === 'All' || opp.type === filterType;
@@ -285,58 +274,63 @@ export default function JobMarketplacePage() {
   }, [opportunities, activeTab, searchQuery, filterType, filterLocation]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8 min-h-screen">
+    <div className="space-y-6">
       
       {/* 1. Main View: Jobs Dashboard */}
       {currentView === 'dashboard' && (
-        <div className="space-y-8">
+        <div className="space-y-6">
           
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">💼 Job & Internship Marketplace</h1>
-              <p className="text-sm text-slate-500 font-semibold mt-1">Publish vacancies, review trace-matched applications, and direct-hire university talent.</p>
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-950">Job & Internship Marketplace</h2>
+              <p className="mt-2 text-sm text-slate-500">Publish vacancies, review trace-matched applications, and direct-hire university talent.</p>
             </div>
             <button
               onClick={() => setIsWizardOpen(true)}
-              className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-xs font-extrabold text-white shadow-md hover:shadow-lg transition duration-200"
+              className="h-11 rounded-[8px] bg-gradient-to-br from-indigo-600 to-blue-600 px-6 text-sm font-semibold text-white shadow-md shadow-indigo-100 hover:bg-gradient-to-br hover:from-indigo-700 hover:to-blue-700 transition duration-200"
+              type="button"
             >
               + Create Opportunity
             </button>
-          </div>
+          </header>
 
           {/* Stats Cards Section */}
           <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {[
-              { label: 'Active Positions', value: stats.active, color: 'from-blue-500 to-sky-400' },
-              { label: 'Total Applicants', value: stats.applicants, color: 'from-indigo-500 to-violet-400' },
-              { label: 'Interviews Running', value: stats.interviews, color: 'from-amber-500 to-orange-400' },
-              { label: 'Positions Filled', value: stats.filled, color: 'from-emerald-500 to-teal-400' },
-              { label: 'Average Match Rate', value: `${stats.matchRate}%`, color: 'from-slate-700 to-slate-800' }
+              { label: 'Active Positions', value: stats.active },
+              { label: 'Total Applicants', value: stats.applicants },
+              { label: 'Interviews Running', value: stats.interviews },
+              { label: 'Positions Filled', value: stats.filled },
+              { label: 'Average Match Rate', value: `${stats.matchRate}%` }
             ].map((stat) => (
-              <div key={stat.label} className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.03)] flex flex-col justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{stat.label}</span>
-                <p className="mt-3 text-2xl font-extrabold text-slate-900 leading-none">{stat.value}</p>
+              <div key={stat.label} className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.04)] flex flex-col justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">{stat.label}</span>
+                <p className="mt-3 text-2xl font-semibold text-slate-950 leading-none">{stat.value}</p>
                 <div className="mt-2.5 h-1 w-12 rounded bg-gradient-to-r from-slate-200 to-slate-300" />
               </div>
             ))}
           </section>
 
           {/* Tabs bar */}
-          <div className="flex border-b border-slate-200 overflow-x-auto gap-4">
-            {['Active', 'Drafts', 'Closed', 'Archived', 'Analytics'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`py-3.5 px-1 text-sm font-bold border-b-2 whitespace-nowrap transition ${
-                  activeTab === tab
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-900'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+          <div className="border-b border-slate-200">
+            <div className="flex gap-8 overflow-x-auto">
+              {['Active', 'Drafts', 'Closed', 'Archived', 'Analytics'].map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => setActiveTab(tab)}
+                  className={`relative whitespace-nowrap px-1 pb-4 text-sm font-semibold transition-all duration-200 ${
+                    activeTab === tab ? 'text-blue-700' : 'text-slate-500 hover:text-slate-900'
+                  }`}
+                >
+                  {tab}
+                  {activeTab === tab && (
+                    <span className="absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-blue-600" />
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Render Active/Drafts/Closed listings */}
@@ -344,7 +338,7 @@ export default function JobMarketplacePage() {
             <div className="space-y-6">
               
               {/* Filters Panel */}
-              <div className="rounded-2xl border border-slate-200 bg-white p-4 flex flex-col md:flex-row items-center gap-4 shadow-sm">
+              <div className="rounded-[8px] border border-slate-200 bg-white p-4 flex flex-col md:flex-row items-center gap-4 shadow-sm">
                 
                 {/* Search */}
                 <div className="relative w-full md:w-80">
@@ -354,18 +348,18 @@ export default function JobMarketplacePage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by title or skills..."
-                    className="w-full rounded-xl border border-slate-200 pl-9 pr-4 py-2.5 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full rounded-[8px] border border-slate-200 pl-9 pr-4 py-2 text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
                   />
                 </div>
 
                 {/* Filters */}
                 <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-500 whitespace-nowrap">Role Type:</span>
+                    <span className="text-xs font-semibold text-slate-500 whitespace-nowrap">Role Type:</span>
                     <select
                       value={filterType}
                       onChange={(e) => setFilterType(e.target.value)}
-                      className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 bg-white focus:outline-none"
+                      className="rounded-[8px] border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 bg-white focus:outline-none"
                     >
                       <option value="All">All Types</option>
                       <option value="Internship">Internships</option>
@@ -376,11 +370,11 @@ export default function JobMarketplacePage() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-500 whitespace-nowrap">Work Mode:</span>
+                    <span className="text-xs font-semibold text-slate-500 whitespace-nowrap">Work Mode:</span>
                     <select
                       value={filterLocation}
                       onChange={(e) => setFilterLocation(e.target.value)}
-                      className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 bg-white focus:outline-none"
+                      className="rounded-[8px] border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 bg-white focus:outline-none"
                     >
                       <option value="All">All Modes</option>
                       <option value="On-site">On-site</option>
@@ -406,10 +400,10 @@ export default function JobMarketplacePage() {
                   ))}
                 </div>
               ) : (
-                <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-16 text-center space-y-3">
+                <div className="rounded-[8px] border border-dashed border-slate-200 bg-slate-50/50 p-16 text-center space-y-3">
                   <span className="text-3xl">📭</span>
-                  <h3 className="text-sm font-extrabold text-slate-900">No opportunities found</h3>
-                  <p className="text-xs text-slate-400 font-semibold max-w-sm mx-auto">Try clearing search filters or create a new vacancy listing to get started.</p>
+                  <h3 className="text-sm font-semibold text-slate-950">No opportunities found</h3>
+                  <p className="text-xs text-slate-400 font-normal max-w-sm mx-auto">Try clearing search filters or create a new vacancy listing to get started.</p>
                 </div>
               )}
 

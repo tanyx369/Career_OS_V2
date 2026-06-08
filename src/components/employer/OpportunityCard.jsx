@@ -31,23 +31,23 @@ export default function OpportunityCard({ opportunity, onViewApplicants }) {
   const fullLocation = city && country ? `${city}, ${country}` : location || 'Kuala Lumpur, Malaysia';
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.03)] transition duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_18px_40px_rgba(37,99,235,0.08)] flex flex-col justify-between h-full">
+    <article className="group overflow-hidden rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-[0_18px_54px_rgba(15,23,42,0.05)] flex flex-col justify-between h-full">
       <div className="space-y-4">
         {/* Top Header */}
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="text-base font-extrabold text-slate-950 truncate leading-snug group-hover:text-blue-700 transition">
+            <h3 className="text-sm font-semibold text-slate-950 truncate leading-snug group-hover:text-blue-700 transition">
               {title}
             </h3>
-            <p className="mt-1 text-xs font-semibold text-slate-400">Acme Corp</p>
+            <p className="mt-1 text-xs font-medium text-slate-400">Acme Corp</p>
           </div>
-          <span className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide border ${typeBadges[type] || 'bg-slate-50 text-slate-600 border-slate-100'}`}>
+          <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide border ${typeBadges[type] || 'bg-slate-50 text-slate-600 border-slate-100'}`}>
             {type}
           </span>
         </div>
 
         {/* Location & Details */}
-        <div className="space-y-2 text-[11px] font-semibold text-slate-500">
+        <div className="space-y-2 text-xs font-medium text-slate-500">
           <div className="flex items-center gap-1.5 truncate">
             <span aria-hidden="true">📍</span>
             <span className="truncate">{fullLocation}</span>
@@ -61,25 +61,25 @@ export default function OpportunityCard({ opportunity, onViewApplicants }) {
         {/* Applicants and Match Rate metrics */}
         <div className="grid grid-cols-2 gap-3.5 border-t border-slate-100 pt-4">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Applicants</p>
-            <p className="mt-1 text-sm font-extrabold text-slate-950">{applicantsCount} Students</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Applicants</p>
+            <p className="mt-1 text-sm font-semibold text-slate-950">{applicantsCount} Students</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Average Match</p>
-            <p className="mt-1 text-sm font-extrabold text-emerald-600">{averageMatch}% Match</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Average Match</p>
+            <p className="mt-1 text-sm font-semibold text-emerald-600">{averageMatch}% Match</p>
           </div>
         </div>
       </div>
 
       {/* Footer view action */}
       <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 gap-3">
-        <span className={`rounded px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide leading-none ${statusBadges[status] || 'bg-slate-500 text-white'}`}>
+        <span className={`rounded-[4px] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide leading-none ${statusBadges[status] || 'bg-slate-500 text-white'}`}>
           {status}
         </span>
         <button
           type="button"
           onClick={onViewApplicants}
-          className="rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-2 text-xs font-bold text-blue-700 transition hover:border-blue-300 hover:bg-blue-100"
+          className="h-9 rounded-[8px] border border-blue-100 bg-blue-50 px-3.5 text-xs font-semibold text-blue-700 transition hover:bg-blue-100"
         >
           View Applicants
         </button>

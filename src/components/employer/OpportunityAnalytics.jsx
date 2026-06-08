@@ -39,14 +39,14 @@ export default function OpportunityAnalytics({ opportunities = [], allCandidates
       {/* Header and Filter */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-5 gap-3">
         <div>
-          <h2 className="text-lg font-extrabold text-slate-950">Hiring Insights & Analytics</h2>
+          <h2 className="text-sm font-bold text-slate-900">Hiring Insights & Analytics</h2>
           <p className="text-xs text-slate-500 font-semibold mt-0.5">Real-time candidate pipelines, source channels, and skill distributions</p>
         </div>
 
         <select
           value={selectedJobId}
           onChange={(e) => setSelectedJobId(e.target.value)}
-          className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          className="rounded-[8px] border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="all">All Posted Opportunities</option>
           {opportunities.map(job => (
@@ -65,24 +65,24 @@ export default function OpportunityAnalytics({ opportunities = [], allCandidates
       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         
         {/* Conversion Funnel */}
-        <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.04)] space-y-4">
+        <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.05)] space-y-4">
           <div>
-            <h3 className="text-sm font-extrabold text-slate-950">Applicant Conversion Funnel</h3>
-            <p className="text-[10px] text-slate-400 font-bold mt-0.5">Aggregated metrics across the entire application flow</p>
+            <h3 className="text-sm font-semibold text-slate-950">Applicant Conversion Funnel</h3>
+            <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Aggregated metrics across the entire application flow</p>
           </div>
 
           <div className="space-y-3.5 pt-2">
             {funnelData.map((item) => (
               <div key={item.stage} className="space-y-1">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-extrabold text-slate-700">{item.stage}</span>
+                  <span className="font-semibold text-slate-700">{item.stage}</span>
                   <div className="space-x-2">
-                    <span className="font-extrabold text-slate-900">{item.count} Candidates</span>
-                    <span className="font-bold text-slate-400">({item.pct}%)</span>
+                    <span className="font-semibold text-slate-950">{item.count} Candidates</span>
+                    <span className="font-semibold text-slate-400">({item.pct}%)</span>
                   </div>
                 </div>
-                <div className="h-4 w-full bg-slate-100 rounded-lg overflow-hidden flex">
-                  <div className={`h-full ${item.color} rounded-lg transition-all duration-500`} style={{ width: `${item.pct}%` }} />
+                <div className="h-4 w-full bg-slate-100 rounded-[4px] overflow-hidden flex">
+                  <div className={`h-full ${item.color} rounded-[4px] transition-all duration-500`} style={{ width: `${item.pct}%` }} />
                 </div>
               </div>
             ))}
@@ -93,8 +93,8 @@ export default function OpportunityAnalytics({ opportunities = [], allCandidates
         <div className="space-y-6">
           <HorizontalBarChartMock title="Skill Coverage in Applicant Pool" data={skillGaps} dual={true} />
           
-          <div className="rounded-2xl border border-blue-50 bg-gradient-to-r from-blue-50/50 to-indigo-50/20 p-5 shadow-xs">
-            <h4 className="text-xs font-extrabold text-blue-900 uppercase tracking-wide">AI Recommendations</h4>
+          <div className="rounded-[8px] border border-blue-100 bg-gradient-to-r from-blue-50/50 to-indigo-50/20 p-5 shadow-sm">
+            <h4 className="text-xs font-semibold text-blue-900 uppercase tracking-wider">AI Recommendations</h4>
             <ul className="mt-2.5 space-y-2 text-xs text-slate-600 font-medium">
               <li className="flex items-start gap-2">
                 <span>⚡</span>
