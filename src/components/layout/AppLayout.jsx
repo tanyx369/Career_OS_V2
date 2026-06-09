@@ -35,6 +35,7 @@ const workspaceConfigs = {
       { label: 'Talent Discovery', path: '/employer/talent', aliases: ['/employer'] },
       { label: 'Candidate Insights', path: '/employer/insights', aliases: [] },
       { label: 'Create Engagement', path: '/employer/posting', aliases: [] },
+      { label: 'Job Marketplace', path: '/employer/marketplace', aliases: [] },
     ],
     supportItems: [
       { label: 'Settings', path: '/employer/settings', aliases: [] },
@@ -57,7 +58,9 @@ const workspaceConfigs = {
 }
 
 function itemMatchesPath(item, pathname) {
-  return item.path === pathname || item.aliases.includes(pathname)
+  if (item.path === pathname || item.aliases.includes(pathname)) return true
+  if (pathname.startsWith(item.path + '/')) return true
+  return false
 }
 
 export default function AppLayout({ workspace = 'student' }) {

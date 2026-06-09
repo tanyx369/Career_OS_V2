@@ -1,14 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { CalendarEvent, CalendarEventStatus } from './CalendarTypes';
-
-interface EventDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  event: CalendarEvent | null;
-  onUpdateStatus: (eventId: string, newStatus: CalendarEventStatus) => void;
-  onRemoveEvent: (eventId: string) => void;
-  onViewEvent: (event: CalendarEvent) => void;
-}
 
 export default function EventDrawer({
   isOpen,
@@ -17,13 +7,13 @@ export default function EventDrawer({
   onUpdateStatus,
   onRemoveEvent,
   onViewEvent,
-}: EventDrawerProps) {
-  const drawerRef = useRef<HTMLDivElement>(null);
+}) {
+  const drawerRef = useRef(null);
 
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         e.preventDefault();
         onClose();
@@ -37,7 +27,7 @@ export default function EventDrawer({
       'button, select, [tabindex]:not([tabindex="-1"])'
     );
     if (focusable && focusable.length > 0) {
-      (focusable[0] as HTMLElement).focus();
+      focusable[0].focus();
     }
 
     return () => {
@@ -47,7 +37,7 @@ export default function EventDrawer({
 
   if (!isOpen || !event) return null;
 
-  const statusColors: Record<CalendarEventStatus, string> = {
+  const statusColors = {
     Registered: 'bg-purple-100 text-purple-700 border-purple-200',
     Saved: 'bg-blue-100 text-blue-700 border-blue-200',
     Waitlisted: 'bg-amber-100 text-amber-700 border-amber-200',
@@ -143,7 +133,7 @@ export default function EventDrawer({
               <select
                 id="status-select"
                 value={event.status}
-                onChange={(e) => onUpdateStatus(event.id, e.target.value as CalendarEventStatus)}
+                onChange={(e) => onUpdateStatus(event.id, e.target.value)}
                 className="h-10 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
               >
                 <option value="Registered">Registered</option>

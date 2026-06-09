@@ -1,3 +1,4 @@
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 import SignOutButton from '../session/SignOutButton';
 import GlobalEmployerSearch from './GlobalEmployerSearch';
@@ -8,7 +9,7 @@ export default function EmployerTopBar() {
   const location = useLocation();
   const { chipsByPage, removeChip, clearChips } = useEmployerSearchStore();
 
-  const getActivePage = (): 'talent' | 'insights' | 'engagement' => {
+  const getActivePage = () => {
     const path = location.pathname;
     if (path.includes('/insights')) return 'insights';
     if (path.includes('/posting')) return 'engagement';

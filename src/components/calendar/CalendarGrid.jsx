@@ -1,15 +1,4 @@
 import React, { useMemo } from 'react';
-import { CalendarEvent, CalendarEventStatus } from './CalendarTypes';
-
-interface CalendarGridProps {
-  events: CalendarEvent[];
-  selectedDate: string; // YYYY-MM-DD
-  onSelectDate: (date: string) => void;
-  currentMonth: Date;
-  onChangeMonth: (month: Date) => void;
-  activeFilter: string;
-  onFilterChange: (filter: string) => void;
-}
 
 export default function CalendarGrid({
   events,
@@ -19,7 +8,7 @@ export default function CalendarGrid({
   onChangeMonth,
   activeFilter,
   onFilterChange,
-}: CalendarGridProps) {
+}) {
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth();
 
@@ -79,7 +68,7 @@ export default function CalendarGrid({
     onSelectDate('2025-05-17');
   };
 
-  const dotColorClasses: Record<CalendarEventStatus, string> = {
+  const dotColorClasses = {
     Registered: 'bg-purple-600',
     Saved: 'bg-blue-600',
     Waitlisted: 'bg-orange-500',

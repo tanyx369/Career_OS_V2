@@ -1,12 +1,6 @@
+import React from 'react';
 
-import { SearchChip as SearchChipType } from '../../store/useEmployerSearchStore';
-
-interface SearchChipProps {
-  chip: SearchChipType;
-  onRemove: (id: string) => void;
-}
-
-export default function SearchChip({ chip, onRemove }: SearchChipProps) {
+export default function SearchChip({ chip, onRemove }) {
   const bgClasses = {
     candidate: 'bg-emerald-50 text-emerald-700 ring-emerald-100',
     skill: 'bg-blue-50 text-blue-700 ring-blue-100',

@@ -1,12 +1,6 @@
+import React from 'react';
 
-
-interface RecentSearchesSectionProps {
-  searches: string[];
-  onSelect: (search: string) => void;
-  onClear: () => void;
-}
-
-export default function RecentSearchesSection({ searches, onSelect, onClear }: RecentSearchesSectionProps) {
+export default function RecentSearchesSection({ searches, onSelect, onClear }) {
   if (searches.length === 0) return null;
 
   return (

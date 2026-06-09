@@ -1,11 +1,13 @@
 import React from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import SignOutButton from '../session/SignOutButton'
+import { useEmployerSearchStore } from '../../store/useEmployerSearchStore'
 
 const navItems = [
   { label: 'Talent Discovery', path: '/employer/talent', aliases: ['/employer'], icon: 'search' },
   { label: 'Candidate Insights', path: '/employer/insights', aliases: [], icon: 'users' },
   { label: 'Create Engagement', path: '/employer/posting', aliases: [], icon: 'spark' },
+  { label: 'Job Marketplace', path: '/employer/marketplace', aliases: [], icon: 'briefcase' },
 ]
 
 const supportItems = [
@@ -18,6 +20,7 @@ function SidebarIcon({ name }) {
     search: <><circle cx="11" cy="11" r="5" /><path d="m15 15 4 4" /></>,
     users: <><path d="M8 18a4 4 0 0 1 8 0" /><circle cx="12" cy="9" r="3" /><path d="M4 18a3 3 0 0 1 4-3" /><path d="M16 15a3 3 0 0 1 4 3" /></>,
     spark: <><path d="M12 3v4" /><path d="M12 17v4" /><path d="M3 12h4" /><path d="M17 12h4" /><path d="m6 6 3 3" /><path d="m15 15 3 3" /><path d="m18 6-3 3" /><path d="m9 15-3 3" /></>,
+    briefcase: <><rect width="20" height="14" x="2" y="7" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></>,
     settings: <><circle cx="12" cy="12" r="3" /><path d="M12 3v3" /><path d="M12 18v3" /><path d="m4.5 7.5 2.1 2.1" /><path d="m17.4 17.4 2.1 2.1" /><path d="M3 12h3" /><path d="M18 12h3" /><path d="m4.5 16.5 2.1-2.1" /><path d="m17.4 6.6 2.1-2.1" /></>,
     help: <><circle cx="12" cy="12" r="9" /><path d="M9.5 9a2.6 2.6 0 0 1 5 1c0 2-2.5 2.1-2.5 4" /><path d="M12 17h.01" /></>,
     bookmark: <path d="M7 4h10v16l-5-3-5 3z" />,
@@ -33,6 +36,7 @@ function SidebarIcon({ name }) {
 
 export default function EmployerSidebar() {
   const location = useLocation()
+  const shortlistedIds = useEmployerSearchStore((state) => state.shortlistedIds)
 
   return (
     <aside className="hidden h-screen w-72 shrink-0 border-r border-slate-200/80 bg-white px-4 py-5 shadow-[8px_0_30px_rgba(15,23,42,0.03)] lg:flex lg:flex-col">
@@ -75,7 +79,7 @@ export default function EmployerSidebar() {
           className="flex items-center justify-between rounded-[8px] px-4 py-3 text-sm font-normal leading-5 text-slate-600 hover:bg-slate-50"
         >
           <span className="flex items-center gap-3"><span className="flex h-6 w-6 items-center justify-center"><SidebarIcon name="users" /></span> Shortlists</span>
-          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">8</span>
+          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">{shortlistedIds.size}</span>
         </NavLink>
       </div>
       <nav className="mt-auto space-y-2 border-t border-slate-100 pt-5">

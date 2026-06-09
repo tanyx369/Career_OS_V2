@@ -1,13 +1,4 @@
 import React, { useMemo } from 'react';
-import { CalendarEvent } from './CalendarTypes';
-
-interface AgendaPanelProps {
-  selectedDate: string; // YYYY-MM-DD
-  events: CalendarEvent[];
-  onSelectEvent: (event: CalendarEvent) => void;
-  onRemoveEvent: (eventId: string) => void;
-  onSelectDate: (date: string) => void;
-}
 
 export default function AgendaPanel({
   selectedDate,
@@ -15,7 +6,7 @@ export default function AgendaPanel({
   onSelectEvent,
   onRemoveEvent,
   onSelectDate,
-}: AgendaPanelProps) {
+}) {
   const headerDateString = useMemo(() => {
     try {
       const d = new Date(selectedDate);
@@ -46,13 +37,6 @@ export default function AgendaPanel({
     Completed: 'bg-emerald-100 text-emerald-700 border-emerald-200',
   };
 
-  const statusBorderColors = {
-    Registered: 'border-purple-600',
-    Saved: 'border-blue-600',
-    Waitlisted: 'border-orange-500',
-    Completed: 'border-green-600',
-  };
-
   const indicatorBarColors = {
     Registered: 'bg-purple-600',
     Saved: 'bg-blue-600',
@@ -60,12 +44,12 @@ export default function AgendaPanel({
     Completed: 'bg-green-600',
   };
 
-  const monthShorts: Record<string, string> = {
+  const monthShorts = {
     '01': 'JAN', '02': 'FEB', '03': 'MAR', '04': 'APR', '05': 'MAY', '06': 'JUN',
     '07': 'JUL', '08': 'AUG', '09': 'SEP', '10': 'OCT', '11': 'NOV', '12': 'DEC'
   };
 
-  const renderTimeBlock = (timeStr: string) => {
+  const renderTimeBlock = (timeStr) => {
     if (!timeStr) return <div className="text-[10px] text-slate-400">All Day</div>;
     // Split "9:00 AM - 5:00 PM"
     const parts = timeStr.split(/\s*-\s*|\s*–\s*/);
@@ -169,11 +153,6 @@ export default function AgendaPanel({
                 Waitlisted: 'bg-amber-100 text-amber-700 border-amber-100',
                 Completed: 'bg-emerald-100 text-emerald-700 border-emerald-100',
               };
-
-              let textCol = 'text-purple-600';
-              if (event.status === 'Saved') textCol = 'text-blue-600';
-              else if (event.status === 'Waitlisted') textCol = 'text-orange-500';
-              else if (event.status === 'Completed') textCol = 'text-green-600';
 
               return (
                 <button

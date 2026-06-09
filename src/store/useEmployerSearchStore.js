@@ -1,24 +1,7 @@
 import { create } from 'zustand';
+import { employerTalentWorkspace } from '../data/mockData';
 
-export interface SearchChip {
-  id: string;
-  type: 'candidate' | 'skill' | 'role';
-  value: string;
-}
-
-interface EmployerSearchState {
-  searchQuery: string;
-  recentSearches: string[];
-  chipsByPage: Record<'talent' | 'insights' | 'engagement', SearchChip[]>;
-  setSearchQuery: (query: string) => void;
-  addChip: (page: 'talent' | 'insights' | 'engagement', chip: Omit<SearchChip, 'id'>) => void;
-  removeChip: (page: 'talent' | 'insights' | 'engagement', id: string) => void;
-  clearChips: (page: 'talent' | 'insights' | 'engagement') => void;
-  addRecentSearch: (query: string) => void;
-  clearRecentSearches: () => void;
-}
-
-export const useEmployerSearchStore = create<EmployerSearchState>((set) => ({
+export const useEmployerSearchStore = create((set) => ({
   searchQuery: '',
   recentSearches: ['SQL', 'Python', 'Product Analyst'],
   chipsByPage: {
@@ -26,6 +9,12 @@ export const useEmployerSearchStore = create<EmployerSearchState>((set) => ({
     insights: [],
     engagement: [],
   },
+  shortlistedIds: new Set(
+    employerTalentWorkspace.candidates.filter(c => c.shortlisted).map(c => c.id)
+  ),
+  savedIds: new Set(
+    employerTalentWorkspace.candidates.filter(c => c.shortlisted).map(c => c.id)
+  ),
   setSearchQuery: (query) => set({ searchQuery: query }),
   addChip: (page, chip) => set((state) => {
     const pageChips = state.chipsByPage[page];
@@ -61,4 +50,25 @@ export const useEmployerSearchStore = create<EmployerSearchState>((set) => ({
     };
   }),
   clearRecentSearches: () => set({ recentSearches: [] }),
+  toggleShortlist: (candidateId) => set((state) => {
+    const nextShort = new Set(state.shortlistedIds);
+    const nextSaved = new Set(state.savedIds);
+    if (nextShort.has(candidateId)) {
+      nextShort.delete(candidateId);
+    } else {
+      nextShort.add(candidateId);
+      nextSaved.add(candidateId); // Automatically save when shortlisting
+    }
+    return { shortlistedIds: nextShort, savedIds: nextSaved };
+  }),
+  toggleSave: (candidateId) => set((state) => {
+    const nextSaved = new Set(state.savedIds);
+    if (nextSaved.has(candidateId)) {
+      nextSaved.delete(candidateId);
+    } else {
+      nextSaved.add(candidateId);
+    }
+    return { savedIds: nextSaved };
+  }),
 }));
+

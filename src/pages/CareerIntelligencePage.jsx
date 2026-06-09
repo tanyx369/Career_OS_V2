@@ -1,45 +1,34 @@
-import React, { useState } from 'react'
-import AIInsightCard from '../components/career/AIInsightCard'
-import LearningRoadmapCard from '../components/career/LearningRoadmapCard'
-import CareerPathDetail from '../components/career/CareerPathDetail'
-import CareerPathNetworkGraph from '../components/career/network/CareerPathNetworkGraph'
-import MarketDemandCard from '../components/career/MarketDemandCard'
-import MarketStanding from '../components/career/MarketStanding'
-import MissingSkillItem from '../components/career/MissingSkillItem'
-import PathOverviewCard from '../components/career/PathOverviewCard'
-import RadarChartMock from '../components/career/RadarChartMock'
-import ReadinessGauge from '../components/career/ReadinessGauge'
-import SalaryBenchmarkCard from '../components/career/SalaryBenchmarkCard'
-import SkillProgressBar from '../components/career/SkillProgressBar'
-import TabNav from '../components/career/TabNav'
-import NextActionCard from '../components/career/NextActionCard'
-import Card from '../components/ui/Card'
-import { careerIntelligence, careerPathNetwork, careerPaths, marketStanding } from '../data/mockData'
+import React, { useState } from 'react';
+import AIInsightCard from '../components/career/AIInsightCard';
+import LearningRoadmapCard from '../components/career/LearningRoadmapCard';
+import CareerPathDetail from '../components/career/CareerPathDetail';
+import CareerPathNetworkGraph from '../components/career/network/CareerPathNetworkGraph';
+import MarketDemandCard from '../components/career/MarketDemandCard';
+import MarketStanding from '../components/career/MarketStanding';
+import MissingSkillItem from '../components/career/MissingSkillItem';
+import PathOverviewCard from '../components/career/PathOverviewCard';
+import RadarChartMock from '../components/career/RadarChartMock';
+import ReadinessGauge from '../components/career/ReadinessGauge';
+import SalaryBenchmarkCard from '../components/career/SalaryBenchmarkCard';
+import SkillProgressBar from '../components/career/SkillProgressBar';
+import TabNav from '../components/career/TabNav';
+import NextActionCard from '../components/career/NextActionCard';
+import Card from '../components/ui/Card';
+import { careerIntelligence, careerPathNetwork, careerPaths } from '../data/mockData';
 
 const tabs = [
   { id: 'skill-summary', label: 'Skill Summary', icon: 'S' },
   { id: 'career-paths', label: 'Career Path', icon: 'P' },
   { id: 'market-standing', label: 'Market Standing', icon: 'M' },
-]
-
-function PlaceholderTab({ children }) {
-  return (
-    <Card className="bg-white/90 p-10 text-center shadow-[0_12px_30px_rgba(15,23,42,0.04)]">
-      <p className="text-base font-semibold text-slate-700">{children}</p>
-    </Card>
-  )
-}
+];
 
 function SkillSummaryTab() {
-  // When a technical category (e.g. Technology, Domain Knowledge, Tools) is
-  // clicked on the main radar, we render a second radar to the right with its
-  // breakdown. Click the same category again, or hit Close, to dismiss.
-  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const handleCategoryClick = (category) => {
-    if (!category?.isTechnical || !category.breakdown) return
-    setSelectedCategory((prev) => (prev?.label === category.label ? null : category))
-  }
+    if (!category?.isTechnical || !category.breakdown) return;
+    setSelectedCategory((prev) => (prev?.label === category.label ? null : category));
+  };
 
   const mainRadarCard = (
     <Card className="rounded-2xl border-slate-200/80 bg-white/95 p-5 shadow-[0_12px_30px_rgba(15,23,42,0.04)]">
@@ -55,7 +44,7 @@ function SkillSummaryTab() {
         highlightedLabel={selectedCategory?.label}
       />
     </Card>
-  )
+  );
 
   const overallReadinessCard = (
     <Card className="rounded-2xl border-slate-200/80 bg-white/95 p-5 shadow-[0_12px_30px_rgba(15,23,42,0.04)]">
@@ -66,7 +55,7 @@ function SkillSummaryTab() {
         text={careerIntelligence.readinessText}
       />
     </Card>
-  )
+  );
 
   return (
     <div className="space-y-5">
@@ -74,7 +63,6 @@ function SkillSummaryTab() {
         <>
           <section className="grid gap-5 lg:grid-cols-2">
             <div className="radar-settle-left">{mainRadarCard}</div>
-            {/* key on category label re-mounts the card so the slide-in animation re-fires when switching */}
             <Card
               key={selectedCategory.label}
               className="radar-slide-in-right rounded-2xl border-slate-200/80 bg-white/95 p-5 shadow-[0_12px_30px_rgba(15,23,42,0.04)]"
@@ -134,13 +122,13 @@ function SkillSummaryTab() {
 
       <LearningRoadmapCard roadmap={careerIntelligence.learningRoadmap} />
     </div>
-  )
+  );
 }
 
 function CareerPathsTab() {
-  const [selectedPathId, setSelectedPathId] = useState(careerPaths[0].id)
-  const selectedPath = careerPaths.find((path) => path.id === selectedPathId) ?? careerPaths[0]
-  const fallbackSteps = careerPaths[0].roadmapSteps
+  const [selectedPathId, setSelectedPathId] = useState(careerPaths[0].id);
+  const selectedPath = careerPaths.find((path) => path.id === selectedPathId) ?? careerPaths[0];
+  const fallbackSteps = careerPaths[0].roadmapSteps;
 
   return (
     <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_320px]">
@@ -167,11 +155,11 @@ function CareerPathsTab() {
         />
       </aside>
     </div>
-  )
+  );
 }
 
 export default function CareerIntelligencePage() {
-  const [activeTab, setActiveTab] = useState('market-standing')
+  const [activeTab, setActiveTab] = useState('market-standing');
 
   return (
     <div className="w-full">
@@ -203,9 +191,9 @@ export default function CareerIntelligencePage() {
         <div className="mt-5">
           {activeTab === 'skill-summary' && <SkillSummaryTab />}
           {activeTab === 'career-paths' && <CareerPathsTab />}
-          {activeTab === 'market-standing' && <MarketStanding data={marketStanding} />}
+          {activeTab === 'market-standing' && <MarketStanding />}
         </div>
       </section>
     </div>
-  )
+  );
 }

@@ -1,27 +1,18 @@
 import React, { useState } from 'react';
-// @ts-ignore
 import DonutChartMock from '../components/employer/DonutChartMock';
-// @ts-ignore
 import EmployerAIInsightCard from '../components/employer/EmployerAIInsightCard';
-// @ts-ignore
 import HorizontalBarChartMock from '../components/employer/HorizontalBarChartMock';
-// @ts-ignore
 import OnboardingTrackerCard from '../components/employer/OnboardingTrackerCard';
-// @ts-ignore
 import PipelineColumn from '../components/employer/PipelineColumn';
-// @ts-ignore
 import StatCard from '../components/employer/StatCard';
-// @ts-ignore
 import ValidationRequestsTable from '../components/employer/ValidationRequestsTable';
 import Card from '../components/ui/Card';
 import { employerCandidateInsights, employerTalentWorkspace } from '../data/mockData';
 import { useEmployerSearchStore } from '../store/useEmployerSearchStore';
 
-
-
 export default function CandidateInsightsPage() {
   const [selectedCandidateId, setSelectedCandidateId] = useState('#1024');
-  const allCandidates = employerTalentWorkspace.candidates as any[];
+  const allCandidates = employerTalentWorkspace.candidates;
 
   // Subscribe to search store
   const { searchQuery, chipsByPage } = useEmployerSearchStore();
@@ -37,7 +28,7 @@ export default function CandidateInsightsPage() {
           c.name.toLowerCase().includes(q) ||
           c.targetRole.toLowerCase().includes(q) ||
           c.university.toLowerCase().includes(q) ||
-          c.topSkills.some((s: string) => s.toLowerCase().includes(q));
+          c.topSkills.some((s) => s.toLowerCase().includes(q));
         if (!matchesSearch) return false;
       }
       
@@ -54,8 +45,8 @@ export default function CandidateInsightsPage() {
 
         if (skillChips.length > 0) {
           const hasAllSkills = skillChips.every(ch =>
-            c.topSkills.some((s: string) => s.toLowerCase() === ch.value.toLowerCase()) ||
-            c.evidenceTrace.some((e: any) => e.skill.toLowerCase() === ch.value.toLowerCase())
+            c.topSkills.some((s) => s.toLowerCase() === ch.value.toLowerCase()) ||
+            c.evidenceTrace.some((e) => e.skill.toLowerCase() === ch.value.toLowerCase())
           );
           if (!hasAllSkills) return false;
         }
@@ -72,11 +63,9 @@ export default function CandidateInsightsPage() {
   // Compute dynamic saved candidates pipeline
   const pipelineColumns = React.useMemo(() => {
     const orig = employerCandidateInsights.savedCandidatesPipeline;
-    // Map stage data dynamically
-    return Object.values(orig).map((stage: any) => {
+    return Object.values(orig).map((stage) => {
       const matchingIds = new Set(matchingCandidates.map(c => c.id));
-      const filteredCands = stage.candidates.filter((cand: any) => {
-        // If candidate chips match or list contains candidate ID
+      const filteredCands = stage.candidates.filter((cand) => {
         if (matchingCandidates.length === allCandidates.length) return true;
         return matchingIds.has(cand.id) || matchingCandidates.some(c => c.name.includes(cand.id));
       });
@@ -115,7 +104,7 @@ export default function CandidateInsightsPage() {
     ];
     if (matchingCandidates.length === allCandidates.length) return base;
 
-    const uniCounts: Record<string, number> = {};
+    const uniCounts = {};
     matchingCandidates.forEach(c => {
       uniCounts[c.university] = (uniCounts[c.university] || 0) + 1;
     });
@@ -142,9 +131,9 @@ export default function CandidateInsightsPage() {
     ];
     if (matchingCandidates.length === allCandidates.length) return base;
 
-    const freq: Record<string, number> = {};
+    const freq = {};
     matchingCandidates.forEach(c => {
-      c.topSkills.forEach((s: string) => {
+      c.topSkills.forEach((s) => {
         freq[s] = (freq[s] || 0) + 1;
       });
     });
@@ -229,7 +218,7 @@ export default function CandidateInsightsPage() {
             <button type="button" className="text-xs font-semibold text-indigo-600">View Full Pipeline</button>
           </div>
           <div className="flex gap-4 overflow-x-auto pb-1">
-            {pipelineColumns.map((column: any) => (
+            {pipelineColumns.map((column) => (
               <PipelineColumn
                 key={column.label}
                 column={column}
@@ -250,7 +239,7 @@ export default function CandidateInsightsPage() {
           </h2>
         </div>
         <div className="grid gap-4 xl:grid-cols-[1fr_1fr_1fr_0.9fr]">
-          {employerCandidateInsights.onboardingTracker.map((item: any) => (
+          {employerCandidateInsights.onboardingTracker.map((item) => (
             <OnboardingTrackerCard key={item.candidate} item={item} />
           ))}
           <div className="rounded-2xl bg-indigo-50/70 p-5">
