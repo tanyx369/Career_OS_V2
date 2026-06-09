@@ -2,6 +2,7 @@ import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AppLayout from './components/layout/AppLayout'
 import AlumniSignalIntelligencePage from './pages/AlumniSignalIntelligencePage'
+import AuthPage from './pages/AuthPage'
 import CandidateInsightsPage from './pages/CandidateInsightsPage'
 import CandidateOverviewPage from './pages/CandidateOverviewPage'
 import CareerIntelligencePage from './pages/CareerIntelligencePage'
@@ -22,6 +23,9 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/auth" element={<AuthPage />} />
+      <Route path="/login" element={<Navigate to="/auth" replace />} />
+      <Route path="/signup" element={<Navigate to="/auth?mode=signup" replace />} />
 
       {/* Each workspace is protected by the role selected on the landing page. */}
       <Route element={<ProtectedRoute role="student" />}>
