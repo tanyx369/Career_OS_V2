@@ -1,7 +1,45 @@
-import React from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import compassIcon from '../assets/icon-compass.svg'
 import { useCareerStore } from '../store/useCareerStore'
+
+// Reveal: fades + lifts the wrapped node when it scrolls into view. Once the
+// element has been seen, the observer stops watching so animations only play
+// once. `delay` accepts 1–4 to pick a `rdN` stagger class from styles.css.
+function Reveal({ as: Tag = 'div', delay, className = '', children, ...rest }) {
+  const ref = useRef(null)
+  const [shown, setShown] = useState(false)
+
+  useEffect(() => {
+    if (shown) return undefined
+    const node = ref.current
+    if (!node) return undefined
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setShown(true)
+            observer.disconnect()
+          }
+        })
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [shown])
+
+  const delayClass = delay ? `rd${Math.min(Math.max(delay, 1), 4)}` : ''
+  const classes = ['landing-reveal', delayClass, shown ? 'is-in' : '', className]
+    .filter(Boolean)
+    .join(' ')
+
+  return (
+    <Tag ref={ref} className={classes} {...rest}>
+      {children}
+    </Tag>
+  )
+}
 
 // Each workspace card maps to one of the protected routes in App.jsx. The
 // landing page selects the role in the store before navigating so the route
@@ -268,19 +306,18 @@ export default function LandingPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={enterStudentPrototype}
+          <Link
+            to="/auth"
             className="rounded-md border border-slate-200 bg-transparent px-4 py-1.5 text-sm font-medium text-slate-700 transition hover:border-indigo-500 hover:text-indigo-600"
           >
             Sign in
-          </button>
-          <a
-            href="#workspaces"
+          </Link>
+          <Link
+            to="/auth?mode=signup"
             className="rounded-md bg-slate-900 px-4 py-1.5 text-sm font-semibold text-white transition hover:-translate-y-px hover:bg-indigo-600"
           >
             Request early access
-          </a>
+          </Link>
         </div>
       </nav>
 
@@ -297,7 +334,7 @@ export default function LandingPage() {
         <div className="pointer-events-none absolute -bottom-16 -right-16 h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle,rgba(41,182,246,0.08),transparent_70%)]" />
 
         <div className="relative mx-auto max-w-4xl">
-          <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-indigo-200/60 bg-white px-5 py-1.5 text-xs font-semibold uppercase tracking-wide text-indigo-600 shadow-[0_2px_12px_rgba(91,108,249,0.10)]">
+          <div className="landing-fade-in mb-7 inline-flex items-center gap-2 rounded-full border border-indigo-200/60 bg-white px-5 py-1.5 text-xs font-semibold uppercase tracking-wide text-indigo-600 shadow-[0_2px_12px_rgba(91,108,249,0.10)]">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-500" />
@@ -305,7 +342,7 @@ export default function LandingPage() {
             Now in prototype — Hackathon 2026
           </div>
 
-          <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-slate-900 sm:text-5xl lg:text-[58px]">
+          <h1 className="landing-fade-in d1 text-4xl font-extrabold leading-[1.08] tracking-tight text-slate-900 sm:text-5xl lg:text-[58px]">
             The career intelligence layer
             <br />
             the world has been{' '}
@@ -314,13 +351,13 @@ export default function LandingPage() {
             </span>
           </h1>
 
-          <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-slate-500 sm:text-lg">
+          <p className="landing-fade-in d2 mx-auto mt-5 max-w-xl text-base leading-7 text-slate-500 sm:text-lg">
             CareerOS connects students, employers, and universities in one AI-powered ecosystem —
             turning raw experience into verified talent evidence and bridging the gap between
             education and industry.
           </p>
 
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
+          <div className="landing-fade-in d3 mt-10 flex flex-wrap justify-center gap-3">
             <button
               type="button"
               onClick={enterStudentPrototype}
@@ -336,7 +373,7 @@ export default function LandingPage() {
             </a>
           </div>
 
-          <div className="mx-auto mt-14 inline-flex overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_6px_28px_rgba(17,24,39,0.07)]">
+          <div className="landing-fade-in d4 mx-auto mt-14 inline-flex overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_6px_28px_rgba(17,24,39,0.07)]">
             {PROBLEM_STATS.map((stat, i) => (
               <div
                 key={stat.label}
@@ -366,7 +403,7 @@ export default function LandingPage() {
         className="border-y border-slate-200 bg-white px-6 py-20 sm:px-12"
       >
         <div className="mx-auto max-w-6xl">
-          <div className="max-w-2xl">
+          <Reveal className="max-w-2xl">
             <Eyebrow>The Problem</Eyebrow>
             <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl">
               Three broken relationships.
@@ -377,12 +414,13 @@ export default function LandingPage() {
               The talent ecosystem operates in silos. Students guess at career relevance. Employers
               screen resumes, not skills. Universities design curricula without market feedback.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
-            {PROBLEM_CARDS.map((card) => (
-              <div
+            {PROBLEM_CARDS.map((card, i) => (
+              <Reveal
                 key={card.title}
+                delay={i + 1}
                 className="rounded-2xl border border-slate-200 bg-slate-50 p-6 transition hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(17,24,39,0.08)]"
               >
                 <div className="mb-4 flex items-start justify-between">
@@ -396,7 +434,7 @@ export default function LandingPage() {
                 <h3 className="text-base font-bold text-slate-900">{card.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-500">{card.body}</p>
                 <p className="mt-3 text-[11px] italic text-slate-400">{card.source}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -405,7 +443,7 @@ export default function LandingPage() {
       {/* ─── WORKSPACES ──────────────────────────────────────────── */}
       <section id="workspaces" className="bg-slate-50 px-6 py-20 sm:px-12">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-12 text-center">
+          <Reveal className="mb-12 text-center">
             <Eyebrow centered>The Solution</Eyebrow>
             <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
               One platform, three perspectives
@@ -414,12 +452,14 @@ export default function LandingPage() {
               Purpose-built workspaces for every stakeholder — each designed around their specific
               goals and challenges.
             </p>
-          </div>
+          </Reveal>
 
           <div className="grid gap-5 lg:grid-cols-3">
-            {WORKSPACES.map((ws) => (
-              <button
+            {WORKSPACES.map((ws, i) => (
+              <Reveal
                 key={ws.id}
+                delay={i + 1}
+                as="button"
                 type="button"
                 onClick={() => enterWorkspace(ws)}
                 className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 text-left transition hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(17,24,39,0.10)]"
@@ -448,7 +488,7 @@ export default function LandingPage() {
                 >
                   {ws.cta} <span aria-hidden>→</span>
                 </span>
-              </button>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -464,20 +504,26 @@ export default function LandingPage() {
         <div className="pointer-events-none absolute -bottom-20 left-[20%] h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle,rgba(123,79,214,0.12),transparent_70%)]" />
 
         <div className="relative mx-auto max-w-6xl">
-          <Eyebrow tone="dark">How It Works</Eyebrow>
-          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            From raw experience
-            <br />
-            to market signal
-          </h2>
-          <p className="mt-3 max-w-md text-base leading-7 text-white/55">
-            A four-step pipeline that transforms unstructured career data into actionable
-            intelligence for every stakeholder.
-          </p>
+          <Reveal>
+            <Eyebrow tone="dark">How It Works</Eyebrow>
+            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+              From raw experience
+              <br />
+              to market signal
+            </h2>
+            <p className="mt-3 max-w-md text-base leading-7 text-white/55">
+              A four-step pipeline that transforms unstructured career data into actionable
+              intelligence for every stakeholder.
+            </p>
+          </Reveal>
 
           <div className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-white/5 lg:grid-cols-4">
-            {STEPS.map((step) => (
-              <div key={step.num} className="bg-white/[0.03] p-7 transition hover:bg-white/[0.07]">
+            {STEPS.map((step, i) => (
+              <Reveal
+                key={step.num}
+                delay={Math.min(i + 1, 4)}
+                className="bg-white/[0.03] p-7 transition hover:bg-white/[0.07]"
+              >
                 <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-indigo-300">
                   {step.num}
                 </p>
@@ -486,7 +532,7 @@ export default function LandingPage() {
                 </div>
                 <h3 className="mt-4 text-base font-bold text-white">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/45">{step.body}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -495,21 +541,24 @@ export default function LandingPage() {
       {/* ─── INTELLIGENCE ────────────────────────────────────────── */}
       <section id="vision" className="bg-white px-6 py-20 sm:px-12">
         <div className="mx-auto max-w-6xl">
-          <Eyebrow>Intelligence Layer</Eyebrow>
-          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-            Powered by real labour
-            <br />
-            market data
-          </h2>
-          <p className="mt-3 max-w-lg text-base leading-7 text-slate-500">
-            Every recommendation is grounded in O*NET occupational taxonomies and Lightcast's live
-            job posting database — not generic AI guesses.
-          </p>
+          <Reveal>
+            <Eyebrow>Intelligence Layer</Eyebrow>
+            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+              Powered by real labour
+              <br />
+              market data
+            </h2>
+            <p className="mt-3 max-w-lg text-base leading-7 text-slate-500">
+              Every recommendation is grounded in O*NET occupational taxonomies and Lightcast's live
+              job posting database — not generic AI guesses.
+            </p>
+          </Reveal>
 
           <div className="mt-12 grid gap-5 md:grid-cols-2">
-            {INTEL_CARDS.map((card) => (
-              <div
+            {INTEL_CARDS.map((card, i) => (
+              <Reveal
                 key={card.title}
+                delay={Math.min(i + 1, 4)}
                 className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-7 transition hover:-translate-y-0.5 hover:border-indigo-200 hover:bg-white hover:shadow-[0_10px_30px_rgba(17,24,39,0.07)]"
               >
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg text-xl ${card.iconBg}`}>
@@ -522,7 +571,7 @@ export default function LandingPage() {
                     {card.tag}
                   </span>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -538,7 +587,7 @@ export default function LandingPage() {
         }}
       >
         <div className="mx-auto max-w-6xl">
-          <div className="mb-12 text-center">
+          <Reveal className="mb-12 text-center">
             <Eyebrow centered>Build Roadmap</Eyebrow>
             <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
               What we've built. What's next.
@@ -547,12 +596,13 @@ export default function LandingPage() {
               We're at prototype stage — here's our honest progress and where we're taking this
               after the hackathon.
             </p>
-          </div>
+          </Reveal>
 
           <div className="grid gap-5 lg:grid-cols-3">
-            {ROADMAP_PHASES.map((phase) => (
-              <div
+            {ROADMAP_PHASES.map((phase, i) => (
+              <Reveal
                 key={phase.title}
+                delay={i + 1}
                 className="rounded-2xl border border-slate-200 bg-white p-7 transition hover:-translate-y-1 hover:shadow-[0_12px_36px_rgba(17,24,39,0.08)]"
               >
                 <span
@@ -569,7 +619,7 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -577,7 +627,7 @@ export default function LandingPage() {
 
       {/* ─── CTA BANNER ──────────────────────────────────────────── */}
       <div className="px-6 pb-20 pt-2 sm:px-12">
-        <div
+        <Reveal
           className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl px-8 py-16 text-center sm:px-16"
           style={{
             background:
@@ -620,7 +670,7 @@ export default function LandingPage() {
               </a>
             </div>
           </div>
-        </div>
+        </Reveal>
       </div>
 
       {/* ─── FOOTER ──────────────────────────────────────────────── */}
