@@ -8,8 +8,8 @@ import { employerEngagement, employerEngagementBuilder, employerTalentWorkspace 
 import { useEmployerSearchStore } from '../store/useEmployerSearchStore'
 
 const tabs = [
-  { id: 'club-collaboration', label: 'Club Collaboration' },
   { id: 'create-engagement', label: 'Create Engagement' },
+  { id: 'club-collaboration', label: 'Club Collaboration' },
 ]
 
 const creationSteps = [
@@ -214,13 +214,13 @@ function ProgressTracker({ currentStep }) {
       <div className="grid gap-4 md:grid-cols-5">
         {creationSteps.map((step, index) => (
           <div key={step.id} className="relative flex items-start gap-3">
-            {index < creationSteps.length - 1 && <span className={`absolute left-8 top-4 hidden h-px w-[calc(100%+1rem)] md:block ${step.id < currentStep ? 'bg-blue-300' : 'bg-slate-200'}`} />}
+            {index < creationSteps.length - 1 && <span className={`absolute left-8 top-4 z-0 hidden h-px w-[calc(100%+1rem)] md:block ${step.id < currentStep ? 'bg-blue-300' : 'bg-slate-200'}`} />}
             <span className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
               step.id === currentStep ? 'bg-blue-600 text-white shadow-sm shadow-blue-200' : step.id < currentStep ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-100' : 'bg-slate-100 text-slate-600'
             }`}>
               {step.id}
             </span>
-            <div className="min-w-0">
+            <div className="min-w-0 bg-white relative z-10 pr-3">
               <p className={`text-sm font-semibold ${step.id === currentStep ? 'text-slate-950' : 'text-slate-600'}`}>{step.title}</p>
               <p className="mt-0.5 text-xs leading-5 text-slate-500">{step.helper}</p>
             </div>
