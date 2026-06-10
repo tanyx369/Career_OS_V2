@@ -628,7 +628,770 @@ const changeColor = (change) => {
   return 'text-slate-500'
 }
 
+const quadrantToneClasses = {
+  priority: {
+    marker: 'text-rose-700 ring-rose-200',
+    icon: 'bg-rose-50 text-rose-600 ring-rose-200',
+  },
+  leverage: {
+    marker: 'text-emerald-700 ring-emerald-200',
+    icon: 'bg-emerald-50 text-emerald-600 ring-emerald-200',
+  },
+  monitor: {
+    marker: 'text-amber-700 ring-amber-200',
+    icon: 'bg-amber-50 text-amber-600 ring-amber-200',
+  },
+  maintain: {
+    marker: 'text-teal-700 ring-teal-200',
+    icon: 'bg-teal-50 text-teal-600 ring-teal-200',
+  },
+}
+
+const quadrantSkills = [
+  { skill: 'Cloud Deployment', icon: 'CD', tone: 'priority', x: 22, y: 28 },
+  { skill: 'MLOps', icon: 'ML', tone: 'priority', x: 31, y: 42 },
+  { skill: 'Product Thinking', icon: 'PT', tone: 'priority', x: 42, y: 34 },
+  { skill: 'Python', icon: 'PY', tone: 'leverage', x: 68, y: 27 },
+  { skill: 'Data Analysis', icon: 'DA', tone: 'leverage', x: 80, y: 42 },
+  { skill: 'Power BI', icon: 'BI', tone: 'monitor', x: 24, y: 72 },
+  { skill: 'SQL', icon: 'SQL', tone: 'maintain', x: 72, y: 76 },
+]
+
+const quadrantStats = [
+  { value: '3', label: 'Strengths', helper: 'Areas driving success', tone: 'emerald', icon: 'UP' },
+  { value: '4', label: 'Priority Gaps', helper: 'High impact areas', tone: 'rose', icon: '!' },
+  { value: '70%', label: 'Focus Score', helper: 'Improvement opportunity', tone: 'violet', icon: 'FS' },
+  { value: '+14%', label: 'Potential Impact', helper: 'Readiness uplift', tone: 'blue', icon: '+' },
+]
+
+const keyInsights = [
+  { text: 'Cloud Deployment and MLOps are high-impact gaps that should be prioritized.', tone: 'rose', icon: 'UP' },
+  { text: 'Python and Data Analysis are strong pillars driving readiness.', tone: 'emerald', icon: 'ST' },
+  { text: 'Closing priority gaps can unlock up to 14% improvement in readiness.', tone: 'amber', icon: '+' },
+]
+
+const priorityActions = [
+  { title: 'Cloud Deployment Workshop', detail: 'Build production-ready cloud skills', impact: 'High Impact', tone: 'rose' },
+  { title: 'MLOps Enablement Program', detail: 'Implement CI/CD and monitoring', impact: 'High Impact', tone: 'rose' },
+  { title: 'Product Thinking Sprint', detail: 'Strengthen user-centric thinking', impact: 'Medium Impact', tone: 'amber' },
+  { title: 'Power BI Fundamentals', detail: 'Improve data visualization skills', impact: 'Medium Impact', tone: 'amber' },
+]
+
 // ─── Dropdown Filter Component ─────────────────────────────────────────────────
+
+function QuadrantLabel({ title, subtitle, className }) {
+  return (
+    <div className={`absolute rounded-[8px] px-3 py-2 ring-1 ${className}`}>
+      <p className="text-xs font-semibold">{title}</p>
+      <p className="mt-1 text-[11px] font-medium opacity-80">{subtitle}</p>
+    </div>
+  )
+}
+
+function getInterventionRecommendation(skillName) {
+  const recommendations = {
+    'Cloud Deployment': 'AWS/GCP Cloud Architecture Certification and Hands-on Deploy Labs.',
+    'MLOps': 'MLOps pipeline workshop featuring GitHub Actions & Docker containers.',
+    'Product Thinking': 'Product Management Sprint: customer discovery to MVP roadmap.',
+    'Python': 'Advanced Python programming boot camp focusing on scripting and OOP.',
+    'Data Analysis': 'Applied Data Science challenge: cleaning raw datasets and scripting.',
+    'Power BI': 'Microsoft Power BI masterclass: data modeling and DAX queries.',
+    'SQL': 'SQL databases Bootcamp: writing complex queries and optimizing tables.',
+    'Statistics': 'Advanced Statistical Methods & Hypothesis Testing workshop.',
+    'Machine Learning': 'Introduction to Machine Learning: regression, trees, and clustering.',
+    'Data Engineering': 'ETL pipelines lab with Apache Spark and data lake staging.',
+    'R Programming': 'Statistical computing with R: tidyverse and markdown reports.',
+    'Data Visualization': 'Interactive Dashboard design using Tableau and d3.js.',
+    'Data Structures': 'Coding interviews prep: stacks, trees, queues, and complexity.',
+    'Algorithms': 'Advanced Algorithms sprint: dynamic programming and graph traversals.',
+    'Web Development': 'Modern Frontend Frameworks: building interactive React web apps.',
+    'Networking Basics': 'Cisco CCNA prep: subnetting, routing tables, and HTTP protocols.',
+    'System Design': 'Scalable web systems design: load balances, caching, and database sharing.',
+    'AI / ML Basics': 'AI Fundamentals: neural networks, NLP, and deep learning overview.',
+    'Product Analytics': 'Behavioral analytics track: Amplitude instrumentation and user cohorts.',
+    'Predictive Modelling': 'Regression modeling and forecasting methods using Python.',
+    'Data Reporting': 'Executive summary writing and metric report generation.',
+    'Python Analytics': 'Data science scripts: Pandas, Numpy, and Matplotlib.',
+    'Excel / Sheets': 'Advanced spreadsheets: VLOOKUP, Pivot tables, and Macros.',
+  }
+  return recommendations[skillName] || `Specialized course and project-based validation for ${skillName}.`
+}
+
+const nodeStyles = {
+  priority: 'bg-rose-50 text-rose-700 ring-rose-200 hover:bg-rose-100 hover:text-rose-800',
+  leverage: 'bg-emerald-50 text-emerald-700 ring-emerald-200 hover:bg-emerald-100 hover:text-emerald-800',
+  monitor: 'bg-amber-50 text-amber-700 ring-amber-200 hover:bg-amber-100 hover:text-amber-800',
+  maintain: 'bg-teal-50 text-teal-700 ring-teal-200 hover:bg-teal-100 hover:text-teal-800',
+}
+
+const clusterStyles = {
+  priority: 'bg-rose-50 text-rose-700 ring-rose-200 border-rose-300 hover:bg-rose-100',
+  leverage: 'bg-emerald-50 text-emerald-700 ring-emerald-200 border-emerald-300 hover:bg-emerald-100',
+  monitor: 'bg-amber-50 text-amber-700 ring-amber-200 border-amber-300 hover:bg-amber-100',
+  maintain: 'bg-teal-50 text-teal-700 ring-teal-200 border-teal-300 hover:bg-teal-100',
+}
+
+function QuadrantSkillNode({ node, hoveredNodeId, setHoveredNodeId, selectedNodeId, setSelectedNodeId }) {
+  const isSelected = selectedNodeId === node.id
+  const isHovered = hoveredNodeId === node.id
+  const isAnyHovered = hoveredNodeId !== null
+  const opacityClass = isAnyHovered && !isHovered ? 'opacity-30 scale-95 blur-[0.2px]' : 'opacity-100'
+
+  const activeStyle = node.isCluster
+    ? `border-2 border-dashed ${clusterStyles[node.tone]}`
+    : `bg-white/95 ${nodeStyles[node.tone]}`
+
+  // Apply visual styling hierarchy:
+  // selected node = stronger blue ring + soft glow + slight scale-up + high z-index
+  // hover node = subtle scale-up only + high z-index
+  const selectionClasses = isSelected
+    ? 'ring-4 ring-blue-500/80 drop-shadow-[0_0_12px_rgba(59,130,246,0.45)] scale-110 z-30'
+    : isHovered
+      ? 'scale-105 shadow-md z-30'
+      : ''
+
+  const handleClick = (e) => {
+    e.stopPropagation()
+    setSelectedNodeId((prev) => (prev === node.id ? null : node.id))
+  }
+
+  return (
+    <div
+      className={`absolute z-20 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out ${opacityClass}`}
+      style={{ left: `${node.x}%`, top: `${node.y}%` }}
+      onMouseEnter={() => setHoveredNodeId(node.id)}
+      onMouseLeave={() => setHoveredNodeId(null)}
+      onClick={handleClick}
+    >
+      <button
+        type="button"
+        className={`flex h-11 w-11 items-center justify-center rounded-full font-bold text-xs shadow-sm ring-1 transition-all duration-300 ease-out focus:outline-none ${activeStyle} ${selectionClasses}`}
+      >
+        {node.isCluster ? (
+          <span className="text-slate-700">{node.label}</span>
+        ) : (
+          <span className="uppercase text-slate-800">{node.icon}</span>
+        )}
+      </button>
+    </div>
+  )
+}
+
+function QuadrantStatCard({ stat }) {
+  const valueClass =
+    stat.tone === 'rose'
+      ? 'text-rose-600'
+      : stat.tone === 'emerald'
+        ? 'text-emerald-600'
+        : stat.tone === 'violet'
+          ? 'text-violet-600'
+          : 'text-blue-600'
+
+  return (
+    <article className="flex min-w-0 items-center gap-3 rounded-[8px] border border-slate-100 bg-white p-3">
+      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-bold ring-1 ${metricToneClasses[stat.tone]}`}>
+        {stat.icon}
+      </span>
+      <div className="min-w-0">
+        <p className={`text-xl font-semibold leading-none ${valueClass}`}>{stat.value}</p>
+        <p className="mt-1 text-xs font-semibold text-slate-800">{stat.label}</p>
+        <p className="mt-0.5 truncate text-[11px] font-medium text-slate-500">{stat.helper}</p>
+      </div>
+    </article>
+  )
+}
+
+function getSkillIcon(skillName) {
+  const customIcons = {
+    'Cloud Deployment': 'CD',
+    'MLOps': 'ML',
+    'Product Thinking': 'PT',
+    'Python': 'PY',
+    'Data Analysis': 'DA',
+    'Power BI': 'BI',
+    'SQL': 'SQL',
+    'Statistics': 'STA',
+    'Machine Learning': 'ML',
+    'Data Engineering': 'DE',
+    'R Programming': 'R',
+    'Data Visualization': 'DV',
+    'Data Structures': 'DS',
+    'Algorithms': 'ALG',
+    'Web Development': 'WEB',
+    'Networking Basics': 'NET',
+    'System Design': 'SYS',
+    'AI / ML Basics': 'AI',
+    'Product Analytics': 'PA',
+    'Business Analytics': 'BA',
+    'Data Warehousing': 'DW',
+    'Tableau': 'TAB',
+    'Excel': 'XLS',
+    'Excel / Sheets': 'XLS',
+    'Predictive Modelling': 'PM',
+    'Data Reporting': 'REP',
+    'Python Analytics': 'PYA',
+  }
+  return customIcons[skillName] || skillName.substring(0, 2).toUpperCase()
+}
+
+const badgeStyles = {
+  priority: 'bg-rose-50 text-rose-700 ring-rose-100',
+  leverage: 'bg-emerald-50 text-emerald-700 ring-emerald-100',
+  monitor: 'bg-amber-50 text-amber-700 ring-amber-100',
+  maintain: 'bg-teal-50 text-teal-700 ring-teal-100',
+}
+
+const badgeLabels = {
+  priority: 'Priority Focus',
+  leverage: 'Leverage Strengths',
+  monitor: 'Monitor & Improve',
+  maintain: 'Maintain Momentum',
+}
+
+function StrategicQuadrantSection({ skills = [], metrics = [], potentialImpact = '+14%' }) {
+  const [hoveredNodeId, setHoveredNodeId] = React.useState(null)
+  const [selectedNodeId, setSelectedNodeId] = React.useState(null)
+  const [hoveredFocusZone, setHoveredFocusZone] = React.useState(false)
+
+  const dynamicSkills = React.useMemo(() => {
+    // 1. Initial mapping of nodes
+    const rawNodes = skills.map((item) => {
+      const x = 12 + (item.coverage / 100) * 76
+      const y = 12 + (1 - (item.demand / 100)) * 76
+      
+      let tone = 'monitor'
+      if (x < 50 && y < 50) tone = 'priority'
+      else if (x >= 50 && y < 50) tone = 'leverage'
+      else if (x < 50 && y >= 50) tone = 'monitor'
+      else tone = 'maintain'
+      
+      return {
+        ...item,
+        x,
+        y,
+        origX: x,
+        origY: y,
+        tone,
+        icon: getSkillIcon(item.skill),
+        id: item.skill,
+      }
+    })
+
+    // 2. Zone-based Clustering (collapse into cluster if more than 3 nodes in a quadrant and they overlap closely)
+    const zones = ['priority', 'leverage', 'monitor', 'maintain']
+    let finalNodes = []
+
+    zones.forEach((zoneName) => {
+      const zoneNodes = rawNodes.filter((n) => n.tone === zoneName)
+      
+      if (zoneNodes.length > 3) {
+        const visited = new Set()
+        const clustered = []
+        
+        for (let i = 0; i < zoneNodes.length; i++) {
+          if (visited.has(i)) continue
+          
+          const cluster = [zoneNodes[i]]
+          visited.add(i)
+          
+          for (let j = i + 1; j < zoneNodes.length; j++) {
+            if (visited.has(j)) continue
+            
+            // Highly crowded (> 5) -> cluster more aggressively to keep nodes away from labels
+            const threshold = zoneNodes.length > 5 ? 12.5 : 10.5
+            const isClose = cluster.some((cNode) => {
+              const dx = zoneNodes[j].x - cNode.x
+              const dy = zoneNodes[j].y - cNode.y
+              return Math.sqrt(dx * dx + dy * dy) < threshold
+            })
+            
+            if (isClose) {
+              cluster.push(zoneNodes[j])
+              visited.add(j)
+            }
+          }
+          
+          if (cluster.length >= 2) {
+            const avgX = cluster.reduce((sum, n) => sum + n.x, 0) / cluster.length
+            const avgY = cluster.reduce((sum, n) => sum + n.y, 0) / cluster.length
+            
+            clustered.push({
+              id: `cluster-${zoneName}-${clustered.length}`,
+              isCluster: true,
+              skills: cluster,
+              x: avgX,
+              y: avgY,
+              tone: zoneName,
+              label: `+${cluster.length}`,
+            })
+          } else {
+            clustered.push({
+              ...cluster[0],
+              isCluster: false,
+            })
+          }
+        }
+        finalNodes = finalNodes.concat(clustered)
+      } else {
+        finalNodes = finalNodes.concat(zoneNodes.map((n) => ({ ...n, isCluster: false })))
+      }
+    })
+
+    // 3. Relaxation loop for collision avoidance on final displayed nodes with safe zones
+    const minDist = 8.5
+    const steps = 15
+    for (let step = 0; step < steps; step++) {
+      // Step A: Push nodes out of quadrant label bounding boxes and enforce margins
+      for (let i = 0; i < finalNodes.length; i++) {
+        const n = finalNodes[i]
+        
+        // Top-Left Label Area: x < 34 and y < 22
+        if (n.x < 34 && n.y < 22) {
+          if ((34 - n.x) < (22 - n.y)) {
+            n.x = 34
+          } else {
+            n.y = 22
+          }
+        }
+        // Top-Right Label Area: x > 66 and y < 22
+        if (n.x > 66 && n.y < 22) {
+          if ((n.x - 66) < (22 - n.y)) {
+            n.x = 66
+          } else {
+            n.y = 22
+          }
+        }
+        // Bottom-Left Label Area: x < 34 and y > 78
+        if (n.x < 34 && n.y > 78) {
+          if ((34 - n.x) < (n.y - 78)) {
+            n.x = 34
+          } else {
+            n.y = 78
+          }
+        }
+        // Bottom-Right Label Area: x > 66 and y > 78
+        if (n.x > 66 && n.y > 78) {
+          if ((n.x - 66) < (n.y - 78)) {
+            n.x = 66
+          } else {
+            n.y = 78
+          }
+        }
+
+        // Spacing from horizontal and vertical axes lines (x=50, y=50)
+        const axisBuffer = 4.5
+        if (Math.abs(n.x - 50) < axisBuffer) {
+          n.x = n.x < 50 ? 50 - axisBuffer : 50 + axisBuffer
+        }
+        if (Math.abs(n.y - 50) < axisBuffer) {
+          n.y = n.y < 50 ? 50 - axisBuffer : 50 + axisBuffer
+        }
+
+        // Minimum spacing from outer chart edges
+        n.x = Math.max(14, Math.min(86, n.x))
+        n.y = Math.max(14, Math.min(86, n.y))
+      }
+
+      // Step B: Resolve node-to-node collisions
+      for (let i = 0; i < finalNodes.length; i++) {
+        for (let j = i + 1; j < finalNodes.length; j++) {
+          const dx = finalNodes[j].x - finalNodes[i].x
+          const dy = finalNodes[j].y - finalNodes[i].y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+          
+          if (dist < minDist && dist > 0.01) {
+            const overlap = minDist - dist
+            const forceX = (dx / dist) * overlap * 0.4
+            const forceY = (dy / dist) * overlap * 0.4
+            
+            finalNodes[i].x = Math.max(14, Math.min(86, finalNodes[i].x - forceX))
+            finalNodes[i].y = Math.max(14, Math.min(86, finalNodes[i].y - forceY))
+            finalNodes[j].x = Math.max(14, Math.min(86, finalNodes[j].x + forceX))
+            finalNodes[j].y = Math.max(14, Math.min(86, finalNodes[j].y + forceY))
+          }
+        }
+      }
+    }
+
+    return finalNodes
+  }, [skills])
+
+  const hoveredNode = React.useMemo(() => {
+    if (!hoveredNodeId) return null
+    return dynamicSkills.find((n) => n.id === hoveredNodeId) || null
+  }, [hoveredNodeId, dynamicSkills])
+
+  const selectedNode = React.useMemo(() => {
+    if (!selectedNodeId) return null
+    return dynamicSkills.find((n) => n.id === selectedNodeId) || null
+  }, [selectedNodeId, dynamicSkills])
+
+  const activeNode = hoveredNode || selectedNode || null
+
+  const zoneCounts = React.useMemo(() => {
+    const counts = { priority: 0, leverage: 0, monitor: 0, maintain: 0 }
+    dynamicSkills.forEach((node) => {
+      if (node.isCluster) {
+        counts[node.tone] += node.skills?.length || 0
+      } else {
+        counts[node.tone] += 1
+      }
+    })
+    return counts
+  }, [dynamicSkills])
+
+  const dynamicStats = React.useMemo(() => {
+    const strengthsCount = skills.filter((s) => s.coverage >= 50).length
+    const priorityGapsCount = skills.filter((s) => s.coverage < 50 && s.demand >= 60).length
+    const readinessMetric = metrics.find((m) => m.label === 'Graduate Readiness Score')
+    const readinessValue = readinessMetric ? readinessMetric.value : '70%'
+    
+    return [
+      { value: String(strengthsCount), label: 'Strengths', helper: 'Areas driving success', tone: 'emerald', icon: 'UP' },
+      { value: String(priorityGapsCount), label: 'Priority Gaps', helper: 'High impact areas', tone: 'rose', icon: '!' },
+      { value: readinessValue, label: 'Readiness Score', helper: 'Current average readiness', tone: 'violet', icon: 'FS' },
+      { value: potentialImpact, label: 'Potential Impact', helper: 'Readiness uplift', tone: 'blue', icon: '+' },
+    ]
+  }, [skills, metrics, potentialImpact])
+
+  const dynamicInsights = React.useMemo(() => {
+    const sortedGaps = [...skills].filter((s) => s.gap < 0).sort((a, b) => a.gap - b.gap)
+    const topGapSkill = sortedGaps[0]?.skill || 'Priority Gaps'
+    const secondGapSkill = sortedGaps[1]?.skill || 'MLOps'
+    
+    const sortedStrengths = [...skills].sort((a, b) => b.coverage - a.coverage)
+    const topStrengthSkill = sortedStrengths[0]?.skill || 'Python'
+    
+    const gapText = topGapSkill === 'MLOps'
+      ? `${topGapSkill} and ${secondGapSkill} are high-impact gaps that should be prioritized.`
+      : `${topGapSkill} and MLOps are high-impact gaps that should be prioritized.`
+      
+    return [
+      { text: gapText, tone: 'rose', icon: 'UP' },
+      { text: `${topStrengthSkill} and core program competencies are strong pillars driving readiness.`, tone: 'emerald', icon: 'ST' },
+      { text: `Closing priority gaps can unlock up to ${potentialImpact} improvement in readiness.`, tone: 'amber', icon: '+' },
+      { 
+        text: 'The central Focus Zone highlights key priorities: targeted interventions on skills plotted here (e.g. MLOps or Cloud Deployment) will yield the fastest readiness gains.', 
+        tone: 'blue', 
+        icon: 'FZ' 
+      },
+    ]
+  }, [skills, potentialImpact])
+
+  const dynamicActions = React.useMemo(() => {
+    const sortedGaps = [...skills].filter((s) => s.gap < 0).sort((a, b) => a.gap - b.gap)
+    return sortedGaps.slice(0, 4).map((item, index) => {
+      const isHigh = index < 2
+      return {
+        title: `${item.skill} Enablement`,
+        detail: isHigh ? `Intensive workshop to build production-ready skills` : `Fundamentals short course to cover gaps`,
+        impact: isHigh ? 'High Impact' : 'Medium Impact',
+        tone: isHigh ? 'rose' : 'amber'
+      }
+    })
+  }, [skills])
+
+  return (
+    <section className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_390px] 2xl:grid-cols-[minmax(0,1fr)_430px]">
+      <div className="min-w-0 self-start xl:sticky xl:top-4">
+      <section className="min-w-0 rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
+        <div className="flex flex-col gap-4 border-b border-slate-100 pb-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <div className="flex items-center gap-3">
+              <h2 className="text-lg font-medium text-slate-950">Program Strengths vs Emerging Weaknesses</h2>
+            </div>
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              A strategic view of program performance to double down on strengths and close critical gaps.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3 lg:grid-cols-[52px_minmax(0,1fr)_260px] xl:grid-cols-[52px_minmax(0,1fr)_280px]">
+          <div className="hidden flex-col items-center justify-center gap-3 text-center lg:flex">
+            <span className="text-[11px] font-semibold text-slate-500">High Impact</span>
+            <span className="h-48 w-px bg-slate-300" />
+            <span className="text-[11px] font-semibold text-slate-500">Low Impact</span>
+          </div>
+
+          <div className="overflow-x-auto pb-2">
+            <div className="relative min-h-[430px] min-w-[640px] overflow-hidden rounded-[8px] border border-slate-200 bg-white">
+              <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">
+                <div className="bg-rose-50/55" />
+                <div className="bg-emerald-50/55" />
+                <div className="bg-amber-50/50" />
+                <div className="bg-teal-50/55" />
+              </div>
+              <div className="absolute left-1/2 top-0 h-full w-px bg-slate-200" />
+              <div className="absolute left-0 top-1/2 h-px w-full bg-slate-200" />
+
+              <QuadrantLabel title="Priority Focus" subtitle="High impact, low performance" className="left-5 top-5 bg-white/80 text-rose-700 ring-rose-100" />
+              <QuadrantLabel title="Leverage Strengths" subtitle="High impact, strong performance" className="right-5 top-5 bg-white/80 text-emerald-700 ring-emerald-100" />
+              <QuadrantLabel title="Monitor & Improve" subtitle="Low impact, low performance" className="bottom-5 left-5 bg-white/80 text-amber-700 ring-amber-100" />
+              <QuadrantLabel title="Maintain Momentum" subtitle="Low impact, strong performance" className="bottom-5 right-5 bg-white/80 text-teal-700 ring-teal-100" />
+
+              {dynamicSkills.map((node) => (
+                <QuadrantSkillNode
+                  key={node.id}
+                  node={node}
+                  hoveredNodeId={hoveredNodeId}
+                  setHoveredNodeId={setHoveredNodeId}
+                  selectedNodeId={selectedNodeId}
+                  setSelectedNodeId={setSelectedNodeId}
+                />
+              ))}
+
+              {/* Focus Zone background elements */}
+              <style>{`
+                @keyframes focusZoneBreath {
+                  0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.25; }
+                  50% { transform: translate(-50%, -50%) scale(1.08); opacity: 0.50; }
+                  100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.25; }
+                }
+                .animate-breath {
+                  animation: focusZoneBreath 4.5s ease-in-out infinite;
+                }
+                @keyframes fadeIn {
+                  from { opacity: 0; transform: translateY(4px); }
+                  to { opacity: 1; transform: translateY(0); }
+                }
+                .animate-fadeIn {
+                  animation: fadeIn 0.22s ease-out forwards;
+                }
+              `}</style>
+              
+              {/* Radial breathing ring */}
+              <div className="absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-100/30 ring-4 ring-blue-100/35 pointer-events-none animate-breath z-0" />
+              
+              {/* Small center marker with hover trigger */}
+              <div 
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center cursor-pointer"
+                onMouseEnter={() => setHoveredFocusZone(true)}
+                onMouseLeave={() => setHoveredFocusZone(false)}
+              >
+                <div className="h-3 w-3 rounded-full bg-blue-600/80 border border-white shadow-sm transition-transform hover:scale-125 duration-200" />
+              </div>
+              
+              {/* Focus Zone Label beneath center point */}
+              <div className="absolute left-1/2 top-[53.5%] -translate-x-1/2 pointer-events-none z-10">
+                <span className="whitespace-nowrap text-[9px] font-bold uppercase tracking-wider text-blue-500/85 bg-white/80 px-1.5 py-0.5 rounded border border-slate-100 shadow-sm">
+                  Focus Zone
+                </span>
+              </div>
+
+              {/* Focus Zone Tooltip */}
+              {hoveredFocusZone && (
+                <div className="pointer-events-none absolute z-50 bottom-[calc(50%+16px)] left-1/2 -translate-x-1/2 w-64 rounded-lg border border-blue-100 bg-white/95 p-3 shadow-md backdrop-blur-sm transition-all duration-200">
+                  <p className="text-xs font-bold text-blue-700">Focus Zone</p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-slate-600 font-medium">
+                    Skills plotted near the center represent high-leverage opportunities where curriculum updates yield the fastest readiness gains.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-3 grid min-w-[640px] grid-cols-3 items-center gap-2 text-[11px] font-semibold text-slate-500">
+              <span>Low Performance</span>
+              <span className="justify-self-center rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-500">Program Average</span>
+              <span className="justify-self-end">High Performance</span>
+            </div>
+          </div>
+
+          {/* Skill Details Panel */}
+          <aside 
+            key={activeNode?.id || 'empty'}
+            className="flex flex-col min-h-[300px] lg:min-h-[430px] rounded-[8px] border border-slate-200/80 bg-slate-50/40 p-4 shadow-sm animate-fadeIn"
+          >
+            {!activeNode ? (
+              <div className="flex flex-col items-center text-center px-4 py-10">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-50 border border-slate-100 text-slate-400 mb-3">
+                  <svg className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                  </svg>
+                </div>
+                <p className="text-[11px] leading-relaxed text-slate-500 font-medium max-w-[200px]">
+                  Click any marker or cluster in the quadrant to pin its details and recommendations.
+                </p>
+              </div>
+            ) : activeNode.isCluster ? (
+              <div className="flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+                    <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-700 ring-1 ring-slate-200">
+                      Cluster Node
+                    </span>
+                    {selectedNodeId && (
+                      <button 
+                        type="button" 
+                        onClick={() => setSelectedNodeId(null)}
+                        className="text-[11px] font-bold text-blue-600 transition hover:text-blue-700"
+                      >
+                        Back to Overview ✕
+                      </button>
+                    )}
+                  </div>
+                  
+                  <h3 className="mt-3 text-sm font-bold text-slate-900 leading-tight">
+                    {badgeLabels[activeNode.tone]} Cluster
+                  </h3>
+                  <p className="mb-3 mt-1 text-xs font-medium leading-5 text-slate-500">
+                    Dense region in the {badgeLabels[activeNode.tone].toLowerCase()} quadrant. Hover details for grouped skills below.
+                  </p>
+                  
+                  <div className="overflow-y-auto space-y-2.5 max-h-[220px] lg:max-h-[250px] pr-1">
+                    {activeNode.skills?.map((s) => (
+                      <div key={s.skill} className="rounded-lg border border-slate-100 bg-white p-3 shadow-xs transition hover:border-slate-200">
+                        <div className="flex items-center justify-between gap-2">
+                          <h4 className="truncate text-xs font-bold text-slate-800" title={s.skill}>{s.skill}</h4>
+                          <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ${badgeStyles[s.tone]}`}>
+                            {s.tone === 'priority' ? 'Priority' : s.tone === 'leverage' ? 'Leverage' : s.tone === 'monitor' ? 'Monitor' : 'Maintain'}
+                          </span>
+                        </div>
+                        
+                        <div className="mt-2 grid grid-cols-2 gap-2 text-[11px] text-slate-500">
+                          <div>
+                            <span className="font-medium">Readiness:</span>
+                            <span className="font-semibold text-slate-800 ml-1">{s.coverage}%</span>
+                          </div>
+                          <div>
+                            <span className="font-medium">Demand:</span>
+                            <span className="font-semibold text-slate-800 ml-1">{s.demand}%</span>
+                          </div>
+                        </div>
+                        
+                        <p className="mt-2 border-t border-slate-50 pt-2 text-[11px] font-medium leading-5 text-slate-600">
+                          <span className="font-semibold text-slate-700">Action: </span>
+                          {getInterventionRecommendation(s.skill)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="mt-3 border-t border-slate-100 pt-2.5">
+                  <p className="text-[11px] leading-5 text-slate-500 italic">
+                    Tip: Hovering individual markers highlights unique skills.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                    <span className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ${badgeStyles[activeNode.tone]}`}>
+                      {badgeLabels[activeNode.tone]}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      {activeNode.gap !== undefined && (
+                        <span className={`inline-flex items-center gap-1 text-xs font-bold ${activeNode.gap < 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                          {activeNode.gap > 0 ? `+${activeNode.gap}%` : `${activeNode.gap}%`} {activeNode.gap < 0 ? '↓' : '↑'}
+                        </span>
+                      )}
+                      {selectedNodeId && (
+                        <button 
+                          type="button" 
+                          onClick={() => setSelectedNodeId(null)}
+                          className="text-[11px] font-bold text-blue-600 transition hover:text-blue-700"
+                        >
+                          Back to Overview ✕
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <h3 className="mt-2.5 text-base font-bold text-slate-900 leading-snug">{activeNode.skill}</h3>
+                  
+                  {/* Readiness Progress Bar */}
+                  <div className="mt-4">
+                    <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
+                      <span>Graduate Readiness</span>
+                      <span className="text-slate-800">{activeNode.coverage}%</span>
+                    </div>
+                    <div className="mt-1.5 h-1.5 w-full rounded-full bg-slate-100">
+                      <div className="h-1.5 rounded-full bg-emerald-500" style={{ width: `${activeNode.coverage}%` }} />
+                    </div>
+                  </div>
+                  
+                  {/* Market Demand Progress Bar */}
+                  <div className="mt-3.5">
+                    <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
+                      <span>Market Demand</span>
+                      <span className="text-slate-800">{activeNode.demand}%</span>
+                    </div>
+                    <div className="mt-1.5 h-1.5 w-full rounded-full bg-slate-100">
+                      <div className="h-1.5 rounded-full bg-blue-500" style={{ width: `${activeNode.demand}%` }} />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-4 border-t border-slate-100 pt-3.5">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-800">Curriculum Intervention</p>
+                  <p className="mt-1.5 rounded-lg border border-slate-200/60 bg-slate-100/50 p-3 text-xs font-medium leading-5 text-slate-600">
+                    {getInterventionRecommendation(activeNode.skill)}
+                  </p>
+                </div>
+              </div>
+            )}
+          </aside>
+        </div>
+
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {dynamicStats.map((stat) => (
+            <QuadrantStatCard key={stat.label} stat={stat} />
+          ))}
+        </div>
+      </section>
+      </div>
+
+      <aside className="self-start space-y-5 rounded-[8px] border border-violet-100 bg-gradient-to-br from-white via-violet-50/60 to-blue-50 p-5 shadow-[0_18px_48px_rgba(79,70,229,0.1)]">
+        <section>
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <h3 className="text-lg font-medium text-slate-950">Key Insights</h3>
+          </div>
+          <div className="mt-4 space-y-3">
+            {dynamicInsights.map((insight) => (
+              <article key={insight.text} className="flex gap-3 rounded-[8px] border border-white bg-white/80 p-4 shadow-sm">
+                <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold ring-1 ${metricToneClasses[insight.tone]}`}>
+                  {insight.icon}
+                </span>
+                <p className="text-sm font-medium leading-6 text-slate-700">{insight.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="border-t border-slate-100 pt-5">
+          <div className="flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-blue-50 text-sm font-bold text-blue-700 ring-1 ring-blue-100">
+              TP
+            </span>
+            <h3 className="text-lg font-medium text-slate-950">Top Priority Actions</h3>
+          </div>
+          <div className="mt-4 space-y-3">
+            {dynamicActions.map((action, index) => (
+              <article key={action.title} className="flex items-center gap-3 rounded-[8px] border border-white bg-white/80 p-3 shadow-sm">
+                <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] text-xs font-bold ring-1 ${index < 2 ? metricToneClasses.rose : metricToneClasses.amber}`}>
+                  {index + 1}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-slate-950">{action.title}</p>
+                  <p className="mt-1 text-xs font-medium text-slate-500">{action.detail}</p>
+                </div>
+                <span className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ${metricToneClasses[action.tone]}`}>
+                  {action.impact}
+                </span>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <div className="rounded-[8px] bg-violet-50/70 p-4 ring-1 ring-violet-100">
+          <p className="text-sm font-semibold text-violet-800">Focus on the right gaps. Maximize impact.</p>
+          <p className="mt-1 text-xs leading-5 text-slate-600">Strategic improvement leads to measurable growth.</p>
+        </div>
+      </aside>
+    </section>
+  )
+}
 
 function FilterDropdown({ label, value, options, onChange }) {
   const [open, setOpen] = useState(false)
@@ -806,7 +1569,7 @@ export default function UniversityOverviewPage() {
     : currentProgram.semesters[0]
 
   const { metrics, skills } = currentProgram.cohortData[cohortKey][semesterKey]
-  const { aiInsight, potentialImpact, strengths, weaknesses, interventions, advisorFocus } = currentProgram
+  const { aiInsight, potentialImpact, advisorFocus } = currentProgram
 
   return (
     <div className="mx-auto max-w-[1560px] space-y-6">
@@ -845,55 +1608,6 @@ export default function UniversityOverviewPage() {
           </button>
         </div>
       </header>
-
-      <section className="rounded-[8px] border border-indigo-100 bg-white p-5 shadow-[0_10px_28px_rgba(79,70,229,0.06)]">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
-        <div className="flex gap-4 items-start">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[8px] bg-indigo-600 text-white shadow-sm text-sm font-bold">EC</span>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-sm font-bold text-slate-900">Dr. Evelyn Chen</h3>
-              <span className="rounded bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold text-indigo-700 border border-indigo-100/50">Dean of Computing & AI</span>
-              <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600 border border-slate-200">Heriot-Watt University Malaysia, MACS</span>
-            </div>
-            <p className="text-xs font-medium text-slate-600 mt-1.5 leading-relaxed max-w-3xl">
-              Dr. Chen is preparing the MACS curriculum review across <strong>BSc Computer Science</strong>, <strong>BSc Data Science</strong>, and <strong>BSc Data Analytics</strong>. The goal is to find the highest-risk Year 1 to Year 3 skill gaps, validate them with alumni and market signals, then launch targeted partner interventions.
-            </p>
-            <p className="mt-1 text-xs font-medium text-slate-400">Contact: evelyn.chen@hw.edu.my</p>
-          </div>
-        </div>
-        <div className="flex gap-3 shrink-0 w-full md:w-auto border-t md:border-t-0 border-slate-100 pt-3 md:pt-0">
-          <div className="text-center px-4 py-2 border-r border-slate-100 last:border-none flex-1 md:flex-none">
-            <span className="block text-lg font-bold text-indigo-600 leading-none">3</span>
-            <span className="block text-[10px] text-slate-400 font-semibold uppercase mt-1 tracking-wider">Programs</span>
-          </div>
-          <div className="text-center px-4 py-2 border-r border-slate-100 last:border-none flex-1 md:flex-none">
-            <span className="block text-lg font-bold text-violet-600 leading-none">9</span>
-            <span className="block text-[10px] text-slate-400 font-semibold uppercase mt-1 tracking-wider">Y1-Y3 Cohorts</span>
-          </div>
-          <div className="text-center px-4 py-2 last:border-none flex-1 md:flex-none">
-            <span className="block text-lg font-bold text-emerald-600 leading-none">840+</span>
-            <span className="block text-[10px] text-slate-400 font-semibold uppercase mt-1 tracking-wider">Students</span>
-          </div>
-        </div>
-        </div>
-        <div className="mt-5 grid gap-3 md:grid-cols-4">
-          {[
-            ['1', 'Spot the risk', 'Start with program-market gaps by selected program and cohort.'],
-            ['2', 'Validate the signal', 'Use alumni outcomes to confirm which gaps affect placement.'],
-            ['3', 'Inspect readiness', 'Check Year 1 to Year 3 skill heatmaps and affected students.'],
-            ['4', 'Launch action', 'Move to collaboration marketplace for workshops and mentors.'],
-          ].map(([step, title, detail]) => (
-            <div key={title} className="rounded-[8px] border border-slate-100 bg-slate-50/70 p-3">
-              <div className="flex items-center gap-2">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-bold text-blue-700 ring-1 ring-blue-100">{step}</span>
-                <p className="text-xs font-bold text-slate-900">{title}</p>
-              </div>
-              <p className="mt-2 text-xs leading-5 text-slate-500">{detail}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* KPI Metrics */}
       <section className="rounded-[8px] border border-blue-100 bg-white/95 p-5 shadow-[0_18px_48px_rgba(30,64,175,0.08)]">
@@ -1009,72 +1723,14 @@ export default function UniversityOverviewPage() {
             <p className="mt-1 text-sm font-semibold text-slate-600">readiness improvement</p>
             <p className="mt-1 text-xs text-slate-500">Estimated: 3-6 months</p>
           </div>
-          <button
-            type="button"
-            className="mt-5 w-full rounded-[8px] bg-blue-600 px-4 py-3 text-sm font-medium text-white shadow-lg shadow-blue-100 transition hover:bg-blue-700"
-          >
-            View full AI recommendations
-          </button>
         </aside>
       </section>
 
-      {/* Strengths vs Weaknesses + Interventions */}
-      <section className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
-        <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
-          <h2 className="text-lg font-medium text-slate-950">Program Strengths vs Emerging Weaknesses</h2>
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
-            <div className="rounded-[8px] border border-emerald-100 bg-emerald-50/60 p-4">
-              <p className="text-sm font-medium text-emerald-800">What We Do Well</p>
-              <div className="mt-4 space-y-3">
-                {strengths.map((item) => (
-                  <div key={item} className="flex items-center justify-between rounded-[8px] bg-white px-3 py-3 text-sm font-medium text-slate-800 ring-1 ring-emerald-100">
-                    <span>{item}</span>
-                    <span className="text-emerald-600">Strong</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="rounded-[8px] border border-rose-100 bg-rose-50/55 p-4">
-              <p className="text-sm font-medium text-rose-800">What We Need To Improve</p>
-              <div className="mt-4 space-y-3">
-                {weaknesses.map((item) => (
-                  <div key={item} className="flex items-center justify-between rounded-[8px] bg-white px-3 py-3 text-sm font-medium text-slate-800 ring-1 ring-rose-100">
-                    <span>{item}</span>
-                    <span className="text-rose-600">Gap</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="rounded-[8px] border border-slate-200/80 bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.05)]">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="text-lg font-medium text-slate-950">Recommended Interventions</h2>
-              <p className="mt-1 text-sm text-slate-500">Concrete actions mapped to the most urgent coverage gaps.</p>
-            </div>
-            <Link to="/university/collaboration" className="text-sm font-medium text-blue-700">
-              Go to Collaboration Marketplace -&gt;
-            </Link>
-          </div>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            {interventions.map((item) => (
-              <article key={item.title} className="rounded-[8px] border border-slate-200 bg-white p-4 shadow-sm transition hover:border-blue-200 hover:shadow-md">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="text-sm font-medium text-slate-950">{item.title}</h3>
-                    <p className="mt-2 text-xs font-semibold text-slate-500">{item.duration}</p>
-                  </div>
-                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-medium ring-1 ${metricToneClasses[item.tone]}`}>
-                    {item.impact}
-                  </span>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      </section>
+      <StrategicQuadrantSection
+        skills={skills}
+        metrics={metrics}
+        potentialImpact={potentialImpact}
+      />
 
       {showSkillSetup ? <SkillSetupModal onClose={() => setShowSkillSetup(false)} /> : null}
     </div>
