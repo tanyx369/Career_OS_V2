@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import TypewriterText from '../ui/TypewriterText'
 import companionBot from '../../assets/career-os-robot.png'
+import { useEmployerMarketplaceStore } from '../../store/useEmployerMarketplaceStore'
+import { employerTalentWorkspace } from '../../data/mockData'
 
 const pageMessages = [
   {
@@ -38,11 +40,7 @@ const pageMessages = [
   },
   {
     match: (pathname) => pathname.includes('/employer/posting'),
-    text: 'Ready to engage? Post a new challenge, micro-project, or workshop to collaborate directly with Heriot-Watt Malaysia students.',
-  },
-  {
-    match: (pathname) => pathname.includes('/employer/marketplace'),
-    text: 'Explore campus-hosted initiatives, guest lecture opportunities, and academic events open for corporate collaboration.',
+    text: 'Hi Edwin. Launch collaboration events to identify top university talent early. Post projects, hackathons, or workshops to build a strong pipeline for your active jobs.',
   },
   {
     match: (pathname) => pathname.includes('/employer/settings'),
@@ -53,13 +51,93 @@ const pageMessages = [
 export default function UniversityCompanionBot() {
   const location = useLocation()
   const [isOpen, setIsOpen] = useState(true)
+  
+  const opportunities = useEmployerMarketplaceStore((state) => state.opportunities)
+  const pipelineApplications = useEmployerMarketplaceStore((state) => state.pipelineApplications)
 
   const message = useMemo(() => {
+    if (location.pathname.includes('/employer/marketplace')) {
+      const activeOpportunities = opportunities.filter((o) => o.status === 'Active')
+      const activeCount = activeOpportunities.length
+
+      let totalApplicants = 0
+      activeOpportunities.forEach((opp) => {
+        totalApplicants += (pipelineApplications[opp.id] || []).length
+      })
+
+      let bestOpp = null
+      activeOpportunities.forEach((opp) => {
+        if (opp.averageMatch > 0 && (!bestOpp || opp.averageMatch > bestOpp.averageMatch)) {
+          bestOpp = opp
+        }
+      })
+
+      const currentDate = new Date('2026-06-10')
+      let closestOpp = null
+      let minDaysDiff = Infinity
+      activeOpportunities.forEach((opp) => {
+        if (opp.deadline) {
+          const deadlineDate = new Date(opp.deadline)
+          const diffTime = deadlineDate - currentDate
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+          if (diffDays > 0 && diffDays < minDaysDiff) {
+            minDaysDiff = diffDays
+            closestOpp = opp
+          }
+        }
+      })
+
+      // Count unapplied high-match candidates
+      const appliedCandidateIds = new Set()
+      activeOpportunities.forEach((opp) => {
+        ;(pipelineApplications[opp.id] || []).forEach((c) => {
+          appliedCandidateIds.add(c.id)
+        })
+      })
+      const allCandidates = employerTalentWorkspace.candidates
+      const unappliedHighMatch = allCandidates.filter((c) => {
+        const isHighMatch = c.match >= 85
+        return isHighMatch && !appliedCandidateIds.has(c.id)
+      })
+      const highMatchCount = unappliedHighMatch.length
+
+      // Priority Order:
+      // 1. Applicant Insights
+      if (activeCount > 0 && totalApplicants > 0) {
+        return `You have ${totalApplicants} applicants across ${activeCount} active opportunities. The ${bestOpp?.title || 'active'} role currently has the highest average match rate (${bestOpp?.averageMatch || 89}%). Review applicants to identify potential interview candidates.`
+      }
+      // 2. Match Rate Insights
+      if (activeCount > 0 && bestOpp && bestOpp.averageMatch > 0) {
+        return `Your ${bestOpp.title} role has the highest match rate at ${bestOpp.averageMatch}%. Consider creating similar opportunities to attract more qualified talent.`
+      }
+      // 3. Deadline Reminders
+      if (activeCount > 0 && closestOpp && minDaysDiff <= 30) {
+        return `The ${closestOpp.title} application deadline is approaching in ${minDaysDiff} days. Review shortlisted candidates before applications close.`
+      }
+      // 4. Candidate Recommendations
+      if (activeCount > 0 && highMatchCount > 0) {
+        return `I found ${highMatchCount} high-match candidates who have not applied yet. Consider sending invitations to increase your applicant pool.`
+      }
+
+      // Check for low applicant alerts as fallback generic
+      const lowApplicantOpps = activeOpportunities.filter((opp) => {
+        const count = (pipelineApplications[opp.id] || []).length
+        return count < 5
+      })
+      if (lowApplicantOpps.length > 0) {
+        return `You have ${lowApplicantOpps.length} active opportunities with fewer than 5 applicants. Review role requirements or extend visibility to reach more students.`
+      }
+
+      // Generic fallback
+      return 'Need talent faster? Use CareerOS matching to automatically surface students who fit your open roles.'
+    }
+
     return pageMessages.find((item) => item.match(location.pathname))?.text
       ?? (location.pathname.startsWith('/employer')
           ? 'I will summarise the important signal on each employer page for the demo.'
           : 'I will summarise the important signal on each university page for the demo.')
-  }, [location.pathname])
+  }, [location.pathname, opportunities, pipelineApplications])
+
 
   return (
     <div className="pointer-events-none fixed bottom-7 left-7 z-40 hidden w-56 lg:block">
