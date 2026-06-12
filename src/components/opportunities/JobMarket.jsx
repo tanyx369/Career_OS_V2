@@ -1,20 +1,77 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  AlertTriangle,
+  BarChart3,
+  Bookmark,
+  Briefcase,
+  Building2,
+  CalendarDays,
+  Check,
+  ChevronDown,
+  Clock3,
+  Code2,
+  Database,
+  Filter,
+  Globe2,
+  GraduationCap,
+  LineChart,
+  MapPin,
+  RefreshCw,
+  Rocket,
+  Search,
+  Sparkles,
+  Tag,
+  Target,
+  TrendingUp,
+} from 'lucide-react'
 import { jobMarket } from '../../data/mockData'
+
+const sectorIconMap = {
+  technology: Code2,
+  analytics: BarChart3,
+  finance: LineChart,
+  consulting: Briefcase,
+  healthcare: GraduationCap,
+  education: GraduationCap,
+  engineering: Building2,
+}
+
+const roleIconMap = {
+  data: BarChart3,
+  software: Code2,
+  analyst: LineChart,
+  engineer: Database,
+  product: Target,
+  consultant: Briefcase,
+}
+
+function IconTile({ icon: Icon = Briefcase, className = 'h-9 w-9 bg-violet-50 text-violet-600 border-violet-100', size = 18 }) {
+  return (
+    <span className={`inline-flex shrink-0 items-center justify-center rounded-xl border ${className}`}>
+      <Icon size={size} strokeWidth={2.2} />
+    </span>
+  )
+}
+
+function sectorIconFor(sector) {
+  return sectorIconMap[sector.id] ?? sectorIconMap[sector.slug] ?? Building2
+}
+
+function roleIconFor(item) {
+  const text = `${item.title ?? ''} ${item.meta ?? ''}`.toLowerCase()
+  const key = Object.keys(roleIconMap).find((candidate) => text.includes(candidate))
+  return key ? roleIconMap[key] : TrendingUp
+}
 
 // All sections read from `jobMarket` in mockData.js. Swap that object with
 // the AI backend response when ready — the components below stay the same.
-
-const TAG_TONE = {
-  violet: 'bg-violet-50 text-violet-600',
-  teal: 'bg-teal-50 text-teal-600',
-}
 
 // ─── section header ────────────────────────────────────────────────────
 function SectionHeader({ icon, title, count, link, accent = 'text-violet-600' }) {
   return (
     <div className="mb-4 flex items-center gap-2">
       <h3 className="flex items-center gap-2 text-base font-bold text-slate-900">
-        {icon && <span className={`text-lg ${accent}`}>{icon}</span>}
+        {icon && <span className={`inline-flex items-center ${accent}`}>{icon}</span>}
         {title}
       </h3>
       {count && (
@@ -31,7 +88,6 @@ function SectionHeader({ icon, title, count, link, accent = 'text-violet-600' })
 
 // ─── search + sector filter (modal popup) ──────────────────────────────
 function SectorFilterModal({ sectors, committed, onApply, onClose }) {
-  // pending state lives in the modal — Apply commits it, Cancel discards.
   const [pending, setPending] = useState(() => new Set(committed))
 
   const toggle = (id) =>
@@ -70,12 +126,10 @@ function SectorFilterModal({ sectors, committed, onApply, onClose }) {
                     : 'border-slate-200 bg-white hover:border-violet-200 hover:bg-slate-50'
                 }`}
               >
-                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xl ${sector.iconBg}`}>
-                  <span aria-hidden>{sector.emoji}</span>
-                </div>
+                <IconTile icon={sectorIconFor(sector)} className={`h-9 w-9 ${sector.iconBg} border-slate-100`} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-slate-900">{sector.name}</p>
-                  <p className="text-xs text-slate-500">{sector.count} events</p>
+                  <p className="text-xs text-slate-500">{sector.count} roles</p>
                 </div>
                 <span
                   className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border text-[10px] font-bold transition ${
@@ -128,13 +182,13 @@ function SearchAndSectorBar({ search, onSearch, committed, onApplyCommitted, sec
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="relative flex-1">
-        <span aria-hidden className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+        <Search size={16} strokeWidth={2.2} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
         <input
           type="search"
           value={search}
           onChange={(e) => onSearch(e.target.value)}
           placeholder="Search jobs, companies, skills..."
-          className="h-10 w-full rounded-full border border-violet-100 bg-violet-50/40 pl-11 pr-10 text-sm outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:bg-white"
+          className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-10 text-sm outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-50"
         />
         {search && (
           <button
@@ -153,20 +207,20 @@ function SearchAndSectorBar({ search, onSearch, committed, onApplyCommitted, sec
           onClick={() => setOpen((o) => !o)}
           aria-haspopup="dialog"
           aria-expanded={open}
-          className={`inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-semibold transition ${
+          className={`inline-flex h-10 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition ${
             open || committed.size > 0
               ? 'border-violet-500 bg-violet-50 text-violet-700'
-              : 'border-violet-300 bg-white text-violet-600 hover:border-violet-400'
+              : 'border-slate-200 bg-white text-slate-600 hover:border-violet-300'
           }`}
         >
-          <span aria-hidden>🏢</span>
+          <Filter size={16} strokeWidth={2.2} />
           <span>Sectors</span>
           {committed.size > 0 && (
             <span className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-violet-600 px-1.5 text-[11px] font-bold text-white">
               {committed.size}
             </span>
           )}
-          <span aria-hidden className={`text-[10px] transition-transform ${open ? 'rotate-180' : ''}`}>▼</span>
+          <ChevronDown size={14} strokeWidth={2.2} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
         </button>
         {open && (
           <SectorFilterModal
@@ -184,74 +238,53 @@ function SearchAndSectorBar({ search, onSearch, committed, onApplyCommitted, sec
   )
 }
 
-// ─── hero banner ───────────────────────────────────────────────────────
-function HeroBanner({ hero }) {
+// ─── closing soon urgency strip ────────────────────────────────────────
+function ClosingSoonStrip({ items }) {
+  const urgentItems = items.filter((i) => i.daysLeft <= 3)
+  if (urgentItems.length === 0) return null
+
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-600 via-violet-500 to-pink-500 p-8 text-white shadow-[0_18px_50px_rgba(108,99,255,0.25)]">
-      <div className="absolute -right-16 -top-16 h-72 w-72 rounded-full bg-white/10" />
-      <div className="absolute bottom-[-80px] right-20 h-52 w-52 rounded-full bg-white/5" />
-      <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center">
-        <div className="flex-1">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/20 px-3 py-1 text-xs font-medium">
-            <span aria-hidden>✨</span> {hero.eyebrow}
-          </span>
-          <h2 className="mt-3 text-2xl font-extrabold leading-tight sm:text-3xl">
-            {hero.title.split('\n').map((line, i, arr) => (
-              <React.Fragment key={i}>
-                {line}
-                {i < arr.length - 1 && <br />}
-              </React.Fragment>
-            ))}
-          </h2>
-          <p className="mt-2 text-sm text-white/80">{hero.subtitle}</p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {hero.skillTags.map((tag) => (
-              <span key={tag} className="rounded-full border border-white/25 bg-white/15 px-3 py-1 text-xs font-medium">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-violet-600 shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+    <div className="flex items-center gap-3 rounded-xl border border-rose-200/80 bg-gradient-to-r from-rose-50/80 to-amber-50/60 p-3.5">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-600">
+        <Clock3 size={15} strokeWidth={2.2} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-rose-900">
+          {urgentItems.length} {urgentItems.length === 1 ? 'role is' : 'roles are'} closing soon
+        </p>
+        <p className="truncate text-xs text-rose-700/80">
+          {urgentItems.map((i) => `${i.title} (${i.daysLeft}d)`).join(' · ')}
+        </p>
+      </div>
+      <div className="flex shrink-0 gap-2">
+        {urgentItems.slice(0, 2).map((item) => (
+          <span
+            key={item.id}
+            className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${
+              item.daysLeft <= 1
+                ? 'bg-rose-500 text-white'
+                : 'bg-amber-100 text-amber-800'
+            }`}
           >
-            <span aria-hidden>🧭</span> {hero.ctaLabel}
-          </button>
-          <div className="mt-4 flex items-center gap-3">
-            <div className="flex">
-              {hero.avatars.map((av, i) => (
-                <div
-                  key={av.initials}
-                  className={`flex h-7 w-7 items-center justify-center rounded-full border-2 border-white/60 text-[10px] font-semibold text-white ${av.color} ${i > 0 ? '-ml-2' : ''}`}
-                >
-                  {av.initials}
-                </div>
-              ))}
-            </div>
-            <span className="text-xs text-white/85">
-              <strong className="text-white">{hero.socialProof.split(' ').slice(0, 2).join(' ')}</strong>{' '}
-              {hero.socialProof.split(' ').slice(2).join(' ')}
-            </span>
-          </div>
-        </div>
+            {item.daysLeft <= 1 ? 'Apply Now' : `${item.daysLeft} days left`}
+          </span>
+        ))}
       </div>
     </div>
   )
 }
 
-// ─── large split-layout job card (Most Relevant) ───────────────────────
+// ─── large split-layout job card (Best Matches) ────────────────────────
 function JobCardLarge({ job }) {
   const [saved, setSaved] = useState(job.isSaved ?? false)
   const [applied, setApplied] = useState(false)
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(108,99,255,0.12)]">
+    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-[0_12px_28px_rgba(108,99,255,0.12)]">
       <div className={`h-1 w-full bg-gradient-to-r ${job.accentGradient}`} />
-      <div className="grid gap-0 sm:grid-cols-[minmax(0,1fr)_220px]">
+      <div className="grid gap-0 sm:grid-cols-[minmax(0,1fr)_200px]">
         <div className="space-y-3 p-5">
           <div className="flex items-start gap-3">
-            <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-xl ${job.logoBg}`}>
-              <span aria-hidden>{job.logoEmoji}</span>
-            </div>
+            <IconTile icon={Building2} className={`h-11 w-11 ${job.logoBg} border-slate-100`} size={20} />
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-medium text-slate-500">
                 {job.company} · {job.location}
@@ -266,16 +299,15 @@ function JobCardLarge({ job }) {
                 saved ? 'bg-violet-100 text-violet-600' : 'text-slate-400 hover:bg-slate-50 hover:text-violet-600'
               }`}
             >
-              {saved ? '🔖' : '🏷'}
+              {saved ? <Bookmark size={16} fill="currentColor" strokeWidth={2.2} /> : <Bookmark size={16} strokeWidth={2.2} />}
             </button>
           </div>
 
           <div className="flex flex-wrap gap-1.5">
             {[
-              { icon: '🏷', text: job.type },
-              { icon: job.workMode === 'Remote' ? '🌐' : '📍', text: job.workMode },
-              { icon: '📍', text: job.location },
-              job.duration && { icon: '📅', text: job.duration },
+              { icon: Tag, text: job.type },
+              { icon: job.workMode === 'Remote' ? Globe2 : MapPin, text: job.workMode },
+              job.duration && { icon: CalendarDays, text: job.duration },
             ]
               .filter(Boolean)
               .map((chip, i) => (
@@ -283,7 +315,7 @@ function JobCardLarge({ job }) {
                   key={i}
                   className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-[11px] font-medium text-slate-600"
                 >
-                  <span aria-hidden>{chip.icon}</span> {chip.text}
+                  <chip.icon size={12} strokeWidth={2.2} /> {chip.text}
                 </span>
               ))}
           </div>
@@ -296,21 +328,21 @@ function JobCardLarge({ job }) {
             ))}
           </div>
 
-          <p className="text-sm leading-relaxed text-slate-600">{job.summary}</p>
+          <p className="text-sm leading-relaxed text-slate-600 line-clamp-2">{job.summary}</p>
 
           <div className="flex flex-wrap items-center gap-2 pt-1">
             {job.isNew && (
               <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700">
-                <span aria-hidden>✨</span> Just posted
+                <Sparkles size={12} strokeWidth={2.2} /> Just posted
               </span>
             )}
             {job.expiringNote && (
               <span className="inline-flex items-center gap-1 rounded-full bg-rose-100 px-2 py-0.5 text-[11px] font-semibold text-rose-700">
-                <span aria-hidden>⏰</span> {job.expiringNote}
+                <Clock3 size={12} strokeWidth={2.2} /> {job.expiringNote}
               </span>
             )}
             <span className="flex items-center gap-1 text-xs text-slate-400">
-              <span aria-hidden>🕘</span> {job.timeAgo}
+              <Clock3 size={12} strokeWidth={2.2} /> {job.timeAgo}
             </span>
             <span className="ml-auto rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-600">
               {job.matchPercent}% Match
@@ -318,7 +350,7 @@ function JobCardLarge({ job }) {
           </div>
         </div>
 
-        <div className="flex flex-col items-stretch gap-3 border-t border-slate-100 bg-slate-50 p-4 sm:border-l sm:border-t-0">
+        <div className="flex flex-col items-stretch gap-3 border-t border-slate-100 bg-slate-50/80 p-4 sm:border-l sm:border-t-0">
           <div>
             <p className="text-[11px] text-slate-400">{job.salaryLabel}</p>
             <p className="font-bold leading-none">
@@ -334,7 +366,7 @@ function JobCardLarge({ job }) {
                 job.daysLeft <= 3 ? 'text-rose-500' : 'text-slate-500'
               }`}
             >
-              {job.daysLeft <= 3 && '⚠ '}
+              {job.daysLeft <= 3 && <AlertTriangle size={12} strokeWidth={2.2} className="mr-1 inline" />}
               {job.daysLeft} days left
             </p>
           </div>
@@ -347,7 +379,7 @@ function JobCardLarge({ job }) {
                 : 'bg-gradient-to-r from-violet-600 to-pink-500 text-white shadow-sm hover:shadow-md'
             }`}
           >
-            <span aria-hidden>{applied ? '✓' : '🚀'}</span>
+            {applied ? <Check size={15} strokeWidth={2.2} /> : <Rocket size={15} strokeWidth={2.2} />}
             {applied ? 'Applied' : 'Apply Now'}
           </button>
         </div>
@@ -360,13 +392,11 @@ function JobCardLarge({ job }) {
 function JobCardSmall({ job }) {
   const [saved, setSaved] = useState(false)
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(108,99,255,0.10)]">
+    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-[0_8px_22px_rgba(108,99,255,0.10)]">
       <div className={`h-1 w-full bg-gradient-to-r ${job.accentGradient}`} />
       <div className="space-y-2 p-4">
         <div className="flex items-start gap-2.5">
-          <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-lg ${job.logoBg}`}>
-            <span aria-hidden>{job.logoEmoji}</span>
-          </div>
+          <IconTile icon={Building2} className={`h-10 w-10 ${job.logoBg} border-slate-100`} size={18} />
           <div className="min-w-0 flex-1">
             <p className="truncate text-[11px] font-medium text-slate-500">
               {job.company} · {job.location}
@@ -381,15 +411,15 @@ function JobCardSmall({ job }) {
               saved ? 'bg-violet-100 text-violet-600' : 'text-slate-400 hover:bg-slate-50 hover:text-violet-600'
             }`}
           >
-            {saved ? '🔖' : '🏷'}
+            {saved ? <Bookmark size={15} fill="currentColor" strokeWidth={2.2} /> : <Bookmark size={15} strokeWidth={2.2} />}
           </button>
         </div>
         <div className="flex flex-wrap gap-1.5">
           <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[10px] font-medium text-slate-600">
-            <span aria-hidden>🏷</span> {job.type}
+            <Tag size={11} strokeWidth={2.2} /> {job.type}
           </span>
           <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[10px] font-medium text-slate-600">
-            <span aria-hidden>{job.workMode === 'Remote' ? '🌐' : '📍'}</span> {job.workMode}
+            {job.workMode === 'Remote' ? <Globe2 size={11} strokeWidth={2.2} /> : <MapPin size={11} strokeWidth={2.2} />} {job.workMode}
           </span>
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -402,11 +432,11 @@ function JobCardSmall({ job }) {
         <div className="flex items-center gap-2 border-t border-slate-100 pt-2">
           {job.isNew && (
             <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-1.5 py-0.5 text-[10px] font-semibold text-violet-700">
-              <span aria-hidden>✨</span> New
+              <Sparkles size={11} strokeWidth={2.2} /> New
             </span>
           )}
           <span className="flex items-center gap-1 text-[11px] text-slate-400">
-            <span aria-hidden>🕘</span> {job.timeAgo}
+            <Clock3 size={11} strokeWidth={2.2} /> {job.timeAgo}
           </span>
           {job.matchPercent != null && (
             <span className="ml-auto rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-600">
@@ -419,195 +449,47 @@ function JobCardSmall({ job }) {
   )
 }
 
-// ─── expiring soon item ────────────────────────────────────────────────
-function ExpiringItem({ item }) {
-  const toneClasses = {
-    urgent: 'text-rose-500',
-    soon: 'text-amber-500',
-    normal: 'text-slate-500',
-  }
-  const ctaClasses = {
-    urgent: 'bg-rose-50 text-rose-600',
-    soon: 'bg-amber-50 text-amber-700',
-    normal: 'bg-slate-100 text-slate-500',
-  }
+// ─── market pulse sidebar ──────────────────────────────────────────────
+function MarketPulseSidebar({ skills, trendingRoles }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-3 transition hover:border-violet-200">
-      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-lg ${item.bg}`}>
-        <span aria-hidden>{item.emoji}</span>
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-slate-900">{item.title}</p>
-        <p className="truncate text-[11px] text-slate-500">{item.sub}</p>
-      </div>
-      <div className="flex flex-col items-end gap-0.5 text-right">
-        <p className={`text-sm font-bold ${toneClasses[item.tone] ?? toneClasses.normal}`}>{item.daysLeft} day{item.daysLeft !== 1 ? 's' : ''}</p>
-        <p className="text-[10px] text-slate-400">remaining</p>
-        <span className={`mt-0.5 rounded-full px-2 py-0.5 text-[10px] font-semibold ${ctaClasses[item.tone] ?? ctaClasses.normal}`}>
-          {item.cta}
-        </span>
-      </div>
-    </div>
-  )
-}
-
-// ─── right panel widgets ───────────────────────────────────────────────
-function ProfileCard({ profile }) {
-  const circumference = 2 * Math.PI * 34
-  const offset = circumference * (1 - profile.completionPercent / 100)
-  return (
-    <div className="rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-50 to-white p-5 text-center">
-      <div className="relative mx-auto mb-3 h-20 w-20">
-        <svg width="80" height="80" viewBox="0 0 80 80" className="-rotate-90">
-          <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(108,99,255,0.15)" strokeWidth="8" />
-          <circle
-            cx="40"
-            cy="40"
-            r="34"
-            fill="none"
-            stroke="#6C63FF"
-            strokeWidth="8"
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
-            strokeLinecap="round"
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-lg font-extrabold text-violet-600">{profile.completionPercent}%</span>
-          <span className="text-[9px] text-slate-400">Profile</span>
+    <div className="space-y-4">
+      {/* Skills in Demand */}
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-5">
+        <h4 className="mb-4 flex items-center gap-2 text-sm font-bold text-slate-900">
+          <BarChart3 size={16} strokeWidth={2.2} className="text-violet-600" /> Skills in Demand
+        </h4>
+        <div className="space-y-3">
+          {skills.map((skill) => (
+            <div key={skill.name}>
+              <div className="mb-1 flex items-center justify-between text-xs">
+                <span className="font-semibold text-slate-700">{skill.name}</span>
+                <span className="text-slate-400">{skill.sub}</span>
+              </div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+                <div className={`h-full rounded-full ${skill.barColor}`} style={{ width: `${skill.percent}%` }} />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-      <p className="text-base font-bold text-slate-900">{profile.name}</p>
-      <p className="text-xs text-slate-500">{profile.sub}</p>
-      <div className="mt-3 flex flex-wrap justify-center gap-1.5">
-        {profile.tags.map((tag) => (
-          <span key={tag.label} className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${TAG_TONE[tag.tone] ?? 'bg-slate-100 text-slate-600'}`}>
-            {tag.label}
-          </span>
-        ))}
-      </div>
-      <div className="mt-4 grid grid-cols-3 gap-2">
-        {profile.stats.map((stat) => (
-          <div key={stat.label} className="rounded-lg border border-slate-100 bg-white p-2.5">
-            <div className="text-lg font-bold text-slate-900">{stat.value}</div>
-            <div className="text-[10px] text-slate-400">{stat.label}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
 
-function SkillsInDemandPanel({ skills }) {
-  return (
-    <div className="rounded-2xl border border-slate-100 bg-white p-4">
-      <h4 className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-900">
-        <span aria-hidden className="text-violet-600">📊</span> Skills in Demand
-      </h4>
-      <div className="space-y-2.5">
-        {skills.map((skill) => (
-          <div key={skill.name}>
-            <div className="mb-1 flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-700">{skill.name}</span>
-              <span className="text-slate-400">{skill.sub}</span>
+      {/* Trending Roles */}
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-5">
+        <h4 className="mb-4 flex items-center gap-2 text-sm font-bold text-slate-900">
+          <TrendingUp size={16} strokeWidth={2.2} className="text-violet-600" /> Trending Roles
+        </h4>
+        <div className="divide-y divide-slate-100">
+          {trendingRoles.map((item) => (
+            <div key={item.id} className="flex cursor-pointer items-center gap-3 py-2.5 first:pt-0 last:pb-0">
+              <IconTile icon={roleIconFor(item)} className={`h-9 w-9 ${item.bg} border-slate-100`} />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-slate-900">{item.title}</p>
+                <p className="text-[11px] text-slate-400">{item.meta}</p>
+              </div>
+              <span className="text-sm">{item.badge}</span>
             </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
-              <div className={`h-full rounded-full ${skill.barColor}`} style={{ width: `${skill.percent}%` }} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function TrendingRolesPanel({ items }) {
-  return (
-    <div className="rounded-2xl border border-slate-100 bg-white p-4">
-      <h4 className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-900">
-        <span aria-hidden className="text-violet-600">📈</span> Trending Roles
-      </h4>
-      <div className="divide-y divide-slate-100">
-        {items.map((item) => (
-          <div key={item.id} className="flex cursor-pointer items-center gap-3 py-2.5 first:pt-0 last:pb-0">
-            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-lg ${item.bg}`}>
-              <span aria-hidden>{item.emoji}</span>
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-slate-900">{item.title}</p>
-              <p className="text-[11px] text-slate-400">{item.meta}</p>
-            </div>
-            <span className="text-sm">{item.badge}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// ─── categories + companies ────────────────────────────────────────────
-function CategoriesRow({ categories }) {
-  return (
-    <div className="flex gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      {categories.map((cat) => (
-        <div
-          key={cat.id}
-          className="flex shrink-0 cursor-pointer items-center gap-2.5 rounded-xl border border-slate-100 bg-white px-4 py-3 transition hover:border-violet-300"
-        >
-          <div className={`flex h-9 w-9 items-center justify-center rounded-lg text-lg ${cat.iconBg}`}>
-            <span aria-hidden>{cat.emoji}</span>
-          </div>
-          <div>
-            <p className="text-xs font-semibold text-slate-900">{cat.name}</p>
-            <p className="text-[10px] text-slate-400">{cat.count} roles</p>
-          </div>
+          ))}
         </div>
-      ))}
-    </div>
-  )
-}
-
-function CompaniesGrid({ companies }) {
-  return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      {companies.map((co) => (
-        <div
-          key={co.id}
-          className="cursor-pointer rounded-2xl border border-slate-100 bg-white p-4 text-center transition hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(108,99,255,0.10)]"
-        >
-          <div className={`mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl text-2xl ${co.bg}`}>
-            <span aria-hidden>{co.emoji}</span>
-          </div>
-          <p className="text-sm font-bold text-slate-900">{co.name}</p>
-          <p className="text-[11px] text-slate-500">{co.industry}</p>
-          <p className="mt-1 text-[11px] font-semibold text-violet-600">{co.openings} openings</p>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-// ─── bottom cta ────────────────────────────────────────────────────────
-function BottomCTA({ cta }) {
-  return (
-    <div className="flex flex-col items-start gap-4 rounded-3xl bg-gradient-to-r from-violet-600 to-pink-500 p-7 text-white sm:flex-row sm:items-center">
-      <div className="flex-1">
-        <h3 className="text-lg font-extrabold">{cta.title}</h3>
-        <p className="mt-1 text-sm text-white/80">{cta.subtitle}</p>
-      </div>
-      <div className="flex shrink-0 gap-2">
-        <button
-          type="button"
-          className="inline-flex items-center gap-1.5 rounded-full bg-white px-5 py-2 text-sm font-semibold text-violet-600 transition hover:bg-slate-50"
-        >
-          <span aria-hidden>🔔</span> {cta.primaryCta}
-        </button>
-        <button
-          type="button"
-          className="rounded-full border border-white/50 bg-transparent px-5 py-2 text-sm font-medium text-white transition hover:bg-white/10"
-        >
-          {cta.secondaryCta}
-        </button>
       </div>
     </div>
   )
@@ -648,7 +530,7 @@ export default function JobMarket() {
   const latest = useMemo(() => jobMarket.latest.filter(matches), [search, committedSectors])
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-6">
       <SearchAndSectorBar
         search={search}
         onSearch={setSearch}
@@ -657,12 +539,12 @@ export default function JobMarket() {
         sectors={jobMarket.sectors}
       />
 
-      <HeroBanner hero={jobMarket.hero} />
+      <ClosingSoonStrip items={jobMarket.expiring} />
 
       <section>
         <SectionHeader
-          icon="🎯"
-          title="Most Relevant for You"
+          icon={<Target size={17} strokeWidth={2.2} />}
+          title="Best Matches"
           count={`${mostRelevant.length} matches`}
           link="See all"
         />
@@ -677,9 +559,9 @@ export default function JobMarket() {
         )}
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
         <section>
-          <SectionHeader icon="✨" title="Latest Postings" count="+340 this week" link="View all" />
+          <SectionHeader icon={<Sparkles size={17} strokeWidth={2.2} />} title="Latest Postings" count="+340 this week" link="View all" />
           {latest.length > 0 ? (
             <>
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -692,7 +574,7 @@ export default function JobMarket() {
                   type="button"
                   className="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-white px-6 py-2 text-sm font-semibold text-violet-600 transition hover:border-violet-400 hover:bg-violet-50"
                 >
-                  <span aria-hidden>🔄</span> Show more listings
+                  <RefreshCw size={14} strokeWidth={2.2} /> Show more listings
                 </button>
               </div>
             </>
@@ -700,33 +582,13 @@ export default function JobMarket() {
             <EmptyHint>No postings match your current filters.</EmptyHint>
           )}
         </section>
-        <aside className="space-y-4">
-          <ProfileCard profile={jobMarket.profile} />
-          <SkillsInDemandPanel skills={jobMarket.skillsInDemand} />
-          <TrendingRolesPanel items={jobMarket.trendingRoles} />
+        <aside>
+          <MarketPulseSidebar
+            skills={jobMarket.skillsInDemand}
+            trendingRoles={jobMarket.trendingRoles}
+          />
         </aside>
       </div>
-
-      <section>
-        <SectionHeader icon="⏰" title="Closing Soon" count={`${jobMarket.expiring.length} expiring`} link="View all" accent="text-rose-500" />
-        <div className="grid gap-3 lg:grid-cols-2">
-          {jobMarket.expiring.map((item) => (
-            <ExpiringItem key={item.id} item={item} />
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <SectionHeader icon="🗂" title="Browse by Category" />
-        <CategoriesRow categories={jobMarket.categories} />
-      </section>
-
-      <section>
-        <SectionHeader icon="🏢" title="Top Hiring Companies" link="All companies" />
-        <CompaniesGrid companies={jobMarket.companies} />
-      </section>
-
-      <BottomCTA cta={jobMarket.bottomCta} />
     </div>
   )
 }

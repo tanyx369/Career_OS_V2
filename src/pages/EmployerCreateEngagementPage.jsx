@@ -8,8 +8,8 @@ import { employerEngagement, employerEngagementBuilder, employerTalentWorkspace 
 import { useEmployerSearchStore } from '../store/useEmployerSearchStore'
 
 const tabs = [
-  { id: 'club-collaboration', label: 'Club Collaboration' },
   { id: 'create-engagement', label: 'Create Engagement' },
+  { id: 'club-collaboration', label: 'Club Collaboration' },
 ]
 
 const creationSteps = [
@@ -213,16 +213,16 @@ function ProgressTracker({ currentStep }) {
     <div className="overflow-hidden rounded-[8px] border border-slate-200 bg-white px-4 py-4">
       <div className="grid gap-4 md:grid-cols-5">
         {creationSteps.map((step, index) => (
-          <div key={step.id} className="relative flex items-start gap-3">
-            {index < creationSteps.length - 1 && <span className={`absolute left-8 top-4 hidden h-px w-[calc(100%+1rem)] md:block ${step.id < currentStep ? 'bg-blue-300' : 'bg-slate-200'}`} />}
+          <div key={step.id} className="relative flex items-center gap-3">
+            {index < creationSteps.length - 1 && <span className={`absolute left-8 top-1/2 -translate-y-1/2 z-0 hidden h-px w-[calc(100%+1rem)] md:block ${step.id < currentStep ? 'bg-blue-300' : 'bg-slate-200'}`} />}
             <span className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
               step.id === currentStep ? 'bg-blue-600 text-white shadow-sm shadow-blue-200' : step.id < currentStep ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-100' : 'bg-slate-100 text-slate-600'
             }`}>
               {step.id}
             </span>
             <div className="min-w-0">
-              <p className={`text-sm font-semibold ${step.id === currentStep ? 'text-slate-950' : 'text-slate-600'}`}>{step.title}</p>
-              <p className="mt-0.5 text-xs leading-5 text-slate-500">{step.helper}</p>
+              <p className={`text-sm font-semibold leading-none pb-1.5 ${step.id === currentStep ? 'text-slate-950' : 'text-slate-600'}`}>{step.title}</p>
+              <p className="pt-1.5 text-xs leading-none text-slate-500">{step.helper}</p>
             </div>
           </div>
         ))}
@@ -872,7 +872,8 @@ export default function EmployerCreateEngagementPage() {
   const [selectedType, setSelectedType] = useState(employerEngagementBuilder.selectedType)
   const [currentStep, setCurrentStep] = useState(1)
   const [activeFilter, setActiveFilter] = useState('All')
-  const [selectedRequestId, setSelectedRequestId] = useState(employerEngagement.selectedRequestId)
+  const [selectedRequestId, setSelectedRequestId] = useState(null)
+  const [panelTab, setPanelTab] = useState('overview')
   const [sentIds, setSentIds] = useState(() => new Set(employerEngagement.clubRequests.filter((request) => request.status === 'Interest Sent').map((request) => request.id)))
   const [toast, setToast] = useState('')
 
@@ -973,27 +974,48 @@ export default function EmployerCreateEngagementPage() {
           <BuilderPreviewPanel selectedType={selectedType} currentStep={currentStep} />
         </div>
       ) : (
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+        <div className="space-y-6">
           <main className="min-w-0 space-y-6">
             <EngagementFilterChips activeFilter={activeFilter} onFilterChange={setActiveFilter} />
-            <section className="grid gap-5 lg:grid-cols-2 2xl:grid-cols-3">
+            <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {filteredRequests.map((request) => (
                 <ClubRequestCard
                   key={request.id}
                   request={request}
-                  onExpressInterest={(nextRequest) => setSelectedRequestId(nextRequest.id)}
+                  onViewDetails={(req) => {
+                    setSelectedRequestId(req.id)
+                    setPanelTab('overview')
+                  }}
+                  onExpressInterest={(req) => {
+                    setSelectedRequestId(req.id)
+                    setPanelTab('express')
+                  }}
                 />
               ))}
             </section>
             <CTASection onClick={() => setActiveTab('create-engagement')} />
           </main>
 
-          <ExpressInterestPanel
-            request={selectedRequest ? { ...selectedRequest, status: sentIds.has(selectedRequest.id) ? 'Interest Sent' : selectedRequest.status } : null}
-            proposalDraft={employerEngagement.proposalDraft}
-            onClose={() => setSelectedRequestId(null)}
-            onSend={sendInterest}
-          />
+          {selectedRequestId && (
+            <div 
+              onClick={() => setSelectedRequestId(null)}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm cursor-pointer"
+            >
+              <div 
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-full max-w-lg cursor-default"
+              >
+                <ExpressInterestPanel
+                  request={selectedRequest ? { ...selectedRequest, status: sentIds.has(selectedRequest.id) ? 'Interest Sent' : selectedRequest.status } : null}
+                  proposalDraft={employerEngagement.proposalDraft}
+                  onClose={() => setSelectedRequestId(null)}
+                  onSend={sendInterest}
+                  activeTab={panelTab}
+                  setActiveTab={setPanelTab}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 
