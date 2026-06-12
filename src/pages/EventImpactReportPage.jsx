@@ -1,5 +1,23 @@
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import {
+  AlertTriangle,
+  Building2,
+  ChevronDown,
+  ChevronUp,
+  Download,
+  FileText,
+  Info,
+  Radio,
+  Share2,
+  Sparkles,
+  Star,
+  Target,
+  TrendingUp,
+  Trophy,
+  UserRound,
+  Users
+} from 'lucide-react'
 
 const COMPLETED_EVENTS_DETAILS = {
   'ai-finance-case': {
@@ -151,14 +169,16 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
             onClick={() => onToast('Downloading PDF Report...')}
             className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-650 hover:bg-slate-50 transition inline-flex items-center gap-1.5 shadow-sm"
           >
-            📥 Download Report
+            <Download className="h-3.5 w-3.5" />
+            Download Report
           </button>
           <button
             type="button"
             onClick={() => onToast('Copied share link to clipboard.')}
             className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-650 hover:bg-slate-50 transition inline-flex items-center gap-1.5 shadow-sm"
           >
-            🔗 Share Report
+            <Share2 className="h-3.5 w-3.5" />
+            Share Report
           </button>
         </div>
       </header>
@@ -166,8 +186,8 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
       {/* ================= EVENT SUMMARY STRIP ================= */}
       <section className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.01)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5 min-w-0">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-lg shadow-sm">
-            🏆
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white shadow-sm">
+            <Trophy className="h-5 w-5" />
           </span>
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -223,7 +243,7 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
                     className="text-slate-400 hover:text-blue-600 text-xs font-bold h-4 w-4 flex items-center justify-center rounded-full border border-slate-200"
                     aria-label="Info about Estimated Readiness Uplift"
                   >
-                    ℹ️
+                    <Info className="h-3 w-3" />
                   </button>
                   {showTooltip && (
                     <div className="absolute left-6 bottom-0 z-30 w-64 rounded-xl border border-slate-100 bg-slate-900 p-3 text-xs text-slate-200 shadow-xl leading-relaxed animate-fade-in font-medium">
@@ -237,7 +257,9 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
             {/* Metrics cards grid */}
             <div className="grid gap-3 grid-cols-2 md:grid-cols-5">
               <div className="rounded-xl border border-slate-100 bg-slate-50/20 p-3.5 space-y-2 flex flex-col justify-between">
-                <span className="text-lg">📈</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-100 bg-emerald-50 text-emerald-600">
+                  <TrendingUp className="h-4 w-4" />
+                </span>
                 <div>
                   <p className="text-sm font-semibold text-slate-400 leading-none">Estimated Readiness Uplift</p>
                   <p className="text-xl font-bold text-emerald-600 mt-2 leading-none">+14%</p>
@@ -246,7 +268,9 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
               </div>
               
               <div className="rounded-xl border border-slate-100 bg-slate-50/20 p-3.5 space-y-2 flex flex-col justify-between">
-                <span className="text-lg">🎯</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-blue-100 bg-blue-50 text-blue-600">
+                  <Target className="h-4 w-4" />
+                </span>
                 <div>
                   <p className="text-sm font-semibold text-slate-400 leading-none">Priority Skill Gaps Improved</p>
                   <p className="text-xl font-bold text-slate-800 mt-2 leading-none">3 of 4</p>
@@ -255,7 +279,9 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
               </div>
 
               <div className="rounded-xl border border-slate-100 bg-slate-50/20 p-3.5 space-y-2 flex flex-col justify-between">
-                <span className="text-lg">👤</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-violet-100 bg-violet-50 text-violet-600">
+                  <UserRound className="h-4 w-4" />
+                </span>
                 <div>
                   <p className="text-sm font-semibold text-slate-400 leading-none">Students in Employer Pipeline</p>
                   <p className="text-xl font-bold text-slate-800 mt-2 leading-none">14</p>
@@ -264,7 +290,9 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
               </div>
 
               <div className="rounded-xl border border-slate-100 bg-slate-50/20 p-3.5 space-y-2 flex flex-col justify-between">
-                <span className="text-lg">🏢</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-orange-100 bg-orange-50 text-orange-600">
+                  <Building2 className="h-4 w-4" />
+                </span>
                 <div>
                   <p className="text-sm font-semibold text-slate-400 leading-none">Companies Engaged</p>
                   <p className="text-xl font-bold text-slate-800 mt-2 leading-none">3</p>
@@ -273,7 +301,9 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
               </div>
 
               <div className="rounded-xl border border-slate-100 bg-slate-50/20 p-3.5 space-y-2 flex flex-col justify-between">
-                <span className="text-lg">👥</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-purple-100 bg-purple-50 text-purple-600">
+                  <Users className="h-4 w-4" />
+                </span>
                 <div>
                   <p className="text-sm font-semibold text-slate-400 leading-none">Students Impacted</p>
                   <p className="text-xl font-bold text-slate-800 mt-2 leading-none">120+</p>
@@ -337,8 +367,9 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
               </table>
             </div>
 
-            <div className="rounded-lg bg-blue-50/30 border border-blue-100/40 p-3 text-xs text-slate-500 font-medium">
-              ℹ️ Skill gaps are prioritized based on Program-Market Alignment insights and employer demand.
+            <div className="rounded-lg bg-blue-50/30 border border-blue-100/40 p-3 text-xs text-slate-500 font-medium flex items-start gap-2">
+              <Info className="h-3.5 w-3.5 shrink-0 text-blue-600 mt-0.5" />
+              <span>Skill gaps are prioritized based on Program-Market Alignment insights and employer demand.</span>
             </div>
           </section>
 
@@ -423,7 +454,11 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
                     >
                       <td className="py-3 px-4 text-slate-800">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs">{row.isCurrent ? '⭐' : '📄'}</span>
+                          {row.isCurrent ? (
+                            <Star className="h-3.5 w-3.5 shrink-0 text-amber-500 fill-amber-100" />
+                          ) : (
+                            <FileText className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                          )}
                           <span className="truncate">{row.name}</span>
                         </div>
                       </td>
@@ -457,7 +492,7 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
           {/* 1. STRATEGIC TAKEAWAYS */}
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm space-y-4">
             <div className="flex items-center gap-2 border-b border-slate-50 pb-2">
-              <span className="text-violet-600 font-bold">✨</span>
+              <Sparkles className="h-4 w-4 text-violet-600" />
               <h4 className="text-xs font-semibold text-slate-800">Strategic Takeaways</h4>
             </div>
 
@@ -614,16 +649,18 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
               <h4 className="text-xs font-semibold text-slate-400 hover:text-slate-655 transition uppercase tracking-wider">
                 Evidence Processing Details
               </h4>
-              <span className="text-slate-400 text-xs font-bold">
-                {showEvidenceDetails ? '▲' : '▼'}
-              </span>
+              {showEvidenceDetails ? (
+                <ChevronUp className="h-4 w-4 text-slate-400" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-slate-400" />
+              )}
             </header>
 
             {showEvidenceDetails && (
               <div className="space-y-4 animate-fade-in pt-1">
                 <div className="grid grid-cols-2 gap-2 text-center text-xs">
                   <div className="rounded-xl border border-slate-100 bg-slate-50/10 p-2 flex items-center gap-2">
-                    <span className="text-sm shrink-0">👥</span>
+                    <Users className="h-4 w-4 shrink-0 text-violet-600" />
                     <div className="text-left leading-normal min-w-0">
                       <p className="font-bold text-slate-800 text-xs">124</p>
                       <p className="text-xs text-slate-400 font-semibold truncate leading-none mt-0.5">Attendance verified</p>
@@ -631,7 +668,7 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
                   </div>
                   
                   <div className="rounded-xl border border-slate-100 bg-slate-50/10 p-2 flex items-center gap-2">
-                    <span className="text-sm shrink-0">📄</span>
+                    <FileText className="h-4 w-4 shrink-0 text-blue-600" />
                     <div className="text-left leading-normal min-w-0">
                       <p className="font-bold text-slate-800 text-xs">96</p>
                       <p className="text-xs text-slate-400 font-semibold truncate leading-none mt-0.5">Contributions confirmed</p>
@@ -639,7 +676,7 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
                   </div>
 
                   <div className="rounded-xl border border-slate-100 bg-slate-50/10 p-2 flex items-center gap-2">
-                    <span className="text-sm shrink-0">📡</span>
+                    <Radio className="h-4 w-4 shrink-0 text-emerald-600" />
                     <div className="text-left leading-normal min-w-0">
                       <p className="font-bold text-slate-800 text-xs">312</p>
                       <p className="text-xs text-slate-400 font-semibold truncate leading-none mt-0.5">Memory signals created</p>
@@ -647,7 +684,7 @@ export default function EventImpactReportPage({ event, onBack, onToast }) {
                   </div>
 
                   <div className="rounded-xl border border-slate-100 bg-rose-50/20 p-2 flex items-center gap-2 border-rose-100/30">
-                    <span className="text-sm shrink-0">⚠️</span>
+                    <AlertTriangle className="h-4 w-4 shrink-0 text-rose-500" />
                     <div className="text-left leading-normal min-w-0">
                       <p className="font-bold text-rose-600 text-xs">8</p>
                       <p className="text-xs text-rose-500 font-semibold truncate leading-none mt-0.5">Exceptions pending</p>

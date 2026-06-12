@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default function SkillGapAnalysisCard({ gaps }) {
   return (
@@ -14,9 +15,9 @@ export default function SkillGapAnalysisCard({ gaps }) {
           </div>
         ))}
       </div>
-      <button type="button" className="mt-4 text-sm font-semibold text-violet-700">
+      <Link to="/student/intelligence" className="inline-block mt-4 text-sm font-semibold text-violet-700 transition-colors hover:text-violet-900">
         View skill roadmap -&gt;
-      </button>
+      </Link>
     </section>
   )
 }

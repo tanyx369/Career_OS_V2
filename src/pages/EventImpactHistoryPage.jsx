@@ -1,5 +1,17 @@
 import React, { useState, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import {
+  Building2,
+  CalendarDays,
+  Download,
+  Eye,
+  MoreVertical,
+  RotateCcw,
+  Search,
+  Sparkles,
+  Star,
+  TrendingUp
+} from 'lucide-react'
 
 // Mock database for semesters, programs, types, companies
 const SEMESTERS = ['Spring 2025', 'Fall 2024', 'Summer 2024', 'Spring 2024']
@@ -284,7 +296,8 @@ export default function EventImpactHistoryPage({ onToast }) {
             onClick={() => onToast('Exporting history details as CSV...')}
             className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-655 hover:bg-slate-50 transition inline-flex items-center gap-1.5 shadow-sm"
           >
-            📥 Export History
+            <Download className="h-3.5 w-3.5" />
+            Export History
           </button>
           <button
             type="button"
@@ -302,7 +315,7 @@ export default function EventImpactHistoryPage({ onToast }) {
           
           {/* Search bar */}
           <div className="flex items-center gap-2 w-full lg:w-96 shrink-0 relative">
-            <span className="absolute left-3.5 text-slate-400 text-xs font-semibold">🔍</span>
+            <Search className="absolute left-3.5 h-3.5 w-3.5 text-slate-400" />
             <input
               type="text"
               placeholder="Search events, partners, or skills..."
@@ -368,7 +381,8 @@ export default function EventImpactHistoryPage({ onToast }) {
               onClick={handleClearFilters}
               className="rounded-lg border border-slate-200/80 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition flex items-center gap-1"
             >
-              🔄 Clear Filters
+              <RotateCcw className="h-3.5 w-3.5" />
+              Clear Filters
             </button>
           </div>
         </div>
@@ -377,7 +391,9 @@ export default function EventImpactHistoryPage({ onToast }) {
       {/* ================= SUMMARY METRICS ================= */}
       <section className="grid gap-4 grid-cols-1 md:grid-cols-3">
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex items-center gap-3.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-sm">📅</span>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-violet-100 bg-violet-50 text-violet-600">
+            <CalendarDays className="h-4.5 w-4.5" />
+          </span>
           <div>
             <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider leading-none">Completed Events</h3>
             <p className="text-xl font-bold text-slate-800 mt-2 leading-none">28</p>
@@ -386,7 +402,9 @@ export default function EventImpactHistoryPage({ onToast }) {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex items-center gap-3.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-sm">📈</span>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 text-emerald-600">
+            <TrendingUp className="h-4.5 w-4.5" />
+          </span>
           <div>
             <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider leading-none">Average Readiness Uplift</h3>
             <p className="text-xl font-bold text-emerald-600 mt-2 leading-none">+10%</p>
@@ -395,7 +413,9 @@ export default function EventImpactHistoryPage({ onToast }) {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex items-center gap-3.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-sm">🏢</span>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-blue-100 bg-blue-50 text-blue-600">
+            <Building2 className="h-4.5 w-4.5" />
+          </span>
           <div>
             <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider leading-none">Companies Engaged</h3>
             <p className="text-xl font-bold text-slate-800 mt-2 leading-none">42</p>
@@ -448,7 +468,7 @@ export default function EventImpactHistoryPage({ onToast }) {
                     <td className="py-3 px-4">
                       <div className="min-w-0 space-y-1">
                         <div className="flex items-center gap-2">
-                          {event.id === fromReportEventId && <span className="text-xs text-amber-500 shrink-0">⭐</span>}
+                          {event.id === fromReportEventId && <Star className="h-3.5 w-3.5 shrink-0 text-amber-500 fill-amber-100" />}
                           <p className="text-xs font-semibold text-slate-855 truncate leading-none">{event.title}</p>
                         </div>
                         <span className={`inline-block rounded border px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide leading-none ${getTypeBadgeClass(event.type)}`}>
@@ -530,14 +550,15 @@ export default function EventImpactHistoryPage({ onToast }) {
                           onClick={() => navigate(`/university/collaboration/post-event/report/${event.id}`)}
                           className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-blue-600 hover:border-blue-300 hover:bg-blue-50/20 transition flex items-center gap-1"
                         >
-                          👁️ View Report
+                          <Eye className="h-3.5 w-3.5" />
+                          View Report
                         </button>
                         <button
                           type="button"
                           onClick={() => onToast('Kebab options toggled.')}
                           className="p-1 rounded text-slate-400 hover:text-slate-750 transition text-xs font-semibold leading-none"
                         >
-                          ⋮
+                          <MoreVertical className="h-3.5 w-3.5" />
                         </button>
                       </div>
                     </td>
@@ -618,7 +639,7 @@ export default function EventImpactHistoryPage({ onToast }) {
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm space-y-4">
             
             <header className="flex items-center gap-2 border-b border-slate-50 pb-2">
-              <span className="text-violet-600 font-bold text-sm">✨</span>
+              <Sparkles className="h-4 w-4 text-violet-600" />
               <h4 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">AI Pattern Summary</h4>
             </header>
 

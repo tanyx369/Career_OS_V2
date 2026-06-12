@@ -239,7 +239,7 @@ function SearchAndSectorBar({ search, onSearch, committed, onApplyCommitted, sec
 }
 
 // ─── closing soon urgency strip ────────────────────────────────────────
-function ClosingSoonStrip({ items }) {
+function ClosingSoonStrip({ items, onApply }) {
   const urgentItems = items.filter((i) => i.daysLeft <= 3)
   if (urgentItems.length === 0) return null
 
@@ -258,16 +258,18 @@ function ClosingSoonStrip({ items }) {
       </div>
       <div className="flex shrink-0 gap-2">
         {urgentItems.slice(0, 2).map((item) => (
-          <span
+          <button
+            type="button"
             key={item.id}
+            onClick={() => onApply?.(item)}
             className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${
               item.daysLeft <= 1
-                ? 'bg-rose-500 text-white'
-                : 'bg-amber-100 text-amber-800'
+                ? 'bg-rose-500 text-white hover:bg-rose-600'
+                : 'bg-amber-100 text-amber-800 hover:bg-amber-200'
             }`}
           >
-            {item.daysLeft <= 1 ? 'Apply Now' : `${item.daysLeft} days left`}
-          </span>
+            {item.cta ?? (item.daysLeft <= 1 ? 'Apply Now' : `${item.daysLeft} days left`)}
+          </button>
         ))}
       </div>
     </div>
@@ -504,6 +506,85 @@ function EmptyHint({ children }) {
   )
 }
 
+function JobDetail({ job, onBack }) {
+  return (
+    <div className="space-y-6">
+      <button
+        type="button"
+        onClick={onBack}
+        className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-blue-200 hover:text-blue-700"
+      >
+        <span aria-hidden>←</span> Back to Job Market
+      </button>
+
+      <section className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${job.accentGradient ?? 'from-blue-600 to-violet-600'} p-7 text-white shadow-[0_20px_60px_rgba(37,99,235,0.22)]`}>
+        <div className="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-white/15" />
+        <div className="absolute bottom-7 right-10 h-20 w-28 rounded-2xl border border-white/20 bg-white/10" />
+        <div className="relative z-10 max-w-3xl">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full border border-white/25 bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">
+              {job.type ?? 'Role'}
+            </span>
+            <span className="rounded-full border border-white/25 bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">
+              {job.workMode ?? 'Hybrid'}
+            </span>
+            {job.matchPercent != null && (
+              <span className="rounded-full bg-emerald-500/90 px-3 py-1 text-xs font-bold text-white">
+                {job.matchPercent}% Match
+              </span>
+            )}
+          </div>
+          <h2 className="mt-4 text-3xl font-extrabold leading-tight">{job.title}</h2>
+          <p className="mt-2 text-sm font-medium text-white/80">{job.company} · {job.location}</p>
+        </div>
+      </section>
+
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
+        <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+          <h3 className="text-base font-semibold text-slate-950">Role Overview</h3>
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            {job.summary ?? `${job.company ?? 'This employer'} is hiring for ${job.title}. Review the role details, deadline, and required focus areas before applying.`}
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {(job.tags ?? []).map((tag) => (
+              <span key={tag} className="rounded-lg bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 ring-1 ring-blue-100">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <aside className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+          <h3 className="text-sm font-semibold text-slate-950">Application Details</h3>
+          <div className="mt-4 space-y-3 text-sm">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Deadline</p>
+              <p className="mt-1 font-semibold text-slate-900">{job.deadline ?? `${job.daysLeft ?? 'Few'} days left`}</p>
+            </div>
+            {job.salaryAmount && (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{job.salaryLabel ?? 'Compensation'}</p>
+                <p className="mt-1 font-semibold text-slate-900">{job.salaryCurrency} {job.salaryAmount}</p>
+              </div>
+            )}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Work Mode</p>
+              <p className="mt-1 font-semibold text-slate-900">{job.workMode ?? 'Hybrid'}</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
+          >
+            <Rocket size={15} strokeWidth={2.2} />
+            Apply Now
+          </button>
+        </aside>
+      </div>
+    </div>
+  )
+}
+
 function jobMatchesQuery(job, query) {
   if (!query) return true
   const needle = query.toLowerCase()
@@ -519,15 +600,38 @@ function jobMatchesSectors(job, committed) {
   return committed.has(job.sector)
 }
 
+function findJobForExpiringItem(item) {
+  const jobs = [...jobMarket.mostRelevant, ...jobMarket.latest]
+  const text = `${item.title ?? ''} ${item.sub ?? ''}`.toLowerCase()
+  return jobs.find((job) => {
+    const company = job.company?.toLowerCase()
+    const title = job.title?.toLowerCase()
+    return (company && text.includes(company)) || (title && text.includes(title))
+  }) ?? {
+    ...item,
+    company: item.sub?.split('·')[0]?.trim(),
+    location: item.sub?.split('·').at(-1)?.trim(),
+    type: item.sub?.split('·')[1]?.trim(),
+    deadline: `${item.daysLeft} days left`,
+    matchPercent: null,
+    tags: [],
+  }
+}
+
 // ─── main composition ─────────────────────────────────────────────────
 export default function JobMarket() {
   const [search, setSearch] = useState('')
   const [committedSectors, setCommittedSectors] = useState(() => new Set())
+  const [selectedJob, setSelectedJob] = useState(null)
 
   const matches = (job) => jobMatchesQuery(job, search) && jobMatchesSectors(job, committedSectors)
 
   const mostRelevant = useMemo(() => jobMarket.mostRelevant.filter(matches), [search, committedSectors])
   const latest = useMemo(() => jobMarket.latest.filter(matches), [search, committedSectors])
+
+  if (selectedJob) {
+    return <JobDetail job={selectedJob} onBack={() => setSelectedJob(null)} />
+  }
 
   return (
     <div className="space-y-6">
@@ -539,7 +643,10 @@ export default function JobMarket() {
         sectors={jobMarket.sectors}
       />
 
-      <ClosingSoonStrip items={jobMarket.expiring} />
+      <ClosingSoonStrip
+        items={jobMarket.expiring}
+        onApply={(item) => setSelectedJob(findJobForExpiringItem(item))}
+      />
 
       <section>
         <SectionHeader

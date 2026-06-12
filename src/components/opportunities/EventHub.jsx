@@ -114,6 +114,19 @@ function eventIconFor(event) {
   return eventIconMap[event.category] ?? topicIconMap[event.iconKey] ?? Sparkles
 }
 
+function eventBannerGradient(event) {
+  const gradients = {
+    hackathons: 'from-blue-600 via-indigo-600 to-violet-600',
+    'case-competitions': 'from-violet-700 via-blue-700 to-cyan-500',
+    workshops: 'from-emerald-600 via-teal-600 to-cyan-500',
+    talks: 'from-orange-500 via-amber-500 to-yellow-400',
+    webinars: 'from-sky-600 via-blue-600 to-indigo-600',
+    networking: 'from-purple-600 via-fuchsia-600 to-rose-500',
+  }
+
+  return gradients[event.category] ?? event.thumbGradient ?? 'from-blue-600 via-indigo-600 to-violet-600'
+}
+
 // ─── unified search + filter bar ────────────────────────────────────────
 function SearchFilterBar({ search, onSearch, sectorId, onSectorChange, sectors, activeCategory, onCategoryChange, categories }) {
   const [open, setOpen] = useState(false)
@@ -133,8 +146,8 @@ function SearchFilterBar({ search, onSearch, sectorId, onSectorChange, sectors, 
   }, [open])
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
+      <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
         <div className="relative flex-1">
           <Search size={16} strokeWidth={2.2} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
@@ -142,7 +155,7 @@ function SearchFilterBar({ search, onSearch, sectorId, onSectorChange, sectors, 
             value={search}
             onChange={(event) => onSearch(event.target.value)}
             placeholder="Search events, topics, skills..."
-            className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-10 text-sm outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-50"
+            className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-10 text-sm font-medium text-slate-700 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
           />
           {search && (
             <button
@@ -161,10 +174,10 @@ function SearchFilterBar({ search, onSearch, sectorId, onSectorChange, sectors, 
             onClick={() => setOpen((o) => !o)}
             aria-haspopup="listbox"
             aria-expanded={open}
-            className={`inline-flex h-10 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition ${
+            className={`inline-flex h-12 items-center gap-2 rounded-xl border px-4 text-sm font-semibold shadow-sm transition ${
               open || isFiltered
-                ? 'border-violet-500 bg-violet-50 text-violet-700'
-                : 'border-slate-200 bg-white text-slate-600 hover:border-violet-300'
+                ? 'border-blue-500 bg-blue-50 text-blue-700'
+                : 'border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:text-blue-700'
             }`}
           >
             <Filter size={16} strokeWidth={2.2} />
@@ -189,7 +202,7 @@ function SearchFilterBar({ search, onSearch, sectorId, onSectorChange, sectors, 
                       setOpen(false)
                     }}
                     className={`flex w-full items-center justify-between px-4 py-2 text-left text-sm transition ${
-                      selected ? 'bg-violet-50 font-semibold text-violet-700' : 'text-slate-700 hover:bg-slate-50'
+                      selected ? 'bg-blue-50 font-semibold text-blue-700' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     <span>{sector.label}</span>
@@ -202,16 +215,16 @@ function SearchFilterBar({ search, onSearch, sectorId, onSectorChange, sectors, 
         </div>
       </div>
       {/* Inline filter chips */}
-      <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {categories.map((cat) => (
           <button
             key={cat.id}
             type="button"
             onClick={() => onCategoryChange(cat.id)}
-            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition ${
+            className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-semibold transition ${
               activeCategory === cat.id
-                ? 'border-violet-600 bg-violet-600 text-white shadow-[0_4px_12px_rgba(124,58,237,0.25)]'
-                : 'border-slate-200 bg-white text-slate-600 hover:border-violet-300 hover:text-violet-600'
+                ? 'border-blue-600 bg-blue-600 text-white shadow-[0_10px_24px_rgba(37,99,235,0.18)]'
+                : 'border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:text-blue-700'
             }`}
           >
             {React.createElement(categoryIconFor(cat), { size: 13, strokeWidth: 2.2 })}
@@ -248,7 +261,7 @@ function SectionHeader({ icon, title, count, link, onLinkClick }) {
 }
 
 // ─── deadline alert ─────────────────────────────────────────────────────
-function DeadlineAlert({ alert }) {
+function DeadlineAlert({ alert, onCtaClick }) {
   return (
     <div className="flex items-center gap-3 rounded-xl border border-amber-200/80 bg-gradient-to-r from-amber-50/80 to-orange-50/60 p-3.5">
       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
@@ -260,6 +273,7 @@ function DeadlineAlert({ alert }) {
       </div>
       <button
         type="button"
+        onClick={onCtaClick}
         className="shrink-0 rounded-lg bg-amber-500 px-4 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-600"
       >
         {alert.ctaLabel}
@@ -270,7 +284,10 @@ function DeadlineAlert({ alert }) {
 
 // ─── event card (unified feed) ──────────────────────────────────────────
 function EventCard({ event, onSelect }) {
-  const [saved, setSaved] = useState(event.isSaved ?? false)
+  const savedEvents = useCareerStore((state) => state.savedEvents)
+  const toggleSaveEvent = useCareerStore((state) => state.toggleSaveEvent)
+  const saved = savedEvents.some((savedEvent) => savedEvent.id === event.id)
+
   return (
     <div
       onClick={() => onSelect?.(event)}
@@ -282,21 +299,27 @@ function EventCard({ event, onSelect }) {
           onSelect?.(event)
         }
       }}
-      className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition-all duration-200 hover:-translate-y-1 hover:border-violet-200 hover:shadow-[0_16px_40px_rgba(108,99,255,0.12)] focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+      className="group flex h-full min-h-[430px] cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
     >
-      <div className={`relative flex h-28 items-end bg-gradient-to-br ${event.thumbGradient} p-3`}>
-        <span
-          className={`absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${TYPE_BADGE_COLOR[event.typeColor] ?? 'bg-slate-100 text-slate-700'}`}
-        >
-          {event.type}
-        </span>
+      <div className={`relative h-40 overflow-hidden bg-gradient-to-br ${eventBannerGradient(event)} p-4 text-white`}>
+        <div className="absolute -right-10 -top-12 h-32 w-32 rounded-full bg-white/15" />
+        <div className="absolute bottom-4 right-5 h-16 w-24 rounded-2xl border border-white/20 bg-white/10" />
+        <div className="absolute bottom-8 right-10 h-16 w-1.5 rounded-full bg-white/40" />
+        <div className="absolute bottom-8 right-16 h-11 w-1.5 rounded-full bg-white/30" />
+        <div className="absolute bottom-8 right-24 h-8 w-1.5 rounded-full bg-white/25" />
+        <div className="relative z-10 flex items-center gap-2 pr-12">
+          <IconTile icon={eventIconFor(event)} className="h-9 w-9 border-white/25 bg-white/15 text-white backdrop-blur" size={17} />
+          <span className="inline-flex items-center rounded-full border border-white/25 bg-white/15 px-3 py-1 text-[11px] font-bold text-white backdrop-blur">
+            {event.type}
+          </span>
+        </div>
         {event.matchPercent != null && (
-          <span className="absolute right-2.5 top-2.5 rounded-full bg-emerald-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+          <span className="absolute right-3 top-14 z-10 rounded-full border border-white/25 bg-emerald-500/90 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm">
             {event.matchPercent}%
           </span>
         )}
         {event.isHot && (
-          <span className="absolute right-2.5 bottom-2.5 rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+          <span className="absolute bottom-3 right-3 z-10 inline-flex items-center gap-1 rounded-full bg-rose-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
             <Flame size={10} fill="currentColor" strokeWidth={2.2} /> Hot
           </span>
         )}
@@ -304,40 +327,52 @@ function EventCard({ event, onSelect }) {
           type="button"
           onClick={(e) => {
             e.stopPropagation()
-            setSaved((v) => !v)
+            toggleSaveEvent(event)
           }}
           aria-label={saved ? 'Unsave event' : 'Save event'}
-          className={`absolute right-2.5 ${event.isHot ? 'bottom-8' : event.matchPercent != null ? 'top-8' : 'top-2.5'} flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-sm opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white ${
-            saved ? 'text-violet-600 !opacity-100' : 'text-slate-400'
+          className={`absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-lg border backdrop-blur transition ${
+            saved
+              ? 'border-white/40 bg-blue-600 text-white shadow-[0_8px_18px_rgba(37,99,235,0.28)] hover:bg-blue-700'
+              : 'border-white/25 bg-white/15 text-white hover:bg-white/25'
           }`}
         >
-          {saved ? <Bookmark size={14} fill="currentColor" strokeWidth={2.2} /> : <Bookmark size={14} strokeWidth={2.2} />}
+          {saved ? <Bookmark size={15} fill="currentColor" strokeWidth={2.2} /> : <Bookmark size={15} strokeWidth={2.2} />}
         </button>
-        <IconTile icon={eventIconFor(event)} className={`h-11 w-11 ${event.iconBg} border-slate-100`} size={20} />
-      </div>
-      <div className="flex flex-1 flex-col p-3.5">
-        <p className="flex items-center gap-1 text-[11px] font-medium text-slate-400">
-          <Building2 size={12} strokeWidth={2.2} /> {event.org}
+        <p className="relative z-10 mt-8 max-w-[calc(100%-5.75rem)] pr-2 text-[19px] font-semibold uppercase leading-6 tracking-wide text-white/95 line-clamp-2">
+          {event.title}
         </p>
-        <h4 className="mt-1 line-clamp-2 min-h-[36px] text-sm font-bold leading-tight text-slate-900">{event.title}</h4>
-        <div className="mt-2 flex items-center gap-3 text-xs text-slate-500">
-          <span className="flex items-center gap-1">
-            <CalendarDays size={12} strokeWidth={2.2} className="text-slate-400" /> {event.date}
+      </div>
+      <div className="flex flex-1 flex-col space-y-4 p-4">
+        <div>
+          <p className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+            <Building2 size={13} strokeWidth={2.2} /> {event.org}
+          </p>
+          <h4 className="mt-1 line-clamp-2 min-h-[44px] text-base font-semibold leading-6 text-slate-950">{event.title}</h4>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 text-[11px] font-medium text-slate-500">
+          <span className="flex items-center gap-1.5">
+            <CalendarDays size={12} strokeWidth={2.2} className="text-blue-500" /> {event.date}
           </span>
-          <span className="flex items-center gap-1">
-            {event.location === 'Online' ? <Globe2 size={12} strokeWidth={2.2} className="text-slate-400" /> : <MapPin size={12} strokeWidth={2.2} className="text-slate-400" />} {event.location}
+          <span className="flex items-center gap-1.5">
+            {event.location === 'Online' ? <Globe2 size={12} strokeWidth={2.2} className="text-blue-500" /> : <MapPin size={12} strokeWidth={2.2} className="text-blue-500" />} {event.location}
           </span>
         </div>
-        <div className="mt-2.5 flex flex-wrap gap-1">
+
+        <div className="flex min-h-[54px] flex-wrap content-start gap-1.5">
           {(event.tags ?? []).slice(0, 3).map((tag) => (
-            <span key={tag} className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">
+            <span key={tag} className="rounded-lg bg-slate-50 px-2.5 py-1 text-[10px] font-semibold text-slate-600 ring-1 ring-slate-100">
               {tag}
             </span>
           ))}
         </div>
-        <div className="mt-auto flex items-center gap-2 border-t border-slate-100 pt-2.5">
-          <span className="flex items-center gap-1 text-xs text-slate-500">
-            <Users size={12} strokeWidth={2.2} /> {event.goingCount} {event.goingLabel}
+
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+          <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
+            <Users size={13} strokeWidth={2.2} className="text-blue-500" /> {event.goingCount} {event.goingLabel}
+          </span>
+          <span className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 transition group-hover:border-blue-300 group-hover:bg-blue-100">
+            View details
           </span>
         </div>
       </div>
@@ -1295,7 +1330,13 @@ export default function EventHub() {
         categories={CATEGORY_FILTERS}
       />
 
-      <DeadlineAlert alert={eventHub.deadlineAlert} />
+      <DeadlineAlert
+        alert={eventHub.deadlineAlert}
+        onCtaClick={() => {
+          const mckinseyEvent = allEventsForModal.find((e) => e.id === 'evt-trend-3')
+          if (mckinseyEvent) openDetail(mckinseyEvent)
+        }}
+      />
 
       <section>
         <SectionHeader
@@ -1306,7 +1347,7 @@ export default function EventHub() {
           onLinkClick={() => setIsAllEventsModalOpen(true)}
         />
         {unifiedFeed.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid min-w-0 gap-5 md:grid-cols-2 xl:grid-cols-3">
             {unifiedFeed.slice(0, 8).map((event) => (
               <EventCard key={event.id} event={event} onSelect={openDetail} />
             ))}
@@ -1319,7 +1360,7 @@ export default function EventHub() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
         <section>
           <SectionHeader
-            icon="🗓"
+            icon={<CalendarDays size={21} strokeWidth={2.2} className="text-blue-600" />}
             title="Your Upcoming Events"
             link="Full calendar"
             onLinkClick={() => setIsCalendarModalOpen(true)}

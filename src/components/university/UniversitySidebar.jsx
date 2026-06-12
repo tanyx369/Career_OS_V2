@@ -7,7 +7,6 @@ const navItems = [
   { label: 'Alumni Signals', path: '/university/signals', aliases: [] },
   { label: 'Student Readiness', path: '/university/readiness', aliases: [] },
   { label: 'Collaboration Marketplace', path: '/university/collaboration', aliases: ['/university/society-corporate-marketplace'] },
-  { label: 'Reports', path: '/university/reports', aliases: [] },
 ]
 
 export default function UniversitySidebar() {

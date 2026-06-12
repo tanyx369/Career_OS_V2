@@ -1,14 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Bookmark, Briefcase, CalendarDays, Heart } from 'lucide-react'
 import { useCareerStore } from '../../store/useCareerStore'
+import EventDetail from './EventDetail'
 
 export default function SavedHub() {
+  const [selectedEvent, setSelectedEvent] = useState(null)
   const savedJobs = useCareerStore((state) => state.savedJobs)
   const savedEvents = useCareerStore((state) => state.savedEvents)
   const toggleSaveJob = useCareerStore((state) => state.toggleSaveJob)
   const toggleSaveEvent = useCareerStore((state) => state.toggleSaveEvent)
 
   const hasItems = savedJobs.length > 0 || savedEvents.length > 0
+
+  if (selectedEvent) {
+    return <EventDetail event={selectedEvent} onBack={() => setSelectedEvent(null)} />
+  }
 
   if (!hasItems) {
     return (
@@ -86,7 +92,19 @@ export default function SavedHub() {
           </h3>
           <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {savedEvents.map((event) => (
-              <div key={event.id} className="group rounded-xl border border-slate-200/80 bg-white p-4 transition hover:border-violet-200 hover:shadow-md">
+              <div
+                key={event.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => setSelectedEvent(event)}
+                onKeyDown={(keyboardEvent) => {
+                  if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
+                    keyboardEvent.preventDefault()
+                    setSelectedEvent(event)
+                  }
+                }}
+                className="group cursor-pointer rounded-xl border border-slate-200/80 bg-white p-4 transition hover:border-violet-200 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+              >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-slate-900">{event.title}</p>
@@ -94,7 +112,10 @@ export default function SavedHub() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => toggleSaveEvent(event)}
+                    onClick={(mouseEvent) => {
+                      mouseEvent.stopPropagation()
+                      toggleSaveEvent(event)
+                    }}
                     className="shrink-0 rounded-full p-1 text-rose-500 transition hover:bg-rose-50"
                     title="Unsave"
                   >

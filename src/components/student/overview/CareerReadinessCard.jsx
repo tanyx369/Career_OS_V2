@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Award, TrendingUp } from 'lucide-react'
 
 export default function CareerReadinessCard({ data }) {
@@ -20,8 +21,12 @@ export default function CareerReadinessCard({ data }) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="rounded-xl bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700">{careerFocus}</span>
-          <span className="rounded-xl bg-indigo-50 px-3 py-1.5 text-xs font-bold text-indigo-700">{targetRole}</span>
+          <Link to="/student/profile" className="rounded-xl bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700 transition-all hover:bg-violet-100 hover:shadow-sm">
+            {careerFocus}
+          </Link>
+          <Link to="/student/profile" className="rounded-xl bg-indigo-50 px-3 py-1.5 text-xs font-bold text-indigo-700 transition-all hover:bg-indigo-100 hover:shadow-sm">
+            {targetRole}
+          </Link>
         </div>
       </div>
 

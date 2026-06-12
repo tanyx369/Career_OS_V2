@@ -29,11 +29,11 @@ const pageMessages = [
   },
   {
     match: (pathname) => pathname.includes('/student/learning'),
-    text: 'Your learning roadmap shows 3 steps remaining for Data Analyst readiness. Start with the Power BI dashboard project.',
+    text: 'Your learning roadmap should focus on the gaps behind your Data Analyst goal: SQL depth, Power BI evidence, and a portfolio analytics project.',
   },
   {
     match: (pathname) => pathname.includes('/student/settings'),
-    text: 'Settings is open. Update your career preferences here to improve my recommendations across all pages.',
+    text: 'Settings keeps your target role, location, and industry preferences current so CareerOS can tune recommendations across the workspace.',
   },
 ]
 

@@ -1,4 +1,25 @@
 import React, { useState, useMemo, useRef, useCallback } from 'react'
+import {
+  BarChart3,
+  Building2,
+  CalendarDays,
+  Check,
+  Clock3,
+  Code2,
+  FileText,
+  FolderArchive,
+  Handshake,
+  Info,
+  KeyRound,
+  MoreVertical,
+  Rocket,
+  Search,
+  SlidersHorizontal,
+  Sparkles,
+  TrendingUp,
+  Trophy,
+  Users
+} from 'lucide-react'
 
 // ── Drag-to-scroll hook ────────────────────────────────────────────────────
 function useDragScroll() {
@@ -47,32 +68,27 @@ const getOutcomesCardStyle = (id) => {
     case 'fintech-case-23':
       return {
         iconBg: 'bg-violet-50 border border-violet-100/50 shadow-sm',
-        icon: (
-          <svg className="h-5 w-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2" />
-          </svg>
-        )
+        icon: <BarChart3 className="h-5 w-5 text-violet-600" />
       }
     case 'data-storytelling-15':
       return {
         iconBg: 'bg-blue-50 border border-blue-100/50 shadow-sm',
-        icon: (
-          <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21h8M12 17V21M5 3h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" />
-          </svg>
-        )
+        icon: <TrendingUp className="h-5 w-5 text-blue-600" />
       }
     case 'product-sprint-23':
     default:
       return {
         iconBg: 'bg-orange-50 border border-orange-100/50 shadow-sm',
-        icon: (
-          <svg className="h-5 w-5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 21l5.104-.813m-4.291-4.283L3 12l4.283-3.291m12.441-2.984a9.123 9.123 0 00-3.266 3.266l-6.527 6.527 3.266 3.266 6.527-6.527a9.123 9.123 0 003.266-3.266z" />
-          </svg>
-        )
+        icon: <Rocket className="h-5 w-5 text-orange-500" />
       }
   }
+}
+
+function EventCategoryIcon({ category }) {
+  if (category === 'Case Competition') return <Trophy className="h-4 w-4 text-amber-600" />
+  if (category === 'Hackathon') return <Code2 className="h-4 w-4 text-blue-600" />
+  if (category === 'Mentorship') return <Handshake className="h-4 w-4 text-violet-600" />
+  return <FileText className="h-4 w-4 text-slate-500" />
 }
 
 // ── OutcomesScrollRail ─────────────────────────────────────────────────────
@@ -123,33 +139,25 @@ function OutcomesScrollRail({ items, onViewImpactReport }) {
               <div className="grid grid-cols-4 border-t border-slate-100 pt-3">
                 {/* Readiness Uplift */}
                 <div className="flex flex-col items-center gap-0.5 border-r border-slate-100 px-1 text-center">
-                  <svg className="h-3.5 w-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
+                  <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
                   <span className="text-[11px] font-bold text-emerald-600 leading-none">{item.uplift}</span>
                   <span className="text-[7.5px] text-slate-500 font-semibold uppercase leading-tight mt-0.5">Readiness<br/>Uplift</span>
                 </div>
                 {/* Priority Gaps */}
                 <div className="flex flex-col items-center gap-0.5 border-r border-slate-100 px-1 text-center">
-                  <svg className="h-3.5 w-3.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                  </svg>
+                  <KeyRound className="h-3.5 w-3.5 text-amber-500" />
                   <span className="text-[11px] font-bold text-slate-900 leading-none">{item.gaps}</span>
                   <span className="text-[7.5px] text-slate-500 font-semibold uppercase leading-tight mt-0.5">Priority<br/>Gaps</span>
                 </div>
                 {/* Students in Pipeline */}
                 <div className="flex flex-col items-center gap-0.5 border-r border-slate-100 px-1 text-center">
-                  <svg className="h-3.5 w-3.5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+                  <Users className="h-3.5 w-3.5 text-violet-500" />
                   <span className="text-[11px] font-bold text-slate-900 leading-none">{item.students}</span>
                   <span className="text-[7.5px] text-slate-500 font-semibold uppercase leading-tight mt-0.5">Students<br/>Pipeline</span>
                 </div>
                 {/* Companies Engaged */}
                 <div className="flex flex-col items-center gap-0.5 px-1 text-center">
-                  <svg className="h-3.5 w-3.5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
+                  <Building2 className="h-3.5 w-3.5 text-blue-500" />
                   <span className="text-[11px] font-bold text-slate-900 leading-none">{item.companies}</span>
                   <span className="text-[7.5px] text-slate-500 font-semibold uppercase leading-tight mt-0.5">Companies<br/>Engaged</span>
                 </div>
@@ -157,9 +165,7 @@ function OutcomesScrollRail({ items, onViewImpactReport }) {
 
               {/* ── AI insight statement ── */}
               <div className="flex items-start gap-2 pt-1 border-t border-slate-100">
-                <svg className="h-3.5 w-3.5 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
+                <Sparkles className="h-3.5 w-3.5 text-blue-500 shrink-0 mt-0.5" />
                 <p className="text-xs font-medium text-slate-700 leading-relaxed">{item.aiStatement}</p>
               </div>
             </div>
@@ -241,9 +247,9 @@ export default function AIPostEventCompletionPage({ onBack, onToast, onViewImpac
   ]
 
   const recentOutcomes = [
-    { id: 'fintech-case-23',      title: 'AI in Finance Case Competition', organizer: 'FinTech Society x Grab, Maybank, PwC', daysAgo: '2 days ago', uplift: '+14%', gaps: '8', students: '64', companies: '14', aiStatement: 'Strong growth in financial modeling readiness and presentation skills.', icon: '📈', color: 'from-blue-500 to-indigo-600' },
-    { id: 'data-storytelling-15', title: 'Data Storytelling Workshop',     organizer: 'Analytics Club x Deloitte',            daysAgo: '4 days ago', uplift: '+9%',  gaps: '6', students: '80', companies: '9',  aiStatement: 'Improved data visualization and insight communication.',               icon: '🖥️', color: 'from-violet-500 to-purple-600' },
-    { id: 'product-sprint-23',    title: 'Campus Product Sprint',          organizer: 'Innovation Hub x Industry.io',          daysAgo: '5 days ago', uplift: '+11%', gaps: '7', students: '88', companies: '13', aiStatement: 'High collaboration and rapid prototyping demonstrated.',               icon: '🚀', color: 'from-orange-500 to-red-500' },
+    { id: 'fintech-case-23',      title: 'AI in Finance Case Competition', organizer: 'FinTech Society x Grab, Maybank, PwC', daysAgo: '2 days ago', uplift: '+14%', gaps: '8', students: '64', companies: '14', aiStatement: 'Strong growth in financial modeling readiness and presentation skills.', color: 'from-blue-500 to-indigo-600' },
+    { id: 'data-storytelling-15', title: 'Data Storytelling Workshop',     organizer: 'Analytics Club x Deloitte',            daysAgo: '4 days ago', uplift: '+9%',  gaps: '6', students: '80', companies: '9',  aiStatement: 'Improved data visualization and insight communication.',               color: 'from-violet-500 to-purple-600' },
+    { id: 'product-sprint-23',    title: 'Campus Product Sprint',          organizer: 'Innovation Hub x Industry.io',          daysAgo: '5 days ago', uplift: '+11%', gaps: '7', students: '88', companies: '13', aiStatement: 'High collaboration and rapid prototyping demonstrated.',               color: 'from-orange-500 to-red-500' },
   ]
 
   // ── HANDLERS ──────────────────────────────────────────────────────────────
@@ -292,7 +298,7 @@ export default function AIPostEventCompletionPage({ onBack, onToast, onViewImpac
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-semibold text-slate-900">Latest Event Outcomes</h2>
-                <span className="text-slate-400 text-sm cursor-pointer" title="Events completed within the last 5 working days">ⓘ</span>
+                <Info className="h-4 w-4 text-slate-400" title="Events completed within the last 5 working days" />
               </div>
               <p className="mt-1 text-xs font-medium text-slate-500">Events completed within the last 5 working days</p>
             </div>
@@ -312,7 +318,9 @@ export default function AIPostEventCompletionPage({ onBack, onToast, onViewImpac
 
           {simulateExpired ? (
             <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-12 text-center flex flex-col items-center gap-3">
-              <span className="text-4xl">📁</span>
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 shadow-sm">
+                <FolderArchive className="h-6 w-6" />
+              </span>
               <h3 className="text-sm font-semibold text-slate-700">No outcomes in the last 5 working days</h3>
               <p className="text-sm text-slate-500 max-w-sm">All completed outcomes have elapsed the 5-working-day threshold and are archived in the Event Impact History registry.</p>
             </div>
@@ -398,12 +406,14 @@ export default function AIPostEventCompletionPage({ onBack, onToast, onViewImpac
           {/* Monthly summary */}
           <div className="grid grid-cols-3 gap-3 pt-1">
             {[
-              { icon: '📅', value: '12', label: 'Completed', bg: 'bg-blue-50',   color: 'text-blue-600' },
-              { icon: '⏰', value: '4',  label: 'Follow-ups', bg: 'bg-amber-50',  color: 'text-amber-600' },
-              { icon: '🏢', value: '28', label: 'Companies',  bg: 'bg-violet-50', color: 'text-violet-600' },
+              { Icon: CalendarDays, value: '12', label: 'Completed', bg: 'bg-blue-50',   color: 'text-blue-600' },
+              { Icon: Clock3, value: '4',  label: 'Follow-ups', bg: 'bg-amber-50',  color: 'text-amber-600' },
+              { Icon: Building2, value: '28', label: 'Companies',  bg: 'bg-violet-50', color: 'text-violet-600' },
             ].map(stat => (
               <div key={stat.label} className="rounded-xl border border-slate-100 bg-slate-50/30 p-3 flex items-center gap-3">
-                <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${stat.bg} ${stat.color} text-base`}>{stat.icon}</span>
+                <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${stat.bg} ${stat.color}`}>
+                  <stat.Icon className="h-4 w-4" />
+                </span>
                 <div>
                   <p className="text-sm font-bold text-slate-800">{stat.value}</p>
                   <p className="text-xs text-slate-400 font-semibold uppercase mt-0.5">{stat.label}</p>
@@ -417,7 +427,9 @@ export default function AIPostEventCompletionPage({ onBack, onToast, onViewImpac
       {/* ── AI STRATEGIC INSIGHT ──────────────────────────────────────────── */}
       <section className="rounded-2xl border border-violet-100 bg-violet-50/40 p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex gap-4 items-start md:items-center">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-600 text-white shadow-sm text-lg">✨</span>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-600 text-white shadow-sm">
+            <Sparkles className="h-5 w-5" />
+          </span>
           <div>
             <h3 className="text-xs font-semibold text-violet-700 uppercase mb-1">AI Strategic Insight</h3>
             <p className="text-sm font-semibold text-slate-800 leading-relaxed max-w-3xl">
@@ -455,7 +467,7 @@ export default function AIPostEventCompletionPage({ onBack, onToast, onViewImpac
         {/* Toolbar */}
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between border-b border-slate-100 pb-4">
           <div className="relative w-full lg:w-80 shrink-0">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               placeholder="Search events, partners, or skills..."
@@ -486,7 +498,8 @@ export default function AIPostEventCompletionPage({ onBack, onToast, onViewImpac
               onClick={() => onToast('Advanced filters toggled.')}
               className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition inline-flex items-center gap-1.5"
             >
-              <span>⚙️</span> Filters
+              <SlidersHorizontal className="h-3.5 w-3.5" />
+              Filters
             </button>
           </div>
         </div>
@@ -520,8 +533,8 @@ export default function AIPostEventCompletionPage({ onBack, onToast, onViewImpac
                 <tr key={row.id} className="hover:bg-slate-50/40 transition">
                   <td className="py-3.5 px-4">
                     <div className="flex items-center gap-3">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-base">
-                        {row.category === 'Case Competition' ? '🏆' : row.category === 'Hackathon' ? '💻' : row.category === 'Mentorship' ? '🤝' : '📄'}
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-100 bg-slate-50">
+                        <EventCategoryIcon category={row.category} />
                       </span>
                       <div className="min-w-0">
                         <p className="text-sm font-semibold text-slate-800 truncate">{row.title}</p>
@@ -541,7 +554,10 @@ export default function AIPostEventCompletionPage({ onBack, onToast, onViewImpac
                   <td className="py-3.5 px-4 text-center text-sm font-semibold text-slate-700">{row.companies}</td>
                   <td className="py-3.5 px-4 text-center text-sm font-semibold text-slate-700">{row.students}</td>
                   <td className="py-3.5 px-4 text-center">
-                    <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">✓ Ready</span>
+                    <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                      <Check className="h-3 w-3" />
+                      Ready
+                    </span>
                   </td>
                   <td className="py-3.5 px-4 text-center whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                     <div className="inline-flex items-center gap-1.5">
@@ -552,7 +568,9 @@ export default function AIPostEventCompletionPage({ onBack, onToast, onViewImpac
                       >
                         View Report
                       </button>
-                      <button type="button" onClick={() => onToast('Action menu opened.')} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition text-sm font-semibold">⋮</button>
+                      <button type="button" onClick={() => onToast('Action menu opened.')} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition">
+                        <MoreVertical className="h-4 w-4" />
+                      </button>
                     </div>
                   </td>
                 </tr>

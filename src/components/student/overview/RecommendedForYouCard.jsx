@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { BookOpen, Briefcase, CalendarCheck, FileText, GraduationCap, Sparkles, Target } from 'lucide-react'
 
 const typeIconConfig = {
@@ -20,6 +21,14 @@ const typeBadgeColors = {
 }
 
 export default function RecommendedForYouCard({ recommendations }) {
+  const [savedTitles, setSavedTitles] = React.useState([])
+
+  const handleToggleSave = (title) => {
+    setSavedTitles((prev) =>
+      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]
+    )
+  }
+
   return (
     <section className="rounded-3xl border border-violet-100/80 bg-white/90 p-5 shadow-[0_18px_44px_rgba(88,63,188,0.08)]">
       <div className="flex items-center gap-2.5">
@@ -33,6 +42,7 @@ export default function RecommendedForYouCard({ recommendations }) {
           const iconConfig = typeIconConfig[item.type] ?? typeIconConfig.Event
           const Icon = iconConfig.icon
           const badgeColor = typeBadgeColors[item.type] ?? 'bg-violet-50 text-violet-700 ring-violet-100'
+          const isSaved = savedTitles.includes(item.title)
 
           return (
             <article
@@ -54,9 +64,14 @@ export default function RecommendedForYouCard({ recommendations }) {
                   <p className="mt-1 text-xs leading-5 text-slate-500">{item.description}</p>
                   <button
                     type="button"
-                    className="mt-2 rounded-lg border border-violet-100 px-2.5 py-1 text-[11px] font-bold text-violet-700 transition-all hover:bg-violet-50"
+                    onClick={() => handleToggleSave(item.title)}
+                    className={`mt-2 rounded-lg px-2.5 py-1 text-[11px] font-bold border transition-all ${
+                      isSaved
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                        : 'border-violet-100 text-violet-700 hover:bg-violet-50'
+                    }`}
                   >
-                    Save
+                    {isSaved ? 'Saved ✓' : 'Save'}
                   </button>
                 </div>
               </div>
@@ -64,9 +79,12 @@ export default function RecommendedForYouCard({ recommendations }) {
           )
         })}
       </div>
-      <button type="button" className="mt-4 text-sm font-semibold text-violet-700 transition-colors hover:text-violet-900">
+      <Link
+        to="/student/learning"
+        className="inline-block mt-4 text-sm font-semibold text-violet-700 transition-colors hover:text-violet-900"
+      >
         View all recommendations
-      </button>
+      </Link>
     </section>
   )
 }

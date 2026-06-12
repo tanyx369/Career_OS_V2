@@ -40,10 +40,19 @@ export default function App() {
           <Route path="/student/career-intelligence" element={<CareerIntelligencePage />} />
           <Route path="/student/opportunities" element={<OpportunitiesPage />} />
           <Route path="/student/applications" element={<ApplicationsPage />} />
-          <Route path="/student/network" element={<PlaceholderPage title="Network & Mentors" />} />
-          <Route path="/student/learning" element={<PlaceholderPage title="Learning & Skills" />} />
+          <Route
+            path="/student/network"
+            element={<PlaceholderPage title="Network & Mentors" />}
+          />
+          <Route
+            path="/student/learning"
+            element={<PlaceholderPage title="Learning & Skills" />}
+          />
           <Route path="/student/ai-assistant" element={<PlaceholderPage title="AI Assistant" />} />
-          <Route path="/student/settings" element={<PlaceholderPage title="Settings" />} />
+          <Route
+            path="/student/settings"
+            element={<PlaceholderPage title="Settings" />}
+          />
           <Route path="/student/help" element={<PlaceholderPage title="Help" />} />
         </Route>
       </Route>
@@ -71,11 +80,11 @@ export default function App() {
           <Route path="/university/curriculum-market-alignment" element={<CurriculumMarketAlignmentPage />} />
           <Route path="/university/signals" element={<AlumniSignalIntelligencePage />} />
           <Route
-            path="/university/collaboration"
+            path="/university/collaboration/*"
             element={<SocietyCorporateMarketplacePage />}
           />
           <Route
-            path="/university/society-corporate-marketplace"
+            path="/university/society-corporate-marketplace/*"
             element={<SocietyCorporateMarketplacePage />}
           />
           <Route path="/university/reports" element={<PlaceholderPage title="Reports" />} />

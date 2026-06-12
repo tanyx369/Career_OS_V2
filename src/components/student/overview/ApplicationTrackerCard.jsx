@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default function ApplicationTrackerCard({ tracker }) {
   return (
@@ -12,9 +13,9 @@ export default function ApplicationTrackerCard({ tracker }) {
           </div>
         ))}
       </div>
-      <button type="button" className="mt-4 text-sm font-semibold text-violet-700">
+      <Link to="/student/applications" className="inline-block mt-4 text-sm font-semibold text-violet-700 transition-colors hover:text-violet-900">
         View all applications -&gt;
-      </button>
+      </Link>
     </section>
   )
 }

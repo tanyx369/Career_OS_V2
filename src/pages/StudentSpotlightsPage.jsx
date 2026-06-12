@@ -1,5 +1,15 @@
 import React, { useState, useMemo } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
+import {
+  Download,
+  Handshake,
+  RotateCcw,
+  Search,
+  Sparkles,
+  TrendingUp,
+  Users,
+  Zap
+} from 'lucide-react'
 
 // Mock programs, growth bands, pipeline status, and skills
 const PROGRAMS = ['BSc Finance', 'BSc Data Science', 'BSc Business Analytics', 'BSc Marketing', 'BSc Computer Science']
@@ -213,7 +223,8 @@ export default function StudentSpotlightsPage({ onToast }) {
             onClick={() => onToast('Exporting student spotlights list as CSV...')}
             className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-650 hover:bg-slate-50 transition inline-flex items-center gap-1.5 shadow-sm"
           >
-            📥 Export List
+            <Download className="h-3.5 w-3.5" />
+            Export List
           </button>
           <button
             type="button"
@@ -231,7 +242,7 @@ export default function StudentSpotlightsPage({ onToast }) {
           
           {/* Search bar */}
           <div className="flex items-center gap-2 w-full lg:w-96 shrink-0 relative">
-            <span className="absolute left-3.5 text-slate-400 text-xs font-semibold">🔍</span>
+            <Search className="absolute left-3.5 h-3.5 w-3.5 text-slate-400" />
             <input
               type="text"
               placeholder="Search students, skills, or programs..."
@@ -297,9 +308,10 @@ export default function StudentSpotlightsPage({ onToast }) {
             <button
               type="button"
               onClick={handleClearFilters}
-              className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition"
+              className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition inline-flex items-center gap-1.5"
             >
-              🔄 Clear Filters
+              <RotateCcw className="h-3.5 w-3.5" />
+              Clear Filters
             </button>
           </div>
         </div>
@@ -308,7 +320,9 @@ export default function StudentSpotlightsPage({ onToast }) {
       {/* ================= STUDENT SUMMARY METRICS ================= */}
       <section className="grid gap-3 grid-cols-2 md:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex items-center gap-3.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-sm">👥</span>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-violet-100 bg-violet-50 text-violet-600">
+            <Users className="h-4.5 w-4.5" />
+          </span>
           <div>
             <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider leading-none">Highlighted Students</h3>
             <p className="text-xl font-bold text-slate-800 mt-2 leading-none">24</p>
@@ -317,7 +331,9 @@ export default function StudentSpotlightsPage({ onToast }) {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex items-center gap-3.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-sm">📈</span>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 text-emerald-600">
+            <TrendingUp className="h-4.5 w-4.5" />
+          </span>
           <div>
             <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider leading-none">Average Growth</h3>
             <p className="text-xl font-bold text-emerald-600 mt-2 leading-none">+18%</p>
@@ -326,7 +342,9 @@ export default function StudentSpotlightsPage({ onToast }) {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex items-center gap-3.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-sm">🤝</span>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-blue-100 bg-blue-50 text-blue-600">
+            <Handshake className="h-4.5 w-4.5" />
+          </span>
           <div>
             <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider leading-none">Students in Pipeline</h3>
             <p className="text-xl font-bold text-slate-800 mt-2 leading-none">14</p>
@@ -335,7 +353,9 @@ export default function StudentSpotlightsPage({ onToast }) {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex items-center gap-3.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-sm">⚡</span>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-purple-100 bg-purple-50 text-purple-600">
+            <Zap className="h-4.5 w-4.5" />
+          </span>
           <div>
             <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider leading-none">High-Growth Students</h3>
             <p className="text-xl font-bold text-slate-800 mt-2 leading-none">9</p>
@@ -535,7 +555,7 @@ export default function StudentSpotlightsPage({ onToast }) {
           {/* AI Spotlight Insights */}
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm space-y-4">
             <header className="flex items-center gap-2 border-b border-slate-50 pb-2">
-              <span className="text-violet-600 font-bold text-sm">✨</span>
+              <Sparkles className="h-4 w-4 text-violet-600" />
               <h4 className="text-xs font-semibold text-slate-800 uppercase tracking-wider">AI Spotlight Insights</h4>
             </header>
 

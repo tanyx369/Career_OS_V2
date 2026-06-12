@@ -24,6 +24,7 @@ import {
   Zap,
 } from 'lucide-react'
 import { eventDetailDefault } from '../../data/mockData'
+import { useCareerStore } from '../../store/useCareerStore'
 
 // All "body" content (tags, agenda, prizes, etc.) is read from `detail`.
 // Hero content (title, type, org, date, going, matchPercent) is read from the
@@ -89,7 +90,7 @@ function SoftIcon({ icon: Icon, className = 'border-violet-100 bg-violet-50 text
 
 // ─── hero ──────────────────────────────────────────────────────────────
 function Hero({ event, onBack }) {
-  const heroGradient = event.heroGradient ?? event.thumbGradient ?? 'from-violet-900 via-indigo-800 to-violet-500'
+  const heroGradient = 'from-[#1A1830] to-[#3D2A7D]'
   return (
     <div className={`relative overflow-hidden rounded-3xl bg-gradient-to-br p-7 text-white shadow-[0_20px_60px_rgba(108,99,255,0.25)] ${heroGradient}`}>
       {/* decorative grid + glow */}
@@ -476,8 +477,15 @@ function VenueTab({ detail }) {
 
 // ─── right sidebar: register card ──────────────────────────────────────
 function RegisterCard({ event, detail }) {
-  const [registered, setRegistered] = useState(false)
-  const [saved, setSaved] = useState(event.isSaved ?? false)
+  const myEvents = useCareerStore((state) => state.myEvents)
+  const addEventToCalendar = useCareerStore((state) => state.addEventToCalendar)
+  const removeEventFromCalendar = useCareerStore((state) => state.removeEventFromCalendar)
+  const savedEvents = useCareerStore((state) => state.savedEvents)
+  const toggleSaveEvent = useCareerStore((state) => state.toggleSaveEvent)
+
+  const isRegistered = myEvents.some((e) => e.id === event.id && e.status === 'Registered')
+  const isSaved = savedEvents.some((e) => e.id === event.id)
+
   const reg = detail.registerCard
   const seatsPercent = ((reg.seatsMax - reg.seatsLeft) / reg.seatsMax) * 100
 
@@ -522,25 +530,31 @@ function RegisterCard({ event, detail }) {
       </div>
       <button
         type="button"
-        onClick={() => setRegistered((v) => !v)}
+        onClick={() => {
+          if (isRegistered) {
+            removeEventFromCalendar(event.id)
+          } else {
+            addEventToCalendar(event, 'Registered')
+          }
+        }}
         className={`mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl px-4 py-3 text-sm font-bold transition ${
-          registered
+          isRegistered
             ? 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200'
             : 'bg-gradient-to-r from-violet-600 to-pink-500 text-white shadow-md hover:shadow-lg'
         }`}
       >
-        {registered ? <Check size={15} strokeWidth={2.2} /> : <Zap size={15} strokeWidth={2.2} />}
-        {registered ? 'Registered!' : 'Register Now'}
+        {isRegistered ? <Check size={15} strokeWidth={2.2} /> : <Zap size={15} strokeWidth={2.2} />}
+        {isRegistered ? 'Registered!' : 'Register Now'}
       </button>
       <div className="mt-2 flex gap-2">
         <button
           type="button"
-          onClick={() => setSaved((v) => !v)}
+          onClick={() => toggleSaveEvent(event)}
           className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-sm font-semibold transition ${
-            saved ? 'border-violet-300 bg-violet-50 text-violet-700' : 'border-slate-200 text-slate-600 hover:border-slate-300'
+            isSaved ? 'border-violet-300 bg-violet-50 text-violet-700' : 'border-slate-200 text-slate-600 hover:border-slate-300'
           }`}
         >
-          {saved ? <Bookmark size={14} fill="currentColor" strokeWidth={2.2} /> : <Bookmark size={14} strokeWidth={2.2} />} {saved ? 'Saved' : 'Save'}
+          {isSaved ? <Bookmark size={14} fill="currentColor" strokeWidth={2.2} /> : <Bookmark size={14} strokeWidth={2.2} />} {isSaved ? 'Saved' : 'Save'}
         </button>
         <button
           type="button"

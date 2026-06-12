@@ -165,6 +165,10 @@ const resourceRecommendations = [
   'Budget range is in the optimal tier',
 ]
 
+function mergeUnique(current, additions) {
+  return Array.from(new Set([...(current ?? []), ...additions]))
+}
+
 const launchChecklist = [
   'Engagement type selected',
   'Program details added',
@@ -208,12 +212,17 @@ function EngagementIcon({ name, tone = 'blue' }) {
   )
 }
 
-function ProgressTracker({ currentStep }) {
+function ProgressTracker({ currentStep, setCurrentStep }) {
   return (
     <div className="overflow-hidden rounded-[8px] border border-slate-200 bg-white px-4 py-4">
       <div className="grid gap-4 md:grid-cols-5">
         {creationSteps.map((step, index) => (
-          <div key={step.id} className="relative flex items-center gap-3">
+          <button
+            key={step.id}
+            type="button"
+            onClick={() => setCurrentStep(step.id)}
+            className="relative flex items-center gap-3 text-left w-full hover:bg-slate-50/50 p-1.5 rounded-lg transition focus:outline-none"
+          >
             {index < creationSteps.length - 1 && <span className={`absolute left-8 top-1/2 -translate-y-1/2 z-0 hidden h-px w-[calc(100%+1rem)] md:block ${step.id < currentStep ? 'bg-blue-300' : 'bg-slate-200'}`} />}
             <span className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
               step.id === currentStep ? 'bg-blue-600 text-white shadow-sm shadow-blue-200' : step.id < currentStep ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-100' : 'bg-slate-100 text-slate-600'
@@ -224,7 +233,7 @@ function ProgressTracker({ currentStep }) {
               <p className={`text-sm font-semibold leading-none pb-1.5 ${step.id === currentStep ? 'text-slate-950' : 'text-slate-600'}`}>{step.title}</p>
               <p className="pt-1.5 text-xs leading-none text-slate-500">{step.helper}</p>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>
@@ -272,7 +281,7 @@ function EngagementTypeSelectionCard({ option, selected, onClick }) {
   )
 }
 
-function AIRecommendationBanner() {
+function AIRecommendationBanner({ onClick }) {
   return (
     <section className="flex flex-col gap-4 rounded-[8px] border border-blue-100 bg-blue-50/55 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex min-w-0 items-center gap-4">
@@ -282,14 +291,14 @@ function AIRecommendationBanner() {
           <p className="mt-1 text-sm leading-6 text-blue-800">Answer a few quick questions and CareerOS AI will recommend the best engagement type for your goals.</p>
         </div>
       </div>
-      <button className="h-10 shrink-0 rounded-[8px] border border-blue-200 bg-white px-4 text-sm font-semibold text-blue-700 hover:bg-blue-50" type="button">
+      <button onClick={onClick} className="h-10 shrink-0 rounded-[8px] border border-blue-200 bg-white px-4 text-sm font-semibold text-blue-700 hover:bg-blue-50 focus:outline-none" type="button">
         Get AI Recommendation
       </button>
     </section>
   )
 }
 
-function AIStrategistCard() {
+function AIStrategistCard({ onRefine }) {
   const recommendations = [
     {
       icon: 'trend',
@@ -329,7 +338,7 @@ function AIStrategistCard() {
         ))}
       </div>
       <div className="mt-4 flex justify-end">
-        <button className="h-10 rounded-[8px] border border-blue-200 bg-white px-4 text-sm font-semibold text-blue-700 hover:bg-blue-50" type="button">
+        <button onClick={onRefine} className="h-10 rounded-[8px] border border-blue-200 bg-white px-4 text-sm font-semibold text-blue-700 hover:bg-blue-50 focus:outline-none" type="button">
           Refine with AI
         </button>
       </div>
@@ -337,63 +346,137 @@ function AIStrategistCard() {
   )
 }
 
-function FieldDisplay({ label, value, required = false, multiline = false, count }) {
+function FieldDisplay({ label, value, required = false, multiline = false, count, onChange, type = 'text' }) {
+  const inputClass = `mt-2 block w-full rounded-[8px] border border-slate-200 bg-white px-4 py-3 text-sm leading-6 text-slate-700 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 ${multiline ? 'min-h-[104px]' : 'min-h-[48px]'}`
+
   return (
     <label className="block">
       <span className="text-sm font-semibold text-slate-800">
         {label}
         {required ? <span className="text-red-500"> *</span> : null}
       </span>
-      <span className={`mt-2 block rounded-[8px] border border-slate-200 bg-white px-4 py-3 text-sm leading-6 text-slate-700 ${multiline ? 'min-h-[104px]' : 'min-h-[48px]'}`}>
-        {value}
-      </span>
+      {onChange ? (
+        multiline ? (
+          <textarea
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            className={inputClass}
+          />
+        ) : (
+          <input
+            type={type}
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            className={inputClass}
+          />
+        )
+      ) : (
+        <span className={`mt-2 block rounded-[8px] border border-slate-200 bg-white px-4 py-3 text-sm leading-6 text-slate-700 ${multiline ? 'min-h-[104px]' : 'min-h-[48px]'}`}>
+          {value}
+        </span>
+      )}
       {count ? <span className="mt-1 block text-right text-xs text-slate-400">{count}</span> : null}
     </label>
   )
 }
 
-function SelectDisplay({ label, value, required = false }) {
+function SelectDisplay({ label, value, required = false, options = [], onChange }) {
   return (
     <label className="block">
       <span className="text-sm font-semibold text-slate-800">
         {label}
         {required ? <span className="text-red-500"> *</span> : null}
       </span>
-      <span className="mt-2 flex min-h-[48px] items-center justify-between rounded-[8px] border border-slate-200 bg-white px-4 text-sm text-slate-700">
-        {value}
-        <span className="text-slate-400">v</span>
-      </span>
+      {onChange ? (
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="mt-2 min-h-[48px] w-full rounded-[8px] border border-slate-200 bg-white px-4 text-sm text-slate-700 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+        >
+          {options.map((option) => (
+            <option key={option} value={option}>{option}</option>
+          ))}
+        </select>
+      ) : (
+        <span className="mt-2 flex min-h-[48px] items-center justify-between rounded-[8px] border border-slate-200 bg-white px-4 text-sm text-slate-700">
+          {value}
+          <span className="text-slate-400">v</span>
+        </span>
+      )}
     </label>
   )
 }
 
-function Chip({ children, removable = true }) {
+function Chip({ children, removable = true, onRemove }) {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 ring-1 ring-blue-100">
       {children}
-      {removable ? <span className="text-blue-500">x</span> : null}
+      {removable ? (
+        <button
+          type="button"
+          onClick={onRemove}
+          className="text-blue-500 hover:text-blue-700 font-bold ml-1 focus:outline-none"
+        >
+          ✕
+        </button>
+      ) : null}
     </span>
   )
 }
 
-function ChipGroup({ label, items, addLabel }) {
+function ChipGroup({ label, items, addLabel, onAdd, onRemove }) {
+  const [adding, setAdding] = useState(false)
+  const [draft, setDraft] = useState('')
+
+  const submitDraft = () => {
+    const next = draft.trim()
+    if (!next) return
+    onAdd?.(next)
+    setDraft('')
+    setAdding(false)
+  }
+
   return (
     <section>
       <h4 className="text-sm font-semibold text-slate-800">{label}</h4>
       <div className="mt-3 flex flex-wrap gap-2">
-        {items.map((item) => <Chip key={item}>{item}</Chip>)}
-        {addLabel ? (
-          <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50" type="button">
+        {items.map((item) => <Chip key={item} onRemove={onRemove ? () => onRemove(item) : undefined}>{item}</Chip>)}
+        {addLabel && !adding ? (
+          <button onClick={() => setAdding(true)} className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300" type="button">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-50 text-blue-600">+</span>
             {addLabel}
           </button>
+        ) : null}
+        {addLabel && adding ? (
+          <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-2 py-1 shadow-sm">
+            <input
+              autoFocus
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') submitDraft()
+                if (event.key === 'Escape') {
+                  setDraft('')
+                  setAdding(false)
+                }
+              }}
+              placeholder={addLabel}
+              className="w-36 bg-transparent px-1 text-sm text-slate-700 outline-none placeholder:text-slate-400"
+            />
+            <button type="button" onClick={submitDraft} className="rounded-full bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-blue-700">
+              Add
+            </button>
+            <button type="button" onClick={() => { setDraft(''); setAdding(false) }} className="rounded-full px-2 py-1 text-xs font-semibold text-slate-400 hover:bg-slate-50 hover:text-slate-600">
+              Cancel
+            </button>
+          </span>
         ) : null}
       </div>
     </section>
   )
 }
 
-function AssistantPanel({ title, subtitle, items, ctaLabel = 'Apply Suggestions' }) {
+function AssistantPanel({ title, subtitle, items, ctaLabel = 'Apply Suggestions', onClick }) {
   return (
     <aside className="rounded-[8px] border border-blue-100 bg-blue-50/45 p-5">
       <div className="flex items-start gap-3">
@@ -411,7 +494,7 @@ function AssistantPanel({ title, subtitle, items, ctaLabel = 'Apply Suggestions'
           </p>
         ))}
       </div>
-      <button className="mt-5 h-10 w-full rounded-[8px] border border-blue-200 bg-white px-4 text-sm font-semibold text-blue-700 hover:bg-blue-50" type="button">
+      <button onClick={onClick} className="mt-5 h-10 w-full rounded-[8px] border border-blue-200 bg-white px-4 text-sm font-semibold text-blue-700 hover:bg-blue-50 focus:outline-none" type="button">
         {ctaLabel}
       </button>
     </aside>
@@ -430,7 +513,7 @@ function StepShell({ title, subtitle, children }) {
   )
 }
 
-function ChooseTypeStep({ selectedType, setSelectedType }) {
+function ChooseTypeStep({ selectedType, setSelectedType, onGetAIRecommendation, onRefineWithAI }) {
   return (
     <>
       <StepShell title="Choose Engagement Type" subtitle="Select the program format that best fits your talent goals.">
@@ -446,28 +529,47 @@ function ChooseTypeStep({ selectedType, setSelectedType }) {
         </div>
       </StepShell>
 
-      <AIRecommendationBanner />
-      <AIStrategistCard />
+      <AIRecommendationBanner onClick={onGetAIRecommendation} />
+      <AIStrategistCard onRefine={onRefineWithAI} />
     </>
   )
 }
 
-function ProgramDetailsStep() {
-  const form = employerEngagementBuilder.form
+function ProgramDetailsStep({ form, setForm, onApplyAISuggestions }) {
+  const handleAddOutcome = (outcome) => {
+    setForm((prev) => ({
+      ...prev,
+      outcomes: mergeUnique(prev.outcomes, [outcome]),
+    }))
+  }
+
+  const handleRemoveOutcome = (item) => {
+    setForm((prev) => ({
+      ...prev,
+      outcomes: prev.outcomes.filter((x) => x !== item),
+    }))
+  }
 
   return (
     <StepShell title="Program Details" subtitle="Tell students what they will build, learn, and prove.">
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
         <div className="space-y-5">
-          <FieldDisplay label="Engagement Title" value={form.title} required count="28/100" />
-          <FieldDisplay label="Goal / Objective" value={form.goal} required count="56/100" />
-          <FieldDisplay label="Description" value={form.description} required multiline count="153/700" />
-          <ChipGroup label="Student Outcomes (What students will gain)" items={form.outcomes} addLabel="Add more" />
+          <FieldDisplay label="Engagement Title" value={form.title} required count={`${form.title.length}/100`} />
+          <FieldDisplay label="Goal / Objective" value={form.goal} required count={`${form.goal.length}/100`} />
+          <FieldDisplay label="Description" value={form.description} required multiline count={`${form.description.length}/700`} />
+          <ChipGroup
+            label="Student Outcomes (What students will gain)"
+            items={form.outcomes}
+            addLabel="Add more"
+            onAdd={handleAddOutcome}
+            onRemove={handleRemoveOutcome}
+          />
         </div>
         <AssistantPanel
           title="AI Writing Assistant"
           subtitle="Here are suggestions to strengthen your program brief."
           items={writingSuggestions}
+          onClick={onApplyAISuggestions}
         />
       </div>
     </StepShell>
@@ -565,28 +667,74 @@ function TargetAudienceCard({ activeChips }) {
   );
 }
 
-function AudienceSkillsStep() {
-  const form = employerEngagementBuilder.form;
+function AudienceSkillsStep({ form, setForm, onApplyAudienceRecommendations }) {
   const { chipsByPage } = useEmployerSearchStore();
   const activeChips = chipsByPage.engagement;
+
+  const handleAdd = (field, val) => {
+    setForm((prev) => ({
+      ...prev,
+      [field]: mergeUnique(prev[field], [val]),
+    }))
+  }
+
+  const handleRemove = (field, item) => {
+    setForm((prev) => ({
+      ...prev,
+      [field]: prev[field].filter((x) => x !== item),
+    }))
+  }
 
   return (
     <StepShell title="Audience & Skills" subtitle="Define who you want to engage and the key skills to develop.">
       <div className="space-y-6">
         <TargetAudienceCard activeChips={activeChips} />
 
-        <ChipGroup label="Target Roles (Students' Interest)" items={form.targetRoles} addLabel="Add role" />
-        <ChipGroup label="Preferred Universities" items={form.universities} addLabel="Add university" />
-        <ChipGroup label="Skill Focus" items={form.skillFocus} addLabel="Add skill" />
-        <ChipGroup label="Experience Level" items={form.experienceLevels} addLabel="Add level" />
+        <ChipGroup
+          label="Target Roles (Students' Interest)"
+          items={form.targetRoles}
+          addLabel="Add role"
+          onAdd={(value) => handleAdd('targetRoles', value)}
+          onRemove={(item) => handleRemove('targetRoles', item)}
+        />
+        <ChipGroup
+          label="Preferred Universities"
+          items={form.universities}
+          addLabel="Add university"
+          onAdd={(value) => handleAdd('universities', value)}
+          onRemove={(item) => handleRemove('universities', item)}
+        />
+        <ChipGroup
+          label="Skill Focus"
+          items={form.skillFocus}
+          addLabel="Add skill"
+          onAdd={(value) => handleAdd('skillFocus', value)}
+          onRemove={(item) => handleRemove('skillFocus', item)}
+        />
+        <ChipGroup
+          label="Experience Level"
+          items={form.experienceLevels}
+          addLabel="Add level"
+          onAdd={(value) => handleAdd('experienceLevels', value)}
+          onRemove={(item) => handleRemove('experienceLevels', item)}
+        />
 
         <section className="rounded-[8px] border border-blue-100 bg-blue-50/55 p-5">
-          <div className="flex items-start gap-3">
-            <EngagementIcon name="ai" tone="violet" />
-            <div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex items-start gap-3">
+              <EngagementIcon name="ai" tone="violet" />
+              <div>
               <h3 className="text-sm font-semibold text-slate-950">AI Recommended Audience</h3>
               <p className="mt-1 text-sm leading-6 text-slate-600">Based on similar successful engagements.</p>
+              </div>
             </div>
+            <button
+              type="button"
+              onClick={onApplyAudienceRecommendations}
+              className="h-10 shrink-0 rounded-[8px] border border-blue-200 bg-white px-4 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+            >
+              Apply Audience
+            </button>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {audienceRecommendations.map((item) => <Chip key={item} removable={false}>{item}</Chip>)}
@@ -597,48 +745,106 @@ function AudienceSkillsStep() {
   );
 }
 
-function TimelineResourcesStep() {
-  const form = employerEngagementBuilder.form
+function TimelineResourcesStep({ form, setForm, onApplyResourceRecommendations }) {
+  const [newDeliverable, setNewDeliverable] = useState('')
+
+  const updateField = (field, value) => {
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
+  }
+
+  const addDeliverable = () => {
+    const deliverable = newDeliverable.trim()
+    if (!deliverable) return
+    setForm((prev) => ({
+      ...prev,
+      deliverables: mergeUnique(prev.deliverables, [deliverable]),
+    }))
+    setNewDeliverable('')
+  }
 
   return (
     <StepShell title="Timeline & Resources" subtitle="Plan the program schedule and required support.">
       <div className="space-y-6">
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          <FieldDisplay label="Start Date" value={form.startDate} required />
-          <SelectDisplay label="Duration" value={form.duration} required />
-          <SelectDisplay label="Mode" value={form.mode} required />
-          <FieldDisplay label="Capacity" value={form.capacity} required />
-          <FieldDisplay label="Application Deadline" value={form.applicationDeadline} required />
-          <SelectDisplay label="Need Mentors" value={form.mentorsNeeded} required />
-          <SelectDisplay label="Need Judges" value={form.judgesNeeded} required />
-          <SelectDisplay label="Budget Range" value={form.budgetRange} required />
+          <FieldDisplay label="Start Date" value={form.startDate} required type="date" onChange={(value) => updateField('startDate', value)} />
+          <SelectDisplay label="Duration" value={form.duration} required options={['1 week', '2 weeks', '3 weeks', '4 weeks', '6 weeks', '8 weeks']} onChange={(value) => updateField('duration', value)} />
+          <SelectDisplay label="Mode" value={form.mode} required options={['Online', 'Hybrid', 'On-site']} onChange={(value) => updateField('mode', value)} />
+          <FieldDisplay label="Capacity" value={form.capacity} required onChange={(value) => updateField('capacity', value)} />
+          <FieldDisplay label="Application Deadline" value={form.applicationDeadline} required type="date" onChange={(value) => updateField('applicationDeadline', value)} />
+          <SelectDisplay label="Need Mentors" value={form.mentorsNeeded} required options={['No', 'Yes', 'Yes - 1 mentor per 20 students', 'Yes - 1 mentor per 15 students']} onChange={(value) => updateField('mentorsNeeded', value)} />
+          <SelectDisplay label="Need Judges" value={form.judgesNeeded} required options={['No', 'Yes', 'Yes - 1 judge per 30 students', 'Yes - 1 judge per 20 students']} onChange={(value) => updateField('judgesNeeded', value)} />
+          <SelectDisplay label="Budget Range" value={form.budgetRange} required options={['No budget required', 'RM 1,000 - RM 3,000', 'RM 3,000 - RM 5,000', 'RM 5,000 - RM 10,000']} onChange={(value) => updateField('budgetRange', value)} />
         </div>
 
         <section>
           <h4 className="text-sm font-semibold text-slate-800">Expected Deliverables</h4>
           <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {form.deliverables.map((deliverable) => (
-              <div key={deliverable} className="rounded-[8px] border border-slate-200 bg-white p-4">
+              <div key={deliverable} className="relative group rounded-[8px] border border-slate-200 bg-white p-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForm((prev) => ({
+                      ...prev,
+                      deliverables: prev.deliverables.filter((x) => x !== deliverable),
+                    }))
+                  }}
+                  className="absolute top-2 right-2 text-slate-400 hover:text-rose-500 font-bold opacity-0 group-hover:opacity-100 transition"
+                >
+                  ✕
+                </button>
                 <p className="text-sm font-semibold text-slate-950">{deliverable}</p>
                 <p className="mt-2 text-sm leading-5 text-slate-500">
-                  {deliverable.includes('Dashboard') ? 'Interactive dashboard' : deliverable.includes('report') ? 'Analysis and findings' : 'Final insights and story'}
+                  {deliverable.toLowerCase().includes('dashboard')
+                    ? 'Interactive dashboard'
+                    : deliverable.toLowerCase().includes('report')
+                      ? 'Analysis and findings'
+                      : 'Final insights and story'}
                 </p>
               </div>
             ))}
-            <button className="flex min-h-[92px] flex-col items-center justify-center rounded-[8px] border border-dashed border-blue-200 bg-blue-50/30 text-sm font-semibold text-blue-700 hover:bg-blue-50" type="button">
-              <span className="text-lg">+</span>
-              Add Deliverable
-            </button>
+            <div className="flex min-h-[120px] w-full flex-col justify-center rounded-[8px] border border-dashed border-blue-200 bg-blue-50/30 p-3">
+              <label className="text-sm font-semibold text-blue-800" htmlFor="new-deliverable">Add Deliverable</label>
+              <input
+                id="new-deliverable"
+                value={newDeliverable}
+                onChange={(event) => setNewDeliverable(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') addDeliverable()
+                }}
+                placeholder="e.g. Final dashboard"
+                className="mt-2 h-10 rounded-[8px] border border-blue-100 bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+              />
+              <button
+                onClick={addDeliverable}
+                className="mt-2 h-9 rounded-[8px] bg-blue-600 px-3 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                type="button"
+              >
+                Add
+              </button>
+            </div>
           </div>
         </section>
 
         <section className="rounded-[8px] border border-blue-100 bg-blue-50/45 p-5">
-          <div className="flex items-start gap-3">
-            <EngagementIcon name="ai" tone="violet" />
-            <div>
-              <h3 className="text-sm font-semibold text-slate-950">AI Resource Assistant</h3>
-              <p className="mt-1 text-sm leading-6 text-slate-600">Based on similar programs, we recommend:</p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex items-start gap-3">
+              <EngagementIcon name="ai" tone="violet" />
+              <div>
+                <h3 className="text-sm font-semibold text-slate-950">AI Resource Assistant</h3>
+                <p className="mt-1 text-sm leading-6 text-slate-600">Based on similar programs, we recommend:</p>
+              </div>
             </div>
+            <button
+              type="button"
+              onClick={onApplyResourceRecommendations}
+              className="h-10 shrink-0 rounded-[8px] border border-blue-200 bg-white px-4 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+            >
+              Apply Resources
+            </button>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {resourceRecommendations.map((item) => <Chip key={item} removable={false}>{item}</Chip>)}
@@ -659,8 +865,7 @@ function SummaryRow({ icon, label, value }) {
   )
 }
 
-function ReviewLaunchStep() {
-  const form = employerEngagementBuilder.form
+function ReviewLaunchStep({ form, selectedType, onEdit }) {
   const intelligence = stepIntelligence[5]
 
   return (
@@ -668,10 +873,16 @@ function ReviewLaunchStep() {
       <section className="rounded-[8px] border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-base font-semibold text-slate-950">Engagement Summary</h3>
-          <button className="h-9 rounded-[8px] border border-blue-100 bg-blue-50 px-3 text-sm font-semibold text-blue-700" type="button">Edit</button>
+          <button
+            onClick={onEdit}
+            className="h-9 rounded-[8px] border border-blue-100 bg-blue-50 px-3 text-sm font-semibold text-blue-700 hover:bg-blue-100 transition focus:outline-none"
+            type="button"
+          >
+            Edit
+          </button>
         </div>
         <div className="mt-5 space-y-4">
-          <SummaryRow icon="doc" label="Type" value="Micro-Project" />
+          <SummaryRow icon="doc" label="Type" value={selectedType} />
           <SummaryRow icon="lock" label="Title" value={form.title} />
           <SummaryRow icon="trend" label="Goal" value={form.goal} />
           <SummaryRow icon="calendar" label="Duration" value={`${form.startDate} - 29 Jun 2025 (${form.duration})`} />
@@ -807,8 +1018,7 @@ function MarketInsights() {
   )
 }
 
-function BuilderPreviewPanel({ selectedType, currentStep }) {
-  const form = employerEngagementBuilder.form
+function BuilderPreviewPanel({ selectedType, currentStep, form }) {
   const preview = employerEngagementBuilder.preview
   const intelligence = stepIntelligence[currentStep]
 
@@ -876,6 +1086,7 @@ export default function EmployerCreateEngagementPage() {
   const [panelTab, setPanelTab] = useState('overview')
   const [sentIds, setSentIds] = useState(() => new Set(employerEngagement.clubRequests.filter((request) => request.status === 'Interest Sent').map((request) => request.id)))
   const [toast, setToast] = useState('')
+  const [form, setForm] = useState(employerEngagementBuilder.form)
 
   const selectedRequest = employerEngagement.clubRequests.find((request) => request.id === selectedRequestId)
   const filteredRequests = useMemo(
@@ -886,10 +1097,14 @@ export default function EmployerCreateEngagementPage() {
     [activeFilter, sentIds],
   )
 
+  function triggerToast(msg) {
+    setToast(msg)
+    window.setTimeout(() => setToast(''), 2000)
+  }
+
   function sendInterest(requestId) {
     setSentIds((current) => new Set([...current, requestId]))
-    setToast('Interest sent successfully.')
-    window.setTimeout(() => setToast(''), 1800)
+    triggerToast('Interest sent successfully.')
   }
 
   function goNext() {
@@ -901,13 +1116,64 @@ export default function EmployerCreateEngagementPage() {
   }
 
   function publishEngagement() {
-    setToast('Engagement published for demo review.')
-    window.setTimeout(() => setToast(''), 1800)
+    triggerToast('Engagement published successfully!')
   }
 
   function saveDraft() {
-    setToast('Draft saved.')
-    window.setTimeout(() => setToast(''), 1800)
+    triggerToast('Draft saved successfully.')
+  }
+
+  const handleGetAIRecommendation = () => {
+    setSelectedType('Micro-Project')
+    setForm((prev) => ({
+      ...prev,
+      skillFocus: mergeUnique(prev.skillFocus, ['SQL', 'Power BI']),
+      deliverables: mergeUnique(prev.deliverables, ['Executive dashboard']),
+    }))
+    triggerToast('AI recommended Micro-Project and added matching skills.')
+  }
+
+  const handleRefineWithAI = () => {
+    setSelectedType('Micro-Project')
+    setForm((prev) => ({
+      ...prev,
+      goal: 'Help students build portfolio-ready analytics evidence using real business data.',
+      outcomes: mergeUnique(prev.outcomes, ['Portfolio-ready analytics case study', 'Executive presentation practice']),
+      skillFocus: mergeUnique(prev.skillFocus, ['SQL', 'Power BI', 'Data Storytelling']),
+      deliverables: mergeUnique(prev.deliverables, ['Executive dashboard', 'Insight memo']),
+    }))
+    triggerToast('AI strategist refined the program goal, skills, and deliverables.')
+  }
+
+  const handleApplyAISuggestions = () => {
+    setForm((prev) => ({
+      ...prev,
+      title: 'Advanced Retail Analytics & Customer Segmentation Challenge',
+      description: 'Leverage Python, SQL, and Power BI on real-world retail transaction datasets. Uncover customer cohorts, perform market basket analysis, and design a dynamic executive dashboard to present actionable strategic recommendations.',
+      outcomes: mergeUnique(prev.outcomes, ['Customer segmentation analysis', 'Market basket insight presentation']),
+    }))
+    triggerToast('AI writing suggestions applied!')
+  }
+
+  const handleApplyAudienceRecommendations = () => {
+    setForm((prev) => ({
+      ...prev,
+      targetRoles: mergeUnique(prev.targetRoles, ['Data Analyst', 'Business Intelligence Analyst']),
+      skillFocus: mergeUnique(prev.skillFocus, ['Excel', 'SQL', 'Analytics']),
+      experienceLevels: mergeUnique(prev.experienceLevels, ['Year 2', 'Year 3']),
+    }))
+    triggerToast('Recommended audience and skills applied.')
+  }
+
+  const handleApplyResourceRecommendations = () => {
+    setForm((prev) => ({
+      ...prev,
+      mentorsNeeded: 'Yes - 1 mentor per 20 students',
+      judgesNeeded: 'Yes - 1 judge per 30 students',
+      budgetRange: 'RM 3,000 - RM 5,000',
+      deliverables: mergeUnique(prev.deliverables, ['Final presentation deck', 'Scored judging rubric']),
+    }))
+    triggerToast('Recommended resources and deliverables applied.')
   }
 
   const activeStep = creationSteps.find((step) => step.id === currentStep) || creationSteps[0]
@@ -915,15 +1181,28 @@ export default function EmployerCreateEngagementPage() {
 
   let stepContent
   if (currentStep === 1) {
-    stepContent = <ChooseTypeStep selectedType={selectedType} setSelectedType={setSelectedType} />
+    stepContent = (
+      <ChooseTypeStep
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+        onGetAIRecommendation={handleGetAIRecommendation}
+        onRefineWithAI={handleRefineWithAI}
+      />
+    )
   } else if (currentStep === 2) {
-    stepContent = <ProgramDetailsStep />
+    stepContent = (
+      <ProgramDetailsStep
+        form={form}
+        setForm={setForm}
+        onApplyAISuggestions={handleApplyAISuggestions}
+      />
+    )
   } else if (currentStep === 3) {
-    stepContent = <AudienceSkillsStep />
+    stepContent = <AudienceSkillsStep form={form} setForm={setForm} onApplyAudienceRecommendations={handleApplyAudienceRecommendations} />
   } else if (currentStep === 4) {
-    stepContent = <TimelineResourcesStep />
+    stepContent = <TimelineResourcesStep form={form} setForm={setForm} onApplyResourceRecommendations={handleApplyResourceRecommendations} />
   } else {
-    stepContent = <ReviewLaunchStep />
+    stepContent = <ReviewLaunchStep form={form} selectedType={selectedType} onEdit={() => setCurrentStep(2)} />
   }
 
   return (
@@ -940,23 +1219,30 @@ export default function EmployerCreateEngagementPage() {
       {activeTab === 'create-engagement' ? (
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px] 2xl:grid-cols-[minmax(0,1fr)_390px]">
           <main className="min-w-0 space-y-5">
-            <ProgressTracker currentStep={currentStep} />
+            <ProgressTracker currentStep={currentStep} setCurrentStep={setCurrentStep} />
             {stepContent}
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               {currentStep === 1 ? (
-                <button className="h-12 rounded-[8px] border border-slate-200 bg-white px-8 text-sm font-semibold text-slate-600 hover:bg-slate-50" type="button">
+                <button
+                  onClick={() => {
+                    setCurrentStep(1)
+                    setActiveTab('club-collaboration')
+                  }}
+                  className="h-12 rounded-[8px] border border-slate-200 bg-white px-8 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                  type="button"
+                >
                   Cancel
                 </button>
               ) : (
                 <button onClick={goBack} className="h-12 rounded-[8px] border border-slate-200 bg-white px-8 text-sm font-semibold text-slate-600 hover:bg-slate-50" type="button">
-                  &lt; Back
+                  ← Back
                 </button>
               )}
 
               {currentStep < 5 ? (
                 <button onClick={goNext} className="h-12 rounded-[8px] bg-blue-600 px-8 text-sm font-semibold text-white shadow-sm shadow-blue-200 hover:bg-blue-700" type="button">
-                  Next: {nextStep.title} -&gt;
+                  {nextStep.title} →
                 </button>
               ) : (
                 <div className="flex flex-col gap-3 sm:flex-row">
@@ -971,7 +1257,7 @@ export default function EmployerCreateEngagementPage() {
             </div>
           </main>
 
-          <BuilderPreviewPanel selectedType={selectedType} currentStep={currentStep} />
+          <BuilderPreviewPanel selectedType={selectedType} currentStep={currentStep} form={form} />
         </div>
       ) : (
         <div className="space-y-6">

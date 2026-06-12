@@ -3280,10 +3280,10 @@ export default function CollaborationMarketplace() {
 
   return (
     <Routes>
-      <Route path="/" element={renderRoute()} />
-      <Route path="/post-event/report/:eventId" element={<EventImpactReportPage onBack={() => navigate('/university/collaboration', { state: { tab: 'Post-Event' } })} onToast={showToast} />} />
-      <Route path="/post-event/history" element={<EventImpactHistoryPage onToast={showToast} />} />
-      <Route path="/post-event/:eventId/student-spotlights" element={<StudentSpotlightsPage onToast={showToast} />} />
+      <Route index element={renderRoute()} />
+      <Route path="post-event/report/:eventId" element={<EventImpactReportPage onBack={() => navigate('/university/collaboration', { state: { tab: 'Post-Event' } })} onToast={showToast} />} />
+      <Route path="post-event/history" element={<EventImpactHistoryPage onToast={showToast} />} />
+      <Route path="post-event/:eventId/student-spotlights" element={<StudentSpotlightsPage onToast={showToast} />} />
     </Routes>
   )
 }

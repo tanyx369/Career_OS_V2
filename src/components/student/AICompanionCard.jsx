@@ -30,7 +30,7 @@ const assistantMessages = [
   },
   {
     match: (pathname) => pathname.includes('/student/learning'),
-    text: 'Your learning plan should focus on skills that appear often in target-role requirements.',
+    text: 'Learning should close the gaps Career Intelligence found: SQL depth, Power BI evidence, and one portfolio-ready analytics project.',
   },
   {
     match: (pathname) => pathname.includes('/student/ai-assistant'),
@@ -38,7 +38,7 @@ const assistantMessages = [
   },
   {
     match: (pathname) => pathname.includes('/student/settings'),
-    text: 'Update your career preferences here so future recommendations stay relevant.',
+    text: 'Keep your target role and preferences current so my recommendations stay aligned across skills, opportunities, and applications.',
   },
   {
     match: (pathname) => pathname.includes('/student/help'),

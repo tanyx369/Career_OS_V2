@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import { Briefcase, ClipboardList, GripVertical, Mail, Mic, Target } from 'lucide-react'
 import { useCareerStore } from '../store/useCareerStore'
 
 const STAGES = ['Applied', 'Under Review', 'Interview', 'Assessment', 'Offer']
@@ -10,39 +11,23 @@ const STAGE_COLORS = {
   'Offer': { bg: 'bg-emerald-50', border: 'border-emerald-200', dot: 'bg-emerald-500', header: 'bg-emerald-100 text-emerald-700' },
 }
 
-function StageDropdown({ currentStage, onMove }) {
-  const [open, setOpen] = useState(false)
-  const otherStages = STAGES.filter((s) => s !== currentStage)
-
-  return (
-    <div className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[10px] font-semibold text-slate-500 transition hover:border-violet-300 hover:text-violet-700"
-      >
-        Move →
-      </button>
-      {open && (
-        <div className="absolute right-0 z-10 mt-1 w-36 rounded-xl border border-slate-100 bg-white py-1 shadow-lg">
-          {otherStages.map((stage) => (
-            <button
-              key={stage}
-              type="button"
-              onClick={() => { onMove(stage); setOpen(false) }}
-              className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-slate-700 transition hover:bg-violet-50"
-            >
-              <span className={`h-1.5 w-1.5 rounded-full ${STAGE_COLORS[stage].dot}`} />
-              {stage}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  )
+const COMPANY_ICON_STYLES = {
+  google: 'border-blue-100 bg-blue-50 text-blue-600',
+  petronas: 'border-emerald-100 bg-emerald-50 text-emerald-600',
+  grab: 'border-green-100 bg-green-50 text-green-600',
+  shopee: 'border-orange-100 bg-orange-50 text-orange-600',
+  cimb: 'border-rose-100 bg-rose-50 text-rose-600',
+  airasia: 'border-sky-100 bg-sky-50 text-sky-600',
+  accenture: 'border-violet-100 bg-violet-50 text-violet-600',
+  default: 'border-slate-200 bg-slate-50 text-slate-600',
 }
 
-function ApplicationCard({ app, onMoveStage }) {
+function companyIconStyle(company = '') {
+  const key = Object.keys(COMPANY_ICON_STYLES).find((name) => company.toLowerCase().includes(name))
+  return COMPANY_ICON_STYLES[key] ?? COMPANY_ICON_STYLES.default
+}
+
+function ApplicationCard({ app, onDragStart, onDragEnd, isDragging }) {
   const daysInStage = useMemo(() => {
     const last = app.statusHistory[app.statusHistory.length - 1]
     if (!last) return 0
@@ -51,18 +36,27 @@ function ApplicationCard({ app, onMoveStage }) {
   }, [app])
 
   return (
-    <div className="rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition hover:shadow-md">
+    <div
+      draggable
+      onDragStart={(event) => onDragStart(event, app.id)}
+      onDragEnd={onDragEnd}
+      className={`group cursor-grab rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md active:cursor-grabbing ${
+        isDragging ? 'opacity-50 ring-2 ring-blue-200' : ''
+      }`}
+    >
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2.5">
-          <span className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm ${app.logoBg}`}>
-            {app.logoEmoji}
+          <span className={`flex h-8 w-8 items-center justify-center rounded-lg border ${companyIconStyle(app.company)}`}>
+            <Briefcase size={15} strokeWidth={2.2} />
           </span>
           <div className="min-w-0">
             <p className="truncate text-xs font-semibold text-slate-900">{app.jobTitle}</p>
             <p className="truncate text-[10px] text-slate-500">{app.company}</p>
           </div>
         </div>
-        <StageDropdown currentStage={app.stage} onMove={(s) => onMoveStage(app.id, s)} />
+        <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-slate-300 transition group-hover:text-slate-500" title="Drag to move">
+          <GripVertical size={15} strokeWidth={2.2} />
+        </span>
       </div>
       <div className="mt-2.5 flex items-center gap-2">
         <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">{app.matchPercent}%</span>
@@ -83,7 +77,6 @@ function ApplicationTimeline({ applications }) {
           stage: entry.stage,
           jobTitle: app.jobTitle,
           company: app.company,
-          logoEmoji: app.logoEmoji,
         })
       })
     })
@@ -119,25 +112,55 @@ function ApplicationInsights({ applications }) {
   const interviewRate = totalApps > 0 ? Math.round((stageCount('Interview') / totalApps) * 100) : 0
   const responseRate = totalApps > 0 ? Math.round(((totalApps - stageCount('Applied')) / totalApps) * 100) : 0
   const avgMatch = totalApps > 0 ? Math.round(applications.reduce((s, a) => s + a.matchPercent, 0) / totalApps) : 0
+  const stats = [
+    {
+      label: 'Total Applications',
+      value: totalApps,
+      icon: ClipboardList,
+      cardClass: 'border-violet-100 bg-violet-50/50',
+      iconClass: 'border-violet-100 bg-violet-50 text-violet-600',
+    },
+    {
+      label: 'Interview Rate',
+      value: `${interviewRate}%`,
+      icon: Mic,
+      cardClass: 'border-blue-100 bg-blue-50/50',
+      iconClass: 'border-blue-100 bg-blue-50 text-blue-600',
+    },
+    {
+      label: 'Response Rate',
+      value: `${responseRate}%`,
+      icon: Mail,
+      cardClass: 'border-emerald-100 bg-emerald-50/50',
+      iconClass: 'border-emerald-100 bg-emerald-50 text-emerald-600',
+    },
+    {
+      label: 'Avg. Match',
+      value: `${avgMatch}%`,
+      icon: Target,
+      cardClass: 'border-amber-100 bg-amber-50/50',
+      iconClass: 'border-amber-100 bg-amber-50 text-amber-600',
+    },
+  ]
 
   return (
     <section className="rounded-2xl border border-slate-200/80 bg-white p-5">
       <h3 className="text-base font-semibold text-slate-950">Application Insights</h3>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          { label: 'Total Applications', value: totalApps, icon: '📋', color: 'violet' },
-          { label: 'Interview Rate', value: `${interviewRate}%`, icon: '🎤', color: 'blue' },
-          { label: 'Response Rate', value: `${responseRate}%`, icon: '📬', color: 'emerald' },
-          { label: 'Avg. Match', value: `${avgMatch}%`, icon: '🎯', color: 'amber' },
-        ].map((stat) => (
-          <div key={stat.label} className={`rounded-xl border border-${stat.color}-100 bg-${stat.color}-50/30 p-3.5`}>
+        {stats.map((stat) => {
+          const Icon = stat.icon
+          return (
+          <div key={stat.label} className={`rounded-xl border p-3.5 ${stat.cardClass}`}>
             <div className="flex items-center gap-2">
-              <span className="text-lg">{stat.icon}</span>
+              <span className={`flex h-9 w-9 items-center justify-center rounded-xl border ${stat.iconClass}`}>
+                <Icon size={17} strokeWidth={2.2} />
+              </span>
               <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">{stat.label}</span>
             </div>
             <p className="mt-1 text-2xl font-bold text-[#11104a]">{stat.value}</p>
           </div>
-        ))}
+          )
+        })}
       </div>
     </section>
   )
@@ -146,6 +169,8 @@ function ApplicationInsights({ applications }) {
 export default function ApplicationsPage() {
   const applications = useCareerStore((state) => state.applications)
   const moveApplicationStage = useCareerStore((state) => state.moveApplicationStage)
+  const [draggedApplicationId, setDraggedApplicationId] = useState(null)
+  const [dragOverStage, setDragOverStage] = useState(null)
 
   const grouped = useMemo(() => {
     const result = {}
@@ -156,6 +181,27 @@ export default function ApplicationsPage() {
     })
     return result
   }, [applications])
+
+  const handleDragStart = (event, appId) => {
+    setDraggedApplicationId(appId)
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', appId)
+  }
+
+  const handleDragEnd = () => {
+    setDraggedApplicationId(null)
+    setDragOverStage(null)
+  }
+
+  const handleDrop = (event, stage) => {
+    event.preventDefault()
+    const appId = event.dataTransfer.getData('text/plain') || draggedApplicationId
+    const current = applications.find((app) => app.id === appId)
+    if (appId && current && current.stage !== stage) {
+      moveApplicationStage(appId, stage)
+    }
+    handleDragEnd()
+  }
 
   return (
     <div className="min-h-full pb-2 text-[#11104a]">
@@ -179,7 +225,23 @@ export default function ApplicationsPage() {
               const colors = STAGE_COLORS[stage]
               const apps = grouped[stage] || []
               return (
-                <div key={stage} className="w-64 shrink-0 rounded-2xl border border-slate-200/80 bg-slate-50/40">
+                <div
+                  key={stage}
+                  onDragOver={(event) => {
+                    event.preventDefault()
+                    event.dataTransfer.dropEffect = 'move'
+                    setDragOverStage(stage)
+                  }}
+                  onDragLeave={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget)) {
+                      setDragOverStage(null)
+                    }
+                  }}
+                  onDrop={(event) => handleDrop(event, stage)}
+                  className={`w-64 shrink-0 rounded-2xl border bg-slate-50/40 transition ${
+                    dragOverStage === stage ? 'border-blue-300 bg-blue-50/60 ring-2 ring-blue-100' : 'border-slate-200/80'
+                  }`}
+                >
                   <div className={`flex items-center justify-between rounded-t-2xl px-4 py-3 ${colors.header}`}>
                     <div className="flex items-center gap-2">
                       <span className={`h-2 w-2 rounded-full ${colors.dot}`} />
@@ -193,7 +255,9 @@ export default function ApplicationsPage() {
                         <ApplicationCard
                           key={app.id}
                           app={app}
-                          onMoveStage={moveApplicationStage}
+                          onDragStart={handleDragStart}
+                          onDragEnd={handleDragEnd}
+                          isDragging={draggedApplicationId === app.id}
                         />
                       ))
                     ) : (
