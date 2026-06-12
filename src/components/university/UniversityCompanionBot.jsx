@@ -3,7 +3,13 @@ import { useLocation } from 'react-router-dom'
 import TypewriterText from '../ui/TypewriterText'
 import companionBot from '../../assets/career-os-robot.png'
 import { useEmployerMarketplaceStore } from '../../store/useEmployerMarketplaceStore'
-import { employerTalentWorkspace } from '../../data/mockData'
+import {
+  employerTalentWorkspace,
+  universityInsights,
+  universityCurriculumAlignment,
+  universityStudentReadiness,
+  universitySocietyMarketplace
+} from '../../data/mockData'
 
 const pageMessages = [
   {
@@ -56,7 +62,9 @@ export default function UniversityCompanionBot() {
   const pipelineApplications = useEmployerMarketplaceStore((state) => state.pipelineApplications)
 
   const message = useMemo(() => {
-    if (location.pathname.includes('/employer/marketplace')) {
+    const pathname = location.pathname
+
+    if (pathname.includes('/employer/marketplace')) {
       const activeOpportunities = opportunities.filter((o) => o.status === 'Active')
       const activeCount = activeOpportunities.length
 
@@ -132,8 +140,34 @@ export default function UniversityCompanionBot() {
       return 'Need talent faster? Use CareerOS matching to automatically surface students who fit your open roles.'
     }
 
-    return pageMessages.find((item) => item.match(location.pathname))?.text
-      ?? (location.pathname.startsWith('/employer')
+    // 2. University Workspace (dynamic)
+    if (pathname === '/university' || pathname === '/university/overview') {
+      return '62 students are at risk, with Cloud & MLOps remaining the largest readiness gap. Prioritize targeted interventions for Year 3 cohorts.'
+    }
+    if (pathname.includes('/university/curriculum') || pathname.includes('/university/curriculum-market-alignment')) {
+      return 'Cloud Deployment shows a 62% coverage gap and MLOps 74%. These are the fastest-growing skill shortages to address.'
+    }
+    if (pathname.includes('/university/readiness') || pathname.includes('/university/student-readiness')) {
+      return '62 students remain below target readiness, with Cloud and MLOps showing the largest skill deficits. Prioritize deployment-focused learning.'
+    }
+    if (pathname.includes('/university/signals')) {
+      return '34% of alumni wish they had learned Power BI, while Cloud Deployment ranks second. Consider strengthening practical tooling exposure.'
+    }
+    if (pathname.includes('/university/collaboration') || pathname.includes('/university/society-corporate-marketplace')) {
+      return 'Five active opportunities can directly support curriculum gaps. Prioritize events seeking technical partners and industry mentors.'
+    }
+    if (pathname.includes('/university/reports')) {
+      return 'Generate your MACS review report. Package curriculum gaps, affected student count, and corporate partner feedback into a single executive deck.'
+    }
+    if (pathname.includes('/university/settings')) {
+      return 'Manage your university settings and API configurations here. Adjust cohort definitions and industry demand filters to refine readiness scores.'
+    }
+    if (pathname.includes('/university/help')) {
+      return 'Access university help resources. Review user guides on curriculum alignment calculations, cohort definitions, and partner integration.'
+    }
+
+    return pageMessages.find((item) => item.match(pathname))?.text
+      ?? (pathname.startsWith('/employer')
           ? 'I will summarise the important signal on each employer page for the demo.'
           : 'I will summarise the important signal on each university page for the demo.')
   }, [location.pathname, opportunities, pipelineApplications])

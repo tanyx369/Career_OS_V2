@@ -3,48 +3,8 @@ import { useLocation } from 'react-router-dom'
 import companionBot from '../../assets/career-os-robot.png'
 import { useTypewriter } from '../ui/TypewriterText'
 
-const assistantMessages = [
-  {
-    match: (pathname) => pathname === '/student' || pathname === '/student/overview',
-    text: "Hi Chris! Your career readiness is improving. Check today's priorities to see your next best action.",
-  },
-  {
-    match: (pathname) => pathname.includes('/student/profile') || pathname.includes('/student/memory-profile'),
-    text: 'Your Career Memory keeps verified projects, skills, and experiences together for future applications.',
-  },
-  {
-    match: (pathname) => pathname.includes('/student/intelligence') || pathname.includes('/student/career-intelligence'),
-    text: 'I found skill gaps between your profile and target role. Start with the highest-impact one.',
-  },
-  {
-    match: (pathname) => pathname.includes('/student/opportunities'),
-    text: 'These opportunities match your skills and goals. Focus on the ones that close important gaps.',
-  },
-  {
-    match: (pathname) => pathname.includes('/student/applications'),
-    text: 'Keep your applications updated so I can help identify the next action for each role.',
-  },
-  {
-    match: (pathname) => pathname.includes('/student/network'),
-    text: 'The right mentor can validate your direction and help strengthen weaker skill areas.',
-  },
-  {
-    match: (pathname) => pathname.includes('/student/learning'),
-    text: 'Learning should close the gaps Career Intelligence found: SQL depth, Power BI evidence, and one portfolio-ready analytics project.',
-  },
-  {
-    match: (pathname) => pathname.includes('/student/ai-assistant'),
-    text: 'Ask me about your career path, skill gaps, opportunities, or evidence in your profile.',
-  },
-  {
-    match: (pathname) => pathname.includes('/student/settings'),
-    text: 'Keep your target role and preferences current so my recommendations stay aligned across skills, opportunities, and applications.',
-  },
-  {
-    match: (pathname) => pathname.includes('/student/help'),
-    text: 'Need a hand? I can explain each workspace area and suggest where to go next.',
-  },
-]
+import { useCareerStore } from '../../store/useCareerStore'
+import { candidateOverview } from '../../data/mockData'
 
 export default function AICompanionCard() {
   const location = useLocation()
@@ -52,12 +12,72 @@ export default function AICompanionCard() {
   const [scrollState, setScrollState] = useState({ canScrollUp: false, canScrollDown: false })
   const messageScrollerRef = useRef(null)
 
+  const experiences = useCareerStore((state) => state.experiences || [])
+  const myEvents = useCareerStore((state) => state.myEvents || [])
+  const applications = useCareerStore((state) => state.applications || [])
+
+  const totalSkills = useMemo(() => {
+    const uniqSkills = new Set()
+    experiences.forEach((exp) => {
+      (exp.extractedSkills || []).forEach((s) => uniqSkills.add(s.name))
+    })
+    return uniqSkills.size || 26
+  }, [experiences])
+
+  const avgStrength = useMemo(() => {
+    const uniqSkills = {}
+    experiences.forEach((exp) => {
+      (exp.extractedSkills || []).forEach((s) => {
+        if (!uniqSkills[s.name] || s.credibility > uniqSkills[s.name]) {
+          uniqSkills[s.name] = s.credibility
+        }
+      })
+    })
+    const values = Object.values(uniqSkills)
+    if (values.length === 0) return 84
+    return Math.round(values.reduce((sum, val) => sum + val, 0) / values.length)
+  }, [experiences])
+
   const message = useMemo(() => {
-    return (
-      assistantMessages.find((item) => item.match(location.pathname))?.text ??
-      'Hi Chris! Need help with your next career step?'
-    )
-  }, [location.pathname])
+    const pathname = location.pathname
+    if (pathname === '/student' || pathname === '/student/overview') {
+      const readiness = candidateOverview?.careerSnapshot?.readiness || 68
+      return `Your career readiness is at ${readiness}%. Complete your Advanced SQL practice to unlock more high-match opportunities.`
+    }
+    if (pathname.includes('/student/profile') || pathname.includes('/student/memory-profile')) {
+      return `You have ${experiences.length} career memories saved. Verify your pending experiences to showcase more credible skills to potential employers.`
+    }
+    if (pathname.includes('/student/intelligence') || pathname.includes('/student/career-intelligence')) {
+      return `You have ${totalSkills} skills tracked with an average strength of ${avgStrength}%. Build model serving or deployment projects to address MLOps gaps.`
+    }
+    if (pathname.includes('/student/opportunities')) {
+      return 'You have 4 recommended opportunities. McKinsey Forward Case Challenge closes in 2 days and aligns strongly with your Data Scientist pathway.'
+    }
+    if (pathname.includes('/student/applications')) {
+      const totalApps = applications.length
+      const interviewApp = applications.find((a) => a.stage === 'Interview')
+      if (interviewApp) {
+        return `You have ${totalApps} applications. Your ${interviewApp.company} interview is active. Practice mock interviews to prepare for it.`
+      }
+      return `You have ${totalApps} active applications. Keep updating your status history to get relevant timeline insights.`
+    }
+    if (pathname.includes('/student/network')) {
+      return "Connect with 5 recommended mentors from Taylor's University alumni network. Request a session to validate your career strategy."
+    }
+    if (pathname.includes('/student/learning')) {
+      return 'Complete the Power BI dashboard workshop to close your primary technical gap. Your learning progress is currently at 42%.'
+    }
+    if (pathname.includes('/student/ai-assistant')) {
+      return 'Ask me anything about your career path, skill gaps, or how to prepare for upcoming applications and interviews.'
+    }
+    if (pathname.includes('/student/settings')) {
+      return 'Update your target roles and preferences. Keep this aligned so your skill gaps and opportunity matching stay accurate.'
+    }
+    if (pathname.includes('/student/help')) {
+      return 'Need assistance? Review our guides on verified experiences, career memory imports, and how matching scores are calculated.'
+    }
+    return 'Hi Chris! Need help with your next career step?'
+  }, [location.pathname, experiences, myEvents, applications, totalSkills, avgStrength])
 
   const { displayedText, isTyping } = useTypewriter({
     text: message,
