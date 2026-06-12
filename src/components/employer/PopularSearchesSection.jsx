@@ -1,4 +1,5 @@
 import React from 'react';
+import { Briefcase, Sparkles, BarChart3 } from 'lucide-react';
 
 export default function PopularSearchesSection({
   onSelectSkill,
@@ -26,7 +27,7 @@ export default function PopularSearchesSection({
               className="flex items-center gap-1.5 rounded-[8px] bg-blue-50/70 border border-blue-100/40 px-2.5 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100/50 transition"
               type="button"
             >
-              <span aria-hidden="true">📊</span>
+              <BarChart3 aria-hidden="true" className="h-3.5 w-3.5" />
               <span>{skill}</span>
             </button>
           ))}
@@ -44,7 +45,7 @@ export default function PopularSearchesSection({
               className="flex items-center gap-1.5 rounded-[8px] bg-violet-50/70 border border-violet-100/40 px-2.5 py-1.5 text-xs font-semibold text-violet-700 hover:bg-violet-100/50 transition"
               type="button"
             >
-              <span aria-hidden="true">💼</span>
+              <Briefcase aria-hidden="true" className="h-3.5 w-3.5" />
               <span>{role}</span>
             </button>
           ))}
@@ -62,7 +63,7 @@ export default function PopularSearchesSection({
               className="flex w-full items-center gap-2 rounded-[8px] px-2.5 py-2.5 text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 transition"
               type="button"
             >
-              <span className="text-blue-500" aria-hidden="true">✨</span>
+              <Sparkles className="h-3.5 w-3.5 text-blue-500" aria-hidden="true" />
               <span>{rec}</span>
             </button>
           ))}

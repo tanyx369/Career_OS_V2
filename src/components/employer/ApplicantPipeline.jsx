@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Bell, PartyPopper, Sparkles } from 'lucide-react';
 import ApplicantCard from './ApplicantCard';
 import { CandidateMatchEngine } from '../../services/CandidateMatchEngine';
 
@@ -139,7 +140,8 @@ export default function ApplicantPipeline({
     <div className="space-y-6">
       {toastMessage && (
         <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-xs font-bold text-white shadow-lg animate-bounce">
-          <span>🔔</span> {toastMessage}
+          <Bell className="h-4 w-4" />
+          {toastMessage}
         </div>
       )}
 
@@ -273,7 +275,8 @@ export default function ApplicantPipeline({
             <div className="rounded-[8px] border border-indigo-100 bg-gradient-to-b from-indigo-50/50 to-white p-6 shadow-sm space-y-4">
               <div>
                 <h3 className="text-sm font-semibold text-slate-950 flex items-center gap-1.5">
-                  <span>✨</span> Invite Suggested Candidates
+                  <Sparkles className="h-4 w-4 text-indigo-600" />
+                  Invite Suggested Candidates
                 </h3>
                 <p className="text-[10px] text-slate-500 font-semibold mt-0.5">
                   Top matched candidates from Taylor University & others.
@@ -455,7 +458,14 @@ export default function ApplicantPipeline({
                     : 'bg-emerald-600 hover:bg-emerald-700 shadow-sm shadow-emerald-100'
                 }`}
               >
-                {selectedCandidate.stage === 'Hired' ? 'Hired' : 'Hire Candidate 🎉'}
+                {selectedCandidate.stage === 'Hired' ? (
+                  'Hired'
+                ) : (
+                  <span className="inline-flex items-center gap-1.5">
+                    Hire Candidate
+                    <PartyPopper className="h-3.5 w-3.5" />
+                  </span>
+                )}
               </button>
             </div>
 

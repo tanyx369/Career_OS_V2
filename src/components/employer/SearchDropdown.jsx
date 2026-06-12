@@ -1,4 +1,5 @@
 import React from 'react';
+import { BarChart3, Briefcase } from 'lucide-react';
 import { employerTalentWorkspace } from '../../data/mockData';
 import SearchResultsGroup from './SearchResultsGroup';
 import RecentSearchesSection from './RecentSearchesSection';
@@ -149,7 +150,7 @@ export default function SearchDropdown({
                   className="flex w-full items-center gap-3 px-4 py-2.5 hover:bg-slate-50/70 transition text-left text-xs font-semibold text-slate-700"
                   type="button"
                 >
-                  <span className="text-slate-400" aria-hidden="true">📊</span>
+                  <BarChart3 className="h-3.5 w-3.5 text-slate-400" aria-hidden="true" />
                   <span>{skill}</span>
                 </button>
               ))}
@@ -177,7 +178,7 @@ export default function SearchDropdown({
                   className="flex w-full items-center gap-3 px-4 py-2.5 hover:bg-slate-50/70 transition text-left text-xs font-semibold text-slate-700"
                   type="button"
                 >
-                  <span className="text-slate-400" aria-hidden="true">💼</span>
+                  <Briefcase className="h-3.5 w-3.5 text-slate-400" aria-hidden="true" />
                   <span>{role}</span>
                 </button>
               ))}

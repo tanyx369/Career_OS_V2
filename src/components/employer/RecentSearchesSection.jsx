@@ -1,4 +1,5 @@
 import React from 'react';
+import { Clock3 } from 'lucide-react';
 
 export default function RecentSearchesSection({ searches, onSelect, onClear }) {
   if (searches.length === 0) return null;
@@ -26,7 +27,7 @@ export default function RecentSearchesSection({ searches, onSelect, onClear }) {
             className="flex items-center gap-1.5 rounded-[8px] border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition"
             type="button"
           >
-            <span aria-hidden="true">🕒</span>
+            <Clock3 aria-hidden="true" className="h-3.5 w-3.5" />
             <span>{search}</span>
           </button>
         ))}

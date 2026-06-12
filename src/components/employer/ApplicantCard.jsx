@@ -1,4 +1,5 @@
 import React from 'react';
+import { FolderOpen } from 'lucide-react';
 
 export default function ApplicantCard({ candidate, onSelect, onMoveStage }) {
   const {
@@ -72,7 +73,7 @@ export default function ApplicantCard({ candidate, onSelect, onMoveStage }) {
       {/* Footer Metrics */}
       <div className="border-t border-slate-100 pt-2.5 flex items-center justify-between gap-2 text-[10px] font-medium text-slate-500">
         <div className="flex items-center gap-1">
-          <span>📁</span>
+          <FolderOpen className="h-3.5 w-3.5" />
           <span>{evidenceCount} Evidence Traces</span>
         </div>
         {availability && (

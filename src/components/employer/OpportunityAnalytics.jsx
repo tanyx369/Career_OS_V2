@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Lightbulb, Zap } from 'lucide-react';
 import DonutChartMock from './DonutChartMock';
 import HorizontalBarChartMock from './HorizontalBarChartMock';
 
@@ -97,11 +98,11 @@ export default function OpportunityAnalytics({ opportunities = [], allCandidates
             <h4 className="text-xs font-semibold text-blue-900 uppercase tracking-wider">AI Recommendations</h4>
             <ul className="mt-2.5 space-y-2 text-xs text-slate-600 font-medium">
               <li className="flex items-start gap-2">
-                <span>⚡</span>
+                <Zap className="mt-0.5 h-3.5 w-3.5 shrink-0 text-blue-600" />
                 <span>Taylor University candidates show 95% match rate on SQL. Invite them for fast-track screens.</span>
               </li>
               <li className="flex items-start gap-2">
-                <span>💡</span>
+                <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
                 <span>35% of applicants lack required Tableau/Power BI skills. Consider updating the description or using our screening questions to filter.</span>
               </li>
             </ul>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Clock3, MapPin } from 'lucide-react';
 
 export default function OpportunityCard({ opportunity, onViewApplicants }) {
   const {
@@ -49,11 +50,11 @@ export default function OpportunityCard({ opportunity, onViewApplicants }) {
         {/* Location & Details */}
         <div className="space-y-2 text-xs font-medium text-slate-500">
           <div className="flex items-center gap-1.5 truncate">
-            <span aria-hidden="true">📍</span>
+            <MapPin aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
             <span className="truncate">{fullLocation}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span aria-hidden="true">⏱</span>
+            <Clock3 aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
             <span>Deadline: {deadline}</span>
           </div>
         </div>

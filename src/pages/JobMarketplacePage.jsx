@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Inbox, Search } from 'lucide-react';
 import OpportunityCard from '../components/employer/OpportunityCard';
 import CreateOpportunityWizard from '../components/employer/CreateOpportunityWizard';
 import ApplicantPipeline from '../components/employer/ApplicantPipeline';
@@ -156,7 +157,7 @@ export default function JobMarketplacePage() {
                 
                 {/* Search */}
                 <div className="relative w-full md:w-80">
-                  <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-400">🔍</span>
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
                     type="text"
                     value={searchQuery}
@@ -215,7 +216,9 @@ export default function JobMarketplacePage() {
                 </div>
               ) : (
                 <div className="rounded-[8px] border border-dashed border-slate-200 bg-slate-50/50 p-16 text-center space-y-3">
-                  <span className="text-3xl">📭</span>
+                  <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500">
+                    <Inbox className="h-6 w-6" />
+                  </span>
                   <h3 className="text-sm font-semibold text-slate-950">No opportunities found</h3>
                   <p className="text-xs text-slate-400 font-normal max-w-sm mx-auto">Try clearing search filters or create a new vacancy listing to get started.</p>
                 </div>

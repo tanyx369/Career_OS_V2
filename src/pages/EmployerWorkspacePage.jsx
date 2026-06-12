@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Bookmark, MoreVertical, Search, Star, Trash2 } from 'lucide-react';
 import { employerTalentWorkspace } from '../data/mockData';
 import { useEmployerSearchStore } from '../store/useEmployerSearchStore';
 
@@ -241,9 +242,7 @@ function CandidateStream({
         {/* Search Bar Input */}
         <div className="px-4 pt-3.5 pb-2">
           <div className="relative">
-            <span aria-hidden className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
-              🔍
-            </span>
+            <Search aria-hidden className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               type="search"
               placeholder="Search candidates, skills..."
@@ -363,9 +362,7 @@ function CandidateStream({
                           : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
                       }`}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill={saved ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-                      </svg>
+                      <Bookmark className={`h-3.5 w-3.5 ${saved ? 'fill-current' : ''}`} />
                     </button>
 
                     {/* Star Shortlist button */}
@@ -382,9 +379,7 @@ function CandidateStream({
                           : 'text-slate-400 hover:text-amber-500 hover:bg-slate-50'
                       }`}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill={shortlisted ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.969 0 1.371 1.24.588 1.81l-3.97 2.88a1 1 0 00-.364 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.971-2.88a1 1 0 00-1.176 0l-3.97 2.88c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118l-3.97-2.88c-.783-.57-.38-1.81.588-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z" />
-                      </svg>
+                      <Star className={`h-3.5 w-3.5 ${shortlisted ? 'fill-current' : ''}`} />
                     </button>
                   </div>
                 </div>
@@ -394,7 +389,9 @@ function CandidateStream({
         ) : (
           /* Empty Shortlist state */
           <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-            <span className="text-3xl">⭐</span>
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-amber-100 bg-amber-50 text-amber-500">
+              <Star className="h-6 w-6" />
+            </span>
             {selectedTab === 'shortlisted' ? (
               <>
                 <h4 className="mt-3 text-xs font-bold text-slate-800">Your shortlist is empty.</h4>
@@ -470,9 +467,7 @@ function CandidateHeader({ candidate, shortlisted, saved, onToggleShortlist, onT
                 : 'bg-white text-slate-500 ring-slate-200 hover:bg-slate-50'
             }`}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill={saved ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-            </svg>
+            <Bookmark className={`h-5 w-5 ${saved ? 'fill-current' : ''}`} />
           </button>
 
           {/* Shortlist Action Button */}
@@ -495,7 +490,7 @@ function CandidateHeader({ candidate, shortlisted, saved, onToggleShortlist, onT
               type="button"
               aria-label="Actions"
             >
-              ⋮
+              <MoreVertical className="h-4 w-4" />
             </button>
 
             {isMenuOpen && (
@@ -508,7 +503,7 @@ function CandidateHeader({ candidate, shortlisted, saved, onToggleShortlist, onT
                   }}
                   className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-xs font-semibold text-rose-600 hover:bg-rose-50/50 transition"
                 >
-                  <span className="text-sm">🗑️</span>
+                  <Trash2 className="h-3.5 w-3.5" />
                   <span>Remove Candidate</span>
                 </button>
               </div>
@@ -1390,7 +1385,9 @@ export default function EmployerWorkspacePage() {
         ) : (
           /* Empty Workspace Panel when tab yields nothing */
           <div className="flex h-[600px] flex-col items-center justify-center rounded-[8px] border border-slate-200 bg-white p-6 text-center shadow-[0_18px_54px_rgba(15,23,42,0.05)]">
-            <span className="text-4xl mb-4">🔍</span>
+            <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 text-blue-600">
+              <Search className="h-7 w-7" />
+            </span>
             <h3 className="text-lg font-bold text-slate-800">No Candidates Selected</h3>
             <p className="mt-1 text-sm text-slate-500 max-w-sm">
               {selectedTab === 'shortlisted'

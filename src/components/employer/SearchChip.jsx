@@ -1,4 +1,5 @@
 import React from 'react';
+import { BarChart3, Briefcase, UserRound, X } from 'lucide-react';
 
 export default function SearchChip({ chip, onRemove }) {
   const bgClasses = {
@@ -7,15 +8,16 @@ export default function SearchChip({ chip, onRemove }) {
     role: 'bg-violet-50 text-violet-700 ring-violet-100',
   };
 
-  const iconLabels = {
-    candidate: '👤',
-    skill: '📊',
-    role: '💼',
+  const Icon = {
+    candidate: UserRound,
+    skill: BarChart3,
+    role: Briefcase,
   };
+  const ChipIcon = Icon[chip.type] || UserRound;
 
   return (
     <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ring-1 ring-inset ${bgClasses[chip.type]}`}>
-      <span aria-hidden="true" className="mr-0.5">{iconLabels[chip.type]}</span>
+      <ChipIcon aria-hidden="true" className="mr-0.5 h-3.5 w-3.5" />
       <span>{chip.value}</span>
       <button
         onClick={() => onRemove(chip.id)}
@@ -23,7 +25,7 @@ export default function SearchChip({ chip, onRemove }) {
         type="button"
         aria-label={`Remove ${chip.value}`}
       >
-        ✕
+        <X className="h-3 w-3" />
       </button>
     </span>
   );

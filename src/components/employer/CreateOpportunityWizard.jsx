@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Bot, Rocket } from 'lucide-react';
 import OpportunityPreview from './OpportunityPreview';
 
 export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
@@ -484,7 +485,8 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
             <div className="space-y-6 max-w-2xl mx-auto">
               <div className="rounded-[8px] border border-indigo-100 bg-indigo-50/50 p-5">
                 <h4 className="text-sm font-semibold text-indigo-950 flex items-center gap-2">
-                  <span>🤖</span> AI Candidate Match Weights
+                  <Bot className="h-4 w-4 text-indigo-600" />
+                  AI Candidate Match Weights
                 </h4>
                 <p className="text-xs text-slate-600 font-semibold mt-1">
                   Adjust how the AI Match Engine ranks candidates who apply. These weights control how candidate trace data and skill evidence are valued.
@@ -683,7 +685,10 @@ export default function CreateOpportunityWizard({ isOpen, onClose, onSave }) {
                     : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-lg'
                 }`}
               >
-                Publish Position 🚀
+                <span className="inline-flex items-center gap-1.5">
+                  Publish Position
+                  <Rocket className="h-3.5 w-3.5" />
+                </span>
               </button>
             )}
           </div>
