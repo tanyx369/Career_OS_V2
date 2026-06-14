@@ -141,19 +141,6 @@ Candidate discovery
 -> Shortlist or engagement
 ```
 
-## Screenshots
-
-No suitable product screenshots are currently committed to the repository. Recommended screenshots to add:
-
-- `docs/screenshots/student-overview.png` - Student Overview with AI Career Companion.
-- `docs/screenshots/student-career-memory.png` - Career Memory evidence timeline.
-- `docs/screenshots/university-program-market-alignment.png` - University Program-Market Alignment.
-- `docs/screenshots/university-collaboration-impact.png` - Collaboration Marketplace or Event Impact Report.
-- `docs/screenshots/employer-talent-discovery.png` - Employer Talent Discovery.
-- `docs/screenshots/employer-create-engagement.png` - Create Engagement or Job Marketplace.
-
-After adding images, reference them here with descriptive alt text and relative paths.
-
 ## Live Demo
 
 - Live Demo: Coming soon
