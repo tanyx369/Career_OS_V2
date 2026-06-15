@@ -235,7 +235,7 @@ Backend (Future Development)
   - LinkedIn
 
 
-## Prototype Limitations
+## Current Prototype Limitations
 
 - Demo content is powered by mock data.
 - AI recommendations, summaries, match scores, and assistant messages are simulated.
