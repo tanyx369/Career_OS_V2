@@ -240,14 +240,3 @@ Potential next steps include:
 This repository contains the CareerOS hackathon prototype and supporting presentation assets.
 
 Product reference documents are available in `docs/`, especially `docs/CAREEROS_PRODUCT_REFERENCE.md` and `docs/MASTER_CONTEXT.md`.
-
-## Public Repository Safety
-
-This README intentionally avoids:
-
-- API keys or secrets.
-- `.env` values.
-- Private URLs.
-- Unsupported customer, traction, or integration claims.
-- Hidden or legacy routes presented as active product features.
-- Outdated product naming such as CareerSync as the primary product name.
