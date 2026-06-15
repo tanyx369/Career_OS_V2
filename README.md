@@ -1,4 +1,7 @@
-# ![App Logo](src/assets/icon-compass.svg) CareerOS
+<p align="center">
+  <img src="src/assets/icon-compass.svg" width="50" height="50" alt="CareerOS Logo" style="vertical-align: middle; display: inline-block;">
+  <span style="font-size: 2em; font-weight: bold; vertical-align: middle; margin-left: 10px;">CareerOS</span>
+</p>
 
 CareerOS is an AI-assisted career intelligence operating system connecting student evidence, university readiness, and employer talent discovery.
 
