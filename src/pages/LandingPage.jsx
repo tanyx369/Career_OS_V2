@@ -90,7 +90,7 @@ const WORKSPACES = [
       'Engagement tools to build your employer brand',
     ],
     cta: 'Enter Employer Workspace',
-    path: '/employer',
+    path: '/employer/home',
     iconClass: 'bg-gradient-to-br from-purple-600 to-purple-400',
     accentClass: 'bg-gradient-to-r from-purple-600 to-purple-300',
     bulletClass: 'bg-purple-600',

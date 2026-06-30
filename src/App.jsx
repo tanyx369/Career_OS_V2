@@ -11,7 +11,13 @@ import CandidateOverviewPage from './pages/CandidateOverviewPage'
 import CareerIntelligencePage from './pages/CareerIntelligencePage'
 import CurriculumMarketAlignmentPage from './pages/CurriculumMarketAlignmentPage'
 import EmployerCreateEngagementPage from './pages/EmployerCreateEngagementPage'
+import Analytics from './pages/employer/Analytics'
+import Candidates from './pages/employer/Candidates'
+import CampusPipeline from './pages/employer/CampusPipeline'
+import Engagements from './pages/employer/Engagements'
+import EmployerHome from './pages/EmployerHome'
 import EmployerWorkspacePage from './pages/EmployerWorkspacePage'
+import TalentDiscovery from './pages/employer/TalentDiscovery'
 import LandingPage from './pages/LandingPage'
 import JobMarketplacePage from './pages/JobMarketplacePage'
 import MemoryProfilePage from './pages/MemoryProfilePage'
@@ -66,12 +72,19 @@ export default function App() {
       </Route>
 
       <Route element={<ProtectedRoute role="employer" />}>
+        {/* Round 2 AI-first pages — own top-nav layout, kept outside AppLayout's sidebar shell. */}
+        <Route path="/employer/home" element={<EmployerHome />} />
+        <Route path="/employer/talent" element={<EmployerWorkspacePage />} />
+        <Route path="/employer/talent-discovery" element={<TalentDiscovery />} />
+        <Route path="/employer/posting" element={<Engagements />} />
+        <Route path="/employer/campus-pipeline" element={<CampusPipeline />} />
+        <Route path="/employer/analytics" element={<Analytics />} />
+        <Route path="/employer/candidates" element={<Candidates />} />
+
         <Route element={<AppLayout workspace="employer" />}>
-          <Route path="/employer" element={<EmployerWorkspacePage />} />
-          <Route path="/employer/talent" element={<EmployerWorkspacePage />} />
-          <Route path="/employer/talent-discovery" element={<EmployerWorkspacePage />} />
+          <Route path="/employer" element={<Navigate to="/employer/home" replace />} />
           <Route path="/employer/insights" element={<CandidateInsightsPage />} />
-          <Route path="/employer/posting" element={<EmployerCreateEngagementPage />} />
+          <Route path="/employer/posting-legacy" element={<EmployerCreateEngagementPage />} />
           <Route path="/employer/marketplace" element={<JobMarketplacePage />} />
           <Route path="/employer/settings" element={<PlaceholderPage title="Settings" />} />
           <Route path="/employer/help" element={<PlaceholderPage title="Help" />} />
@@ -108,7 +121,7 @@ export default function App() {
       <Route path="/intelligence" element={<Navigate to="/student/intelligence" replace />} />
       <Route path="/career-intelligence" element={<Navigate to="/student/intelligence" replace />} />
       <Route path="/opportunities" element={<Navigate to="/student/opportunities" replace />} />
-      <Route path="/employer-view" element={<Navigate to="/employer/talent" replace />} />
+      <Route path="/employer-view" element={<Navigate to="/employer/home" replace />} />
       <Route path="/university-hub" element={<Navigate to="/university/readiness" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
