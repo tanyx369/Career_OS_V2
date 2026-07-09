@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { ArrowRight, CheckCircle2, Send, Sparkles } from 'lucide-react'
 import HomeTopNav from '../components/home/HomeTopNav'
 import TypewriterText from '../components/ui/TypewriterText'
@@ -284,6 +285,10 @@ function DemoToast({ message }) {
 
 export default function AICompanionPage() {
   const readiness = candidateOverview.careerSnapshot.readiness
+  const location = useLocation()
+  // Capture the handoff prompt once, on the first render. Later renders can
+  // freely mutate location.state without re-triggering the send.
+  const [initialPrompt] = useState(() => location.state?.initialPrompt ?? null)
   const [messages, setMessages] = useState([{ id: 'start', role: 'robot', type: 'text', text: STARTER_MESSAGE }])
   const [draft, setDraft] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
@@ -291,6 +296,7 @@ export default function AICompanionPage() {
   const scrollRef = useRef(null)
   const timersRef = useRef([])
   const toastRef = useRef(null)
+  const initialPromptHandledRef = useRef(false)
 
   useEffect(() => {
     if (!scrollRef.current) return
@@ -359,6 +365,20 @@ export default function AICompanionPage() {
     })
     schedule(finishResponse, response.thinkingSteps.length * 800 + 350)
   }
+
+  // Continue a prompt handed off from another page (e.g. the Home page's
+  // Career Coach card). Fires once — the ref guards against StrictMode's
+  // double-invoke, and browser-history replace prevents a refresh from
+  // replaying the prompt. The pending timer is intentionally NOT tracked in
+  // timersRef because the sibling mount-cleanup effect would clear it during
+  // StrictMode's simulated unmount before it can fire.
+  useEffect(() => {
+    if (initialPromptHandledRef.current || !initialPrompt) return
+    initialPromptHandledRef.current = true
+    window.history.replaceState({}, '', location.pathname)
+    window.setTimeout(() => sendMessage(initialPrompt), 250)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialPrompt])
 
   const insights = useMemo(() => [
     ['Today\'s focus', 'TalentBank AI Challenge deadline in 2 days', 'Why is TalentBank AI Challenge a good match for me?'],

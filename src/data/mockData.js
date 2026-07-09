@@ -2847,9 +2847,19 @@ export const eventDetailDefault = {
 // candidateOverview (Round 1) so both can be demoed without conflict.
 export const candidateHome = {
   robotBriefing: {
-    message:
-      "While you were away, I found something - TalentBank just opened an AI Challenge. 847 students registered, and your NLP skills give you a 92% match. Deadline's in 2 days.",
-    chips: ['Tell me about this challenge', 'Which companies are watching me?', 'Apply to TalentBank now'],
+    title: 'Your Career Coach',
+    subtitle: 'Quick chat · always on',
+    message: [
+      { text: 'TalentBank AI Challenge just opened — ' },
+      { text: '92% match', bold: true },
+      { text: ', 2 days left.' },
+    ],
+    chips: [
+      { label: 'Why this match', prompt: 'Why is TalentBank AI Challenge a good match for me?' },
+      { label: "Who's watching me", prompt: 'Which companies are watching me right now?' },
+      { label: 'Apply now', prompt: 'Help me apply to TalentBank AI Challenge now.' },
+    ],
+    placeholder: 'Ask your Career Coach…',
   },
   exploreOpportunities: [
     {
