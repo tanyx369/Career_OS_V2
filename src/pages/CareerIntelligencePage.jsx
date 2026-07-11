@@ -117,14 +117,19 @@ export default function CareerIntelligencePage() {
 
       <div className="mx-auto max-w-[1480px] px-4 py-5 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
-          <div className="min-w-0 lg:sticky lg:top-4 lg:self-start lg:h-[min(calc(100vh-2rem),36rem)]">
-            <CareerPathCompanionPanel
-              message={COMPANION_MESSAGE}
-              messages={chatMessages}
-              chips={chips}
-              isTyping={isTyping}
-              onChipClick={handleChipClick}
-            />
+          {/* Grid placeholder — reserves the 320px column so the rest of the
+              layout stays put. The actual chat panel is position: fixed inside
+              so it never scrolls with the page. */}
+          <div className="min-w-0">
+            <div className="lg:fixed lg:top-20 lg:z-10 lg:h-[min(calc(100vh-6rem),36rem)] lg:w-[320px] lg:left-[max(2rem,calc((100vw-1480px)/2+2rem))]">
+              <CareerPathCompanionPanel
+                message={COMPANION_MESSAGE}
+                messages={chatMessages}
+                chips={chips}
+                isTyping={isTyping}
+                onChipClick={handleChipClick}
+              />
+            </div>
           </div>
 
           <div className="min-w-0 space-y-4">

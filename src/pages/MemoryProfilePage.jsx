@@ -5,6 +5,7 @@ import CompanionChatPanel from '../components/careerMemory/CompanionChatPanel'
 import MemoryTimeline from '../components/careerMemory/MemoryTimeline'
 import AISignalsPanel from '../components/careerMemory/AISignalsPanel'
 import GapsPanel from '../components/careerMemory/GapsPanel'
+import AddExperienceModal from '../components/careerMemory/AddExperienceModal'
 import { candidateOverview, careerMemoryDemo, careerMemoryView, mockUser } from '../data/mockData'
 
 const MEMORY_DETAILS = {
@@ -190,6 +191,7 @@ export default function MemoryProfilePage() {
   const [activeMemory, setActiveMemory] = useState(null)
   const [editing, setEditing] = useState(false)
   const [toast, setToast] = useState('')
+  const [isAddOpen, setIsAddOpen] = useState(false)
   const toastRef = useRef(null)
 
   useEffect(() => () => window.clearTimeout(toastRef.current), [])
@@ -224,6 +226,11 @@ export default function MemoryProfilePage() {
     showToast('Career Memory updated')
   }
 
+  const handleAddExperience = (newEntry) => {
+    setTimeline((current) => [newEntry, ...current])
+    showToast('Experience added to Career Memory')
+  }
+
   const draftTimelineEntry = {
     ...careerMemoryDemo.draftEntry,
     title: `${draftDetails.organisation} - ${draftDetails.title}`,
@@ -246,12 +253,17 @@ export default function MemoryProfilePage() {
 
       <div className="mx-auto max-w-[1480px] px-4 py-5 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[300px_minmax(0,1fr)_320px]">
-          <div className="min-w-0 lg:sticky lg:top-4 lg:self-start lg:h-[min(calc(100vh-2rem),36rem)]">
-            <CompanionChatPanel
-              companion={careerMemoryView.companion}
-              onShowDraft={() => setDraftPhase('typing')}
-              onConfirmDraft={() => setDraftPhase('confirming')}
-            />
+          {/* Grid placeholder — reserves the 300px column so the rest of the
+              layout stays put. The actual chat panel is position: fixed inside
+              so it never scrolls with the page. */}
+          <div className="min-w-0">
+            <div className="lg:fixed lg:top-20 lg:z-10 lg:h-[min(calc(100vh-6rem),36rem)] lg:w-[300px] lg:left-[max(2rem,calc((100vw-1480px)/2+2rem))]">
+              <CompanionChatPanel
+                companion={careerMemoryView.companion}
+                onShowDraft={() => setDraftPhase('typing')}
+                onConfirmDraft={() => setDraftPhase('confirming')}
+              />
+            </div>
           </div>
 
           <div className="min-w-0">
@@ -263,6 +275,7 @@ export default function MemoryProfilePage() {
               onOpenMemory={(entry) => openMemory(entry)}
               onEditMemory={(entry) => openMemory(entry, true)}
               onEditDraft={() => openMemory(draftMemory, true)}
+              onAddExperience={() => setIsAddOpen(true)}
             />
           </div>
 
@@ -283,6 +296,11 @@ export default function MemoryProfilePage() {
           onSave={saveMemory}
         />
       )}
+      <AddExperienceModal
+        open={isAddOpen}
+        onClose={() => setIsAddOpen(false)}
+        onSubmit={handleAddExperience}
+      />
       <DemoToast message={toast} />
     </div>
   )

@@ -235,6 +235,7 @@ export default function MemoryTimeline({
   onOpenMemory,
   onEditMemory,
   onEditDraft,
+  onAddExperience,
 }) {
   const [view, setView] = useState('timeline')
 
@@ -261,6 +262,7 @@ export default function MemoryTimeline({
           <ViewToggle view={view} onChange={setView} />
           <button
             type="button"
+            onClick={() => onAddExperience?.()}
             className="flex flex-shrink-0 items-center gap-1.5 rounded-full bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
           >
             <Plus size={16} strokeWidth={2.4} /> Add Experience
