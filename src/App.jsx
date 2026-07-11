@@ -70,7 +70,6 @@ export default function App() {
             path="/student/learning"
             element={<PlaceholderPage title="Learning & Skills" />}
           />
-          <Route path="/student/ai-assistant" element={<PlaceholderPage title="AI Assistant" />} />
           <Route
             path="/student/settings"
             element={<PlaceholderPage title="Settings" />}

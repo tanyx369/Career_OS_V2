@@ -1,61 +1,117 @@
 import React, { useState } from 'react'
-import { Eye, Sparkles, Zap } from 'lucide-react'
-import homeHeroBg from '../../assets/Home page bg 1.png'
-import robotImage from '../../assets/career-os-robot.png'
-import TypewriterText from '../ui/TypewriterText'
+import { ArrowRight, Bot, Eye, Send, Sparkles, Zap } from 'lucide-react'
 
 const CHIP_ICONS = [Sparkles, Eye, Zap]
 
-export default function HeroCard({ briefing, onChipClick }) {
-  const [showChips, setShowChips] = useState(false)
+// Compact "Your Career Coach" chat card on the Candidate Home page.
+// Every submit (chip or input) hands the prompt off to the AI Companion page
+// via onSubmit — the parent navigates to /student/ai-companion and passes the
+// prompt through router state so the companion auto-continues the conversation.
+export default function HeroCard({ briefing, onSubmit, onOpenCompanion }) {
+  const [draft, setDraft] = useState('')
+
+  const submit = (prompt) => {
+    const clean = prompt?.trim()
+    if (!clean) return
+    onSubmit?.(clean)
+    setDraft('')
+  }
+
+  const messageParts = Array.isArray(briefing.message)
+    ? briefing.message
+    : [{ text: briefing.message }]
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-[#dfe8fb] bg-white shadow-[0_10px_28px_rgba(38,72,140,0.08)]">
-      <img
-        src={homeHeroBg}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover"
-        aria-hidden="true"
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-white/45 via-white/18 to-white/0" />
-
-      <div className="relative grid min-h-[226px] grid-cols-1 items-center gap-4 px-4 py-5 sm:px-8 lg:grid-cols-[170px_minmax(0,1fr)]">
-        <div className="flex justify-center lg:justify-start">
-          <img
-            src={robotImage}
-            alt="CareerOS companion robot"
-            className="h-32 w-32 object-contain drop-shadow-[0_18px_26px_rgba(79,70,229,0.22)] sm:h-44 sm:w-44"
-          />
-        </div>
-
-        <div className="min-w-0">
-          <div className="relative max-w-[520px] rounded-2xl border border-[#dce6f8] bg-white px-6 py-5 shadow-[0_10px_24px_rgba(45,78,145,0.12)]">
-            <span className="absolute -left-4 top-1/2 hidden h-8 w-8 -translate-y-1/2 rotate-45 border-b border-l border-[#dce6f8] bg-white sm:block" />
-            <p className="relative text-base font-semibold leading-relaxed text-[#10183f] sm:text-lg">
-              <TypewriterText text={briefing.message} speed={18} onComplete={() => setShowChips(true)} />
+    <section className="rounded-2xl border border-[#dfe8fb] bg-[linear-gradient(135deg,#f4f2ff_0%,#eaeefc_55%,#f3f5ff_100%)] p-5 shadow-[0_10px_28px_rgba(38,72,140,0.08)]">
+      {/* Header row: robot badge + title, "Full companion" button */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white shadow-[0_8px_18px_rgba(99,102,241,0.3)]">
+              <Bot size={22} strokeWidth={2.2} aria-hidden="true" />
+            </div>
+            <span
+              className="absolute -bottom-0.5 -left-0.5 h-3 w-3 rounded-full border-2 border-white bg-emerald-500 shadow-sm"
+              aria-hidden="true"
+            />
+            <span className="sr-only">Career Coach online</span>
+          </div>
+          <div>
+            <h2 className="text-base font-bold leading-tight text-[#11194a]">
+              {briefing.title ?? 'Your Career Coach'}
+            </h2>
+            <p className="mt-0.5 text-xs font-semibold text-[#7382a1]">
+              {briefing.subtitle ?? 'Quick chat · always on'}
             </p>
           </div>
-
-          {showChips && (
-          <div className="chat-fade-in mt-4 flex max-w-[640px] flex-wrap gap-3">
-            {briefing.chips.map((chip, index) => {
-              const Icon = CHIP_ICONS[index] ?? Sparkles
-              return (
-              <button
-                key={chip}
-                type="button"
-                onClick={() => onChipClick?.(chip)}
-                className="inline-flex items-center gap-2 rounded-full border border-[#d9e5f8] bg-white/92 px-3.5 py-2 text-xs font-semibold text-[#35507d] shadow-[0_4px_10px_rgba(46,82,154,0.08)] transition hover:-translate-y-0.5 hover:border-blue-300 hover:text-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100"
-              >
-                <Icon size={14} className="text-blue-600" strokeWidth={2.3} />
-                {chip}
-              </button>
-              )
-            })}
-          </div>
-          )}
         </div>
+
+        <button
+          type="button"
+          onClick={() => onOpenCompanion?.()}
+          className="inline-flex items-center gap-1 rounded-full border border-indigo-100 bg-white/85 px-3.5 py-2 text-xs font-bold text-indigo-700 shadow-[0_4px_10px_rgba(46,82,154,0.08)] transition hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-100"
+        >
+          Full companion <ArrowRight size={13} strokeWidth={2.4} />
+        </button>
       </div>
+
+      {/* Companion message bubble */}
+      <div className="mt-4 rounded-xl border border-white/70 bg-white px-4 py-3 shadow-[0_4px_12px_rgba(45,78,145,0.06)]">
+        <p className="text-sm font-medium leading-6 text-[#10183f]">
+          {messageParts.map((part, index) => (
+            part.bold
+              ? <strong key={index} className="font-bold text-[#11194a]">{part.text}</strong>
+              : <span key={index}>{part.text}</span>
+          ))}
+        </p>
+      </div>
+
+      {/* Quick-reply chips — each redirects to the AI Companion with its prompt */}
+      <div className="mt-3 flex flex-wrap gap-2">
+        {briefing.chips.map((chip, index) => {
+          const Icon = CHIP_ICONS[index] ?? Sparkles
+          const label = typeof chip === 'string' ? chip : chip.label
+          const prompt = typeof chip === 'string' ? chip : (chip.prompt ?? chip.label)
+          return (
+            <button
+              key={label}
+              type="button"
+              onClick={() => submit(prompt)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#d9e5f8] bg-white/92 px-3.5 py-2 text-xs font-semibold text-[#35507d] shadow-[0_4px_10px_rgba(46,82,154,0.08)] transition hover:-translate-y-0.5 hover:border-indigo-300 hover:text-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-100"
+            >
+              <Icon size={13} className="text-indigo-600" strokeWidth={2.3} aria-hidden="true" />
+              {label}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Composer — submits to AI Companion via the parent */}
+      <form
+        onSubmit={(event) => {
+          event.preventDefault()
+          submit(draft)
+        }}
+        className="mt-3 flex items-center gap-2 rounded-full border border-white/80 bg-white px-4 py-2 shadow-[0_4px_12px_rgba(45,78,145,0.08)]"
+      >
+        <Sparkles size={16} className="text-indigo-500" strokeWidth={2.2} aria-hidden="true" />
+        <label htmlFor="career-coach-input" className="sr-only">Message your Career Coach</label>
+        <input
+          id="career-coach-input"
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          placeholder={briefing.placeholder ?? 'Ask your Career Coach…'}
+          className="flex-1 bg-transparent text-sm font-medium text-[#2c3656] placeholder:text-[#9aa6c3] focus:outline-none"
+        />
+        <button
+          type="submit"
+          disabled={!draft.trim()}
+          aria-label="Send to AI Companion"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-45"
+        >
+          <Send size={15} strokeWidth={2.4} />
+        </button>
+      </form>
     </section>
   )
 }

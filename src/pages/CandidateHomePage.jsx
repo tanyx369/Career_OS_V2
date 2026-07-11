@@ -165,43 +165,11 @@ export default function CandidateHomePage() {
     })
   }
 
-  const handleHeroChip = (chip) => {
-    if (chip === 'Tell me about this challenge') {
-      setModal({
-        title: 'Why this challenge matches you',
-        body: 'TalentBank AI Challenge matches Chris because of NLP, Python, and project experience. 847 students registered, Chris has a 92% match, and the deadline is in 2 days.',
-        sections: [
-          { title: 'Matched skills', text: 'NLP, Python, ML fundamentals' },
-          { title: 'What to prepare', text: 'Portfolio proof, short write-up, project evidence' },
-        ],
-        actions: [
-          { label: 'Close', secondary: true, onClick: () => setModal(null) },
-          { label: 'View challenge details', onClick: () => navigate('/student/opportunities') },
-        ],
-      })
-      return
-    }
-    if (chip === 'Which companies are watching me?') {
-      setDrawer({
-        title: 'Employers watching you',
-        rows: [
-          { title: 'Lenovo', body: 'Viewed your profile today. Interest: AI & Software roles.' },
-          { title: 'AIA Malaysia', body: 'Viewed your profile yesterday. Interest: Fintech & Data roles.' },
-          { title: 'Grab', body: 'Matched your NLP project 2 days ago. Interest: Data Analyst Intern.' },
-        ],
-        actions: [
-          { label: 'Close', secondary: true, onClick: () => setDrawer(null) },
-          { label: 'View employer activity', onClick: () => navigate('/student/account') },
-        ],
-      })
-      return
-    }
-    if (chip === 'Apply to TalentBank now') {
-      navigate('/student/opportunities', {
-        state: { highlightOpportunityId: 'talentbank-ai-challenge' },
-      })
-    }
+  const handleCoachSubmit = (prompt) => {
+    navigate('/student/ai-companion', { state: { initialPrompt: prompt } })
   }
+
+  const openCompanion = () => navigate('/student/ai-companion')
 
   const handlePickUp = (item) => {
     if (item.title === 'TalentBank application') navigate('/student/applications')
@@ -275,7 +243,11 @@ export default function CandidateHomePage() {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           <div className="min-w-0 space-y-4">
-            <HeroCard briefing={candidateHome.robotBriefing} onChipClick={handleHeroChip} />
+            <HeroCard
+              briefing={candidateHome.robotBriefing}
+              onSubmit={handleCoachSubmit}
+              onOpenCompanion={openCompanion}
+            />
             <CareerAnimalHomeCard onRetake={() => setShowAssessment(true)} />
             <OpportunityCards opportunities={candidateHome.exploreOpportunities} onSelect={handleOpportunity} />
             <QuickActions actions={candidateHome.quickActions} onAction={handleQuickAction} />
